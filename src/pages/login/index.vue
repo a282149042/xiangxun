@@ -20,7 +20,7 @@
             <input type="password" placeholder="">
           </div>
         </div>
-        <div class="login_btn">
+        <div class="login_btn" @click="login()">
           登录
         </div>
       </div>
@@ -57,6 +57,9 @@ export default {
     changeFixed(clientHeight){
       this.$refs.login.style.height = clientHeight+'px';
     },
+    login () {
+      this.$router.push('main')
+    }
   }
 }
 </script>

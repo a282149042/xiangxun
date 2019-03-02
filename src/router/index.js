@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 // import App from '../App'
 import login from '@/pages/login/index.vue'
+import main from '@/pages/main/timeMonitoring.vue'
 Vue.use(Router)
 export default new Router({
   mode: 'hash',
@@ -18,5 +19,10 @@ export default new Router({
       path: '/login',
       name: "login",
       component: login
+    },
+    {
+      path: '/main',
+      name: "main",
+      component: main
     }]
 })
