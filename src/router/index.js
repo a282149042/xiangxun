@@ -4,6 +4,9 @@ import Router from 'vue-router'
 // import App from '../App'
 import login from '@/pages/login/index.vue'
 import main from '@/pages/main/timeMonitoring.vue'
+import dataCalc from '@/pages/main/dataCalc.vue'
+import dataAnaysis from '@/pages/main/dataAnalysis.vue'
+
 Vue.use(Router)
 export default new Router({
   mode: 'hash',
@@ -24,5 +27,15 @@ export default new Router({
       path: '/main',
       name: "main",
       component: main
+    },
+    {
+      path: '/dataCalc',
+      name: "dataCalc",
+      component: dataCalc
+    },
+    {
+      path: '/dataAnaysis',
+      name: "dataAnaysis",
+      component: dataAnaysis
     }]
 })

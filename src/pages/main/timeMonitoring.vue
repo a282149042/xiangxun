@@ -5,13 +5,13 @@
         <!-- <span class="_head_line">
         </span> -->
         <div class="left_three_btn">
-          <div class="monitoring_btn active">
+          <div class="monitoring_btn active" @click="openMonitoring()">
             实时监控
           </div>
-          <div class="monitoring_btn">
+          <div class="monitoring_btn" @click="openDataCalc()">
             数据统计
           </div>
-          <div class="monitoring_btn">
+          <div class="monitoring_btn" @click="openDataAnalysis()">
             数据分析
           </div>
         </div>
@@ -206,12 +206,12 @@
           <div class="alarm_info">
             <!-- 中间告警信息 -->
             <div class="circle">
-              <div class="big" style="left: 55px;border: 5px solid #E60012;border-bottom: none;color: #E60012">告警信息</div>
-              <div class="small" style="left: 50px">5条</div>
+              <div class="big" style="left: 30px;border: 5px solid #E60012;border-bottom: none;color: #E60012">告警信息</div>
+              <div class="small" style="left: 25px">5条</div>
             </div>
             <div class="circle">
-              <div class="big" style="right: 55px;border: 5px solid #AC2FB1;border-bottom: none;color: #AC2FB1">失联信息</div>
-              <div class="small" style="right: 50px">10条</div>
+              <div class="big" style="right: 30px;border: 5px solid #AC2FB1;border-bottom: none;color: #AC2FB1">失联信息</div>
+              <div class="small" style="right: 25px">10条</div>
             </div>
           </div>
           <div class="alarm_list">
@@ -236,9 +236,10 @@
   </div>
 </template>
 <script>
+import axios from 'axios'
 import moment from 'moment'
 import echarts from 'echarts'
-import '../../../node_modules/echarts/map/js/china.js'
+// const china = require('../../../public/json/china.json') 
 export default {
   name: 'monitoring',
   components: {
@@ -317,6 +318,15 @@ export default {
     this.platformCount()
   },
   methods:{
+    openMonitoring() {
+      this.$router.push('main')
+    },
+    openDataCalc() {
+      this.$router.push('dataCalc')
+    },
+    openDataAnalysis() {
+      this.$router.push('dataAnaysis')
+    },
     statisticsClassification() {
       const countRangeEcharts = echarts.init(document.getElementById('countRange'));
       const options = {
@@ -445,7 +455,9 @@ export default {
     randomData() {  
      return Math.round(Math.random()*500);  
     },
-    platformCount () {
+    async platformCount () {
+     let china = await axios.get('./json/china.json')
+      echarts.registerMap('china', china.data);
       const platformCountEcharts = echarts.init(document.getElementById('platformCount'));
       const optionsParams = {
           title: {  
