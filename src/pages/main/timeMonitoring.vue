@@ -67,12 +67,169 @@
           </div>
           <div class="_left_bottom monitoring_list">
             <!-- 监控列表 -->
-            监控列表
+            <div class="table_title">
+              ◆ 监控列表 ◆ 
+            </div>
+            <table class="table_list">
+              <tr>
+                <th>终端名称</th>
+                <th>信号强度</th>
+                <th>太阳能电压</th>
+                <th>电池电压</th>
+                <th>温 度 </th>
+                <th>光照度</th>
+                <th>终端状态</th>
+                <th style="padding: 0 30px">操作</th>
+              </tr>
+              <tr>
+                <td>黄（慢）闪灯</td>
+                <td>正常</td>
+                <td>12</td>
+                <td>13</td>
+                <td>22</td>
+                <td>100</td>
+                <td>正常</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="_record">
+                      报警记录
+                    </div>
+                    <div class="history_data">
+                      历史数据
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>太阳能点阵式标志</td>
+                <td>正常</td>
+                <td>12</td>
+                <td>13</td>
+                <td>22</td>
+                <td>100</td>
+                <td>正常</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="_record">
+                      报警记录
+                    </div>
+                    <div class="history_data">
+                      历史数据
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>面阵式半透型主动发光标志</td>
+                <td>正常</td>
+                <td>12</td>
+                <td>13</td>
+                <td>22</td>
+                <td>100</td>
+                <td>正常</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="_record">
+                      报警记录
+                    </div>
+                    <div class="history_data">
+                      历史数据
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>面阵式全透型主动发光标志</td>
+                <td>正常</td>
+                <td>12</td>
+                <td>13</td>
+                <td>22</td>
+                <td>100</td>
+                <td>正常</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="_record">
+                      报警记录
+                    </div>
+                    <div class="history_data">
+                      历史数据
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>爆闪灯</td>
+                <td>正常</td>
+                <td>12</td>
+                <td>13</td>
+                <td>22</td>
+                <td>100</td>
+                <td>正常</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="_record">
+                      报警记录
+                    </div>
+                    <div class="history_data">
+                      历史数据
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>爆闪灯</td>
+                <td>正常</td>
+                <td>12</td>
+                <td>13</td>
+                <td>22</td>
+                <td>100</td>
+                <td>正常</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="_record">
+                      报警记录
+                    </div>
+                    <div class="history_data">
+                      历史数据
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
           </div>
         </div>
         <div class="full_right_container alarm_information">
           <!-- 告警信息 -->
-            告警信息
+          <div class="head_title">
+             ◆ 告警信息 ◆ 
+          </div>
+          <div class="alarm_info">
+            <!-- 中间告警信息 -->
+            <div class="circle">
+              <div class="big" style="left: 55px;border: 5px solid #E60012;border-bottom: none;color: #E60012">告警信息</div>
+              <div class="small" style="left: 50px">5条</div>
+            </div>
+            <div class="circle">
+              <div class="big" style="right: 55px;border: 5px solid #AC2FB1;border-bottom: none;color: #AC2FB1">失联信息</div>
+              <div class="small" style="right: 50px">10条</div>
+            </div>
+          </div>
+          <div class="alarm_list">
+            <!-- 告警列表 -->
+            <div class="alarm_item" v-for="(item, index) in alarmList" :key="index"> 
+              <div class="alarm_address_time">
+                <div class="_address">
+                  告警地点
+                </div>
+                <div class="_time">
+                  {{item.time}}
+                </div>
+              </div>
+              <div class="address_detail">
+                  {{item.address}}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -88,30 +245,78 @@ export default {
   },
   data() {
     return {
-      clientHeight: '',
-      dateTime: moment().format('YYYY.MM.DD')
+      dateTime: moment().format('YYYY.MM.DD'),
+      alarmList: [
+        {
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },
+        {
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },
+        {
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },
+        {
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },{
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },
+        {
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },
+        {
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },
+        {
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },{
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },
+        {
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },{
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },
+        {
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },
+        {
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },{
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },
+        {
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        },{
+          address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
+          time: moment().format('YYYY.MM.DD')
+        }
+      ]
     }
   },
   created() {
   },
   mounted() {
-    this.clientHeight = `${document.documentElement.scrollTop+document.documentElement.clientHeight}`;
-    window.onresize = function getCurHeight() {
-      this.clientHeight = `${document.documentElement.scrollTop+document.documentElement.clientHeight}`;
-    }
     this.statisticsClassification()
     this.statisticsStatus()
     this.platformCount()
   },
-  watch: {
-      clientHeight: function () {
-        this.changeFixed(this.clientHeight)
-      }
-    },
   methods:{
-    changeFixed(clientHeight){
-      this.$refs.monitoring.style.height = clientHeight+'px';
-    },
     statisticsClassification() {
       const countRangeEcharts = echarts.init(document.getElementById('countRange'));
       const options = {
@@ -242,28 +447,8 @@ export default {
     },
     platformCount () {
       const platformCountEcharts = echarts.init(document.getElementById('platformCount'));
-      const mydata = [
-        {name: '北京',value: '100' },{name: '天津',value: this.randomData() },  
-        {name: '上海',value: this.randomData() },{name: '重庆',value: this.randomData() },  
-        {name: '河北',value: this.randomData() },{name: '河南',value: this.randomData() },  
-        {name: '云南',value: this.randomData() },{name: '辽宁',value: this.randomData() },  
-        {name: '黑龙江',value: this.randomData() },{name: '湖南',value: this.randomData() },  
-        {name: '安徽',value: this.randomData() },{name: '山东',value: this.randomData() },  
-        {name: '新疆',value: this.randomData() },{name: '江苏',value: this.randomData() },  
-        {name: '浙江',value: this.randomData() },{name: '江西',value: this.randomData() },  
-        {name: '湖北',value: this.randomData() },{name: '广西',value: this.randomData() },  
-        {name: '甘肃',value: this.randomData() },{name: '山西',value: this.randomData() },  
-        {name: '内蒙古',value: this.randomData() },{name: '陕西',value: this.randomData() },  
-        {name: '吉林',value: this.randomData() },{name: '福建',value: this.randomData() },  
-        {name: '贵州',value: this.randomData() },{name: '广东',value: this.randomData() },  
-        {name: '青海',value: this.randomData() },{name: '西藏',value: this.randomData() },  
-        {name: '四川',value: this.randomData() },{name: '宁夏',value: this.randomData() },  
-        {name: '海南',value: this.randomData() },{name: '台湾',value: this.randomData() },  
-        {name: '香港',value: this.randomData() },{name: '澳门',value: this.randomData() }  
-      ];
-      var optionMap = {
-        // color: ['#5475f5', '#9feaa5', '#85daef','#74e2ca', '#e6ac53', '#9fb5ea'],
-        title: {  
+      const optionsParams = {
+          title: {  
             text: '◆ 平台数据分布 ◆',  
             subtext: '',  
             x:'center',
@@ -273,37 +458,130 @@ export default {
               color: '#FFDE29'
             }
         },  
-        tooltip : {  
-            trigger: 'item'  
+          tooltip: {
+            trigger: 'item',
+            formatter: function(params) {
+                var res = params.name+'<br/>';
+                var myseries = optionsParams.series;
+                for (var i = 0; i < myseries.length; i++) {
+                    for(var j=0;j<myseries[i].data.length;j++){
+                        if(myseries[i].data[j].name==params.name){
+                            res+=myseries[i].name +' : '+myseries[i].data[j].value+'</br>';
+                        }
+                    }
+                }
+                return res;
+            }
         },
-          visualMap: {
-            show : true, 
-            bottom: '10', 
-            y: 'center',  
-            text: [   
-                "正常","异常","离线"
-            ],  
-            color: ['#5475f5', '#9feaa5', '#85daef','#74e2ca', '#e6ac53', '#9fb5ea']  
-        },
-        //配置属性
-        series: [{  
-            name: '数据',  
-            type: 'map',  
-            mapType: 'china',   
-            roam: true,  
-            label: {  
-                normal: {  
-                    show: true  //省份名称  
-                },  
-                emphasis: {  
-                    show: false  
-                }  
-            },  
-            data:mydata  //数据
-        }]  
-      };  
+          legend: {
+              orient: 'horizontal',
+              x: 'center',
+              bottom: '10',
+              textStyle: {
+                color: "#FFDE29",
+                fontSize: 12
+              },
+              data:['正常','异常','离线']
+          },
+        
+          series : [
+              {
+                  name: '正常',
+                  type: 'map',
+                  mapType: 'china',
+                  roam: false,
+                  itemStyle: {
+                    normal: {
+                        label: {
+                          show: true,//默认是否显示省份名称 
+                          textStyle: {
+                            color: "#fff"
+                          },   
+                        },
+                        color:'#1fa022',
+                        areaColor: '#21262b',
+                        borderWidth:1,
+                        borderColor:'#aca62f',
+                    },
+                    emphasis: {
+                        show: true,
+                        areaColor: '#1fa022'
+                    }
+                  },
+                  data:[
+                      {name: '天津',value: 2},
+                      {name: '安徽',value: 3},
+                      {name: '山东',value: 3},
+                      {name: '新疆',value: 3},
+                      {name: '陕西',value: 3},
+                      {name: '北京',value: 3}
+                  ]
+              },
+              {
+                  name: '异常',
+                  type: 'map',
+                  mapType: 'china',
+                  roam: false,
+                  itemStyle: {
+                    normal: {
+                        label: {
+                          show: true,//默认是否显示省份名称
+                          textStyle: {
+                            color: "#fff"
+                          },  
+                        },
+                        color:'#e6212a',
+                        areaColor: '#21262b',
+                        textStyle: {
+                          color: "#fff"
+                        },
+                        borderWidth:1,
+                        borderColor:'#aca62f',
+                    },
+                    emphasis: {
+                          show: true,
+                          areaColor: '#e6212a',
+                    }
+                  },
+                  data:[
+                      {name: '河北',value: 3},
+                      {name: '安徽',value: 3},
+                      {name: '吉林',value: 3},
+                      {name: '福建',value: 3}
+                  ]
+              },
+              {
+                  name: '离线',
+                  type: 'map',
+                  roam: false,
+                  mapType: 'china',
+                  itemStyle: {
+                    normal: {
+                        color: '#848484',
+                        areaColor: '#21262b',
+                        label: {
+                          show: true,//默认是否显示省份名称
+                          textStyle: {
+                            color: "#fff"
+                          },    
+                        },
+                        borderWidth:1,
+                        borderColor:'#aca62f',
+                    },
+                    emphasis: {
+                        show: true,
+                        areaColor: '#848484'
+                    }
+                  },
+                  data:[
+                      {name: '北京',value: 3},
+                      {name: '香港',value: 3}
+                  ]
+              }
+          ]
+      };
       //使用制定的配置项和数据显示图表
-      platformCountEcharts.setOption(optionMap);
+      platformCountEcharts.setOption(optionsParams);
     }
   }
 }
