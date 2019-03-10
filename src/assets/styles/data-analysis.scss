@@ -1,0 +1,351 @@
+.data_calc_page{
+  background: #000;
+  height: 1100px;
+  width: 100%;
+  .header{
+    display: flex;
+    align-items: center;
+    padding-top: 20px;
+    position: relative;
+    .header_left{
+      width: 33%;
+      height: 50px;
+      margin-left: 15px;
+      border-top: 1px solid #DDC128;
+      .left_three_btn{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 12px;
+        margin-left: 30px;
+        .active{
+          color: #000000 !important;
+          background: #E0BC25;
+        }
+        .monitoring_btn{
+          font-size: 14px;
+          text-align: center;
+          line-height: 30px;
+          margin-right: 10%;
+          color: #FFFFFF;
+          width: 20%;
+          height: 30px;
+        }
+      }
+    }
+    .header_left:before{
+      content: '';
+      display: block;
+      position: absolute;
+      width: 0px;
+      height: 0px;
+      left: 6px;
+      top: 15px;
+      border-radius: 50%;
+      border: 5px dashed #E0BC25;
+    }
+    .header_left:after{
+      content: '';
+      display: block;
+      position: absolute;
+      width: 0px;
+      height: 0px;
+      left: 33.5%;
+      top: 15px;
+      border-radius: 50%;
+      border: 5px dashed #E0BC25;
+    }
+    .header_center{
+      width: 33%;
+      height: 50px;
+      font-size:20px;
+      font-family:NotoSansHans-Light;
+      font-weight:300;
+      color:rgba(20,41,117,1);
+      background: #DDC128;
+      text-align: center;
+      line-height: 50px;
+    }
+    .header_right{
+      width: 22%;
+      height: 50px;
+      position: relative;
+      border-top: 1px solid #DDC128;
+      display: flex;
+      justify-content: space-between;
+      .right_two_btn{
+        display: flex;
+        justify-content: space-between;
+        margin-top: 12px;
+        margin-right: 30px;
+        width: 100%;
+        .monitoring_btn{
+          font-size: 14px;
+          text-align: center;
+          line-height: 30px;
+          margin-right: 10%;
+          color: #FFFFFF;
+          width: 50%;
+          height: 30px;
+        }
+      }
+    }
+    .header_right:before{
+      content: '';
+      display: block;
+      position: absolute;
+      width: 0px;
+      height: 0px;
+      right: 0;
+      top: -5px;
+      border-radius: 50%;
+      border: 5px dashed #E0BC25;
+    }
+    .header_right:after{
+      content: '';
+      display: block;
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      width: 0px;
+      height: 0px;
+      border-radius: 50%;
+      border: 5px dashed #E0BC25;
+    }
+    .monitoring_date{
+      position: absolute;
+      font-size:13px;
+      right: 6%;
+      top: 10px;
+      font-family:NotoSansHans-Regular;
+      font-weight:400;
+      color:rgba(255,255,255,1);
+    }
+  }
+  .page_center{
+    margin-top: 50px;
+    margin-left: 45px;
+    margin-right: 6%;
+    table{
+      border-collapse: collapse;
+      text-align: center;
+    }
+    table, td, th {
+      border: 1px solid #E0BC25;
+    }
+    tr>td{
+      width: 25%;
+      color: #FFDE29;
+      font-size: 9px;
+    }
+    th{
+      color: #FFDE29;
+      font-size: 9px;
+    }
+   .top_title_display{
+      display: flex;
+      justify-content: space-around;
+      .select_items_year{
+        width: 25%;
+        .label_item{
+          // width: 40%;
+       }
+      }
+      .select_items_month{
+        width: 25%;
+      }
+      .select_items_date{
+        width: 25%;
+      }
+      .select_items_area{
+        width: 25%;
+      }
+      .select_items_terminal{
+        width: 30%;
+      }
+     .select_items{
+       display: flex;
+       align-items: center;
+       .label_item{
+         color: #FFDE29;
+      }
+       .select_input{
+         width: 55%;
+         margin-right: 10%;
+       }
+     }
+     .submit_btn{
+      height: 20px;
+      width: 80px;
+      line-height: 20px;
+      text-align: center;
+      padding: 10px;
+      background:linear-gradient(90deg,rgba(188,72,1,1),rgba(243,204,23,1));
+      border-radius:4px;
+      cursor: pointer
+     }
+   }
+   .echarts_container{
+     width: 100%;
+     margin-top: 30px;
+    .top_two_charts{
+       width: 100%;
+       display: flex;
+       align-items: center;
+      .left_charts{
+        border: 1px solid #E0BC25;
+        margin-right: 1%;
+        width: 33%;
+        height: 400px;
+        padding-top: 10px;
+        ._title{
+          text-align: center;
+          color: #FFDE29;
+          font-size: 9px;
+        }
+        .count_table{
+          width: 90%;
+          margin: 0 5%;
+          border: 1px solid #E0BC25;
+          height: 40px;
+          line-height: 40px;
+          display: flex;
+          justify-content: space-around;
+          .temina_title{
+            color: #FFDE29;
+            font-size: 9px;
+          }
+          .number_{
+            color: #fff;
+            font-size: 9px;
+          }
+        }
+        .three_list{
+          width: 90%;
+          margin: 0 5%;
+          border: 1px solid #E0BC25;
+          border-top: none;
+          height: 100px;
+          line-height: 50px;
+          display: flex;
+          justify-content: space-around;
+          .no_border{
+            border: none !important;
+          }
+          .nomal_number{
+            width: 33%;
+            border-right: 1px solid #E0BC25;
+            ._title{
+              color: #FFDE29;
+              font-size: 9px;
+            }
+            ._numbers{
+              text-align: center;
+              color: #fff;
+              font-size: 9px;
+            }
+          }
+        }
+        .charts_nomal{
+          width: 90%;
+          margin: 0 5%;
+          border: 1px solid #E0BC25;
+          border-top: none;
+          height: 220px;
+        }
+      }
+      .right_charts{
+        width: 65.3%;
+        border: 1px solid #E0BC25;
+        height: 410px;
+      }
+    }
+    .bottom_two_charts{
+      margin-top: 20px;
+      width: 100%;
+       display: flex;
+       align-items: center;
+      .left_charts, .right_charts{
+        border: 1px solid #E0BC25;
+        width: 49.5%;
+        margin-right: 0.5%;
+        height: 390px;
+        padding-top: 10px;
+        ._title{
+          text-align: center;
+          font-size: 12px;
+          color: #E0BC25;
+        }
+        .chars_table{
+          display: flex;
+          padding-top: 10px;
+          ._left_charts{
+            // 左侧图表
+            width: 35%;
+            margin-right: 2%;
+            height: 320px;
+          }
+          .unnomal_log{
+            width: 60%;
+            height: 350px;
+            overflow: scroll;
+            ._title{
+              height: 30px;
+              line-height: 30px;
+              border: 1px solid #A59226;
+              text-align: center;
+              background: #E0BC25;
+              font-size: 12px;
+              color: #000000;
+            }
+            ._logs_list{
+              .log_detail_date{
+                display: flex;
+                justify-content: space-between;
+                padding: 5px 10px;
+                border: 1px solid #A59226;
+                border-bottom: none;
+                ._detail{
+                  font-size:8px;
+                  font-family:MicrosoftYaHei;
+                  font-weight:400;
+                  color:rgba(191,193,198,1);
+                }
+                ._date_time{
+                  font-size:8px;
+                  font-family:MicrosoftYaHei;
+                  font-weight:400;
+                  color:rgba(191,193,198,1);
+                }
+              }
+              .reason_isfixed{
+                display: flex;
+                justify-content: space-between;
+                padding: 0px 10px 5px 10px;
+                border: 1px solid #A59226;
+                border-top:none;
+                ._reason{
+                  text-align: left;
+                  font-size:8px;
+                  font-family:MicrosoftYaHei;
+                  font-weight:400;
+                  color:rgba(191,193,198,1);
+                }
+                ._isFixed{
+                  color: #E6671A;
+                  font-size: 8px;
+                }
+              }
+            }
+          }
+        }
+      }
+      .right_charts{
+        width: 50%;
+        border: 1px solid #E0BC25;
+        height: 390px;
+      }
+
+    }
+   }
+  }
+}

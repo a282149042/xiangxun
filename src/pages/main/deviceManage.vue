@@ -1,5 +1,5 @@
 <template>
-  <div class="data_calc_page" ref="monitoring">
+  <div class="system_manage_page" ref="monitoring">
     <div class="header">
       <div class="header_left">
         <!-- <span class="_head_line">
@@ -11,7 +11,7 @@
           <div class="monitoring_btn"  @click="openDataCalc()">
             数据统计
           </div>
-          <div class="monitoring_btn active" @click="openDataAnalysis()">
+          <div class="monitoring_btn" @click="openDataAnalysis()">
             数据分析
           </div>
         </div>
@@ -24,7 +24,7 @@
           <div class="monitoring_btn" @click="openSystemManage()">
             系统管理
           </div>
-          <div class="monitoring_btn" @click="openDeviceManage()">
+          <div class="monitoring_btn active" @click="openDeviceManage()">
             设备管理
           </div>
         </div>
@@ -669,6 +669,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-  @import '@/assets/styles/data-analysis.scss';
+  @import '@/assets/styles/system-manage.scss';
 </style>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

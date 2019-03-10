@@ -6,6 +6,8 @@ import login from '@/pages/login/index.vue'
 import main from '@/pages/main/timeMonitoring.vue'
 import dataCalc from '@/pages/main/dataCalc.vue'
 import dataAnaysis from '@/pages/main/dataAnalysis.vue'
+import systemManage from '@/pages/main/systemManage.vue'
+import deviceManage from '@/pages/main/deviceManage.vue'
 
 Vue.use(Router)
 export default new Router({
@@ -37,5 +39,16 @@ export default new Router({
       path: '/dataAnaysis',
       name: "dataAnaysis",
       component: dataAnaysis
-    }]
+    },
+    {
+      path: '/systemManage',
+      name: "systemManage",
+      component: systemManage
+    },
+    {
+      path: '/deviceManage',
+      name: "deviceManage",
+      component: deviceManage
+    }
+  ]
 })

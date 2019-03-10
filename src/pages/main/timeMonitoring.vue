@@ -21,10 +21,10 @@
       </div>
       <div class="header_right">
         <div class="right_two_btn">
-          <div class="monitoring_btn">
+          <div class="monitoring_btn" @click="openSystemManage()">
             系统管理
           </div>
-          <div class="monitoring_btn">
+          <div class="monitoring_btn" @click="openDeviceManage()">
             设备管理
           </div>
         </div>
@@ -326,6 +326,12 @@ export default {
     },
     openDataAnalysis() {
       this.$router.push('dataAnaysis')
+    },
+    openSystemManage() {
+      this.$router.push('systemManage')
+    },
+    openDeviceManage() {
+      this.$router.push('deviceManage')
     },
     statisticsClassification() {
       const countRangeEcharts = echarts.init(document.getElementById('countRange'));
