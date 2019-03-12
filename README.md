@@ -1,29 +1,26 @@
 # xiangxu-project
 
-## Project setup
+## 安装依赖
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 本地开发启动
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### 生产编译
 ```
 npm run build
 ```
 
-### Run your tests
+### 测试
 ```
 npm run test
 ```
 
-### Lints and fixes files
+### lint检测
 ```
 npm run lint
 ```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

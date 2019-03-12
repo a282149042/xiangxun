@@ -66,7 +66,11 @@
       <div class="table_container">
         <div class="left_table">
           <div class="three_tree_level">
-            <vue-ztree :list.sync='ztreeDataSource' :func='nodeClick' :expand='expandClick' :contextmenu='contextmenuClick' :is-open='true'></vue-ztree>
+            <div class="tree3">
+              <input class="tree-search-input" type="text" v-model="searchword" placeholder="search..."/>
+              <button class=" tree-search-btn" type="button" @click="search">search</button>
+              <v-tree ref='tree1' :canDeleteRoot="true" :data='treeData1' :draggable='true' :tpl='tpl' :halfcheck='true' :multiple="true"/>
+            </div>
           </div>
         </div>
         <div class="right_table">
@@ -97,43 +101,29 @@ export default {
       selectedTerminal: '爆闪灯',
       terminalList: ['爆闪灯','黄慢（闪）灯', '点阵式主动发光标志','面阵式全透发光标志' ,'面阵式半透发光标志'],
       monthList: [1,2,3,4,5,6,7,8,9,10,11,12],
-      ztreeDataSource:[{
-                id:1,
-                name:"音乐",
-                children:[],
-                url:"http://www.baidu.com"
-      },{
-          id:2,
-          name:"视频",
-          children:[{
-             id:3,
-             name:"电影",
-             children:[{
-                id:4,
-                name:"国产电影",
-                url:""
-             },{
-                id:5,
-                name:"好莱坞电影",
-                url:""
-             },{
-                id:6,
-                name:"小语种电影",
-                url:""
-             }]
-          },{
-             id:7,
-             name:"短片",
-             children:[{
-                id:9,
-                name:"电视剧",
-                url:""
-             },{
-                id:10,
-                name:"短片",
-                url:""
-             }]
+      searchword: '',
+      initSelected: ['node-1'],
+      treeData1: [{
+        title: 'node1',
+        expanded: true,
+        children: [{
+          title: 'node 1-1',
+          expanded: true,
+          children: [{
+            title: 'node 1-1-1'
+          }, {
+            title: 'node 1-1-2'
+          }, {
+            title: 'node 1-1-3'
           }]
+        }, {
+          title: 'node 1-2',
+          children: [{
+            title: "<span style='color: red'>node 1-2-1</span>"
+          }, {
+            title: "<span style='color: red'>node 1-2-2</span>"
+          }]
+        }]
       }]
     }
   },
@@ -157,54 +147,37 @@ export default {
     openDeviceManage() {
       this.$router.push('deviceManage')
     },
-    // 点击节点
-    nodeClick:function(m){
-       console.log(JSON.parse(JSON.stringify(m)));
+    nodechecked (node, v) {
+      alert('that a node-check envent ...' + node.title + v)
     },
-    // 右击事件
-    contextmenuClick:function(m){
-       console.log(m)
-       console.log("触发了自定义的contextmenuClick事件");
+    // tpl (node, ctx, parent, index, props) {
+    tpl (...args) {
+      let {0: node, 2: parent, 3: index} = args
+      let titleClass = node.selected ? 'node-title node-selected' : 'node-title'
+      if (node.searched) titleClass += ' node-searched'
+      return <span>
+        <button class="treebtn1" onClick={() => this.$refs.tree1.addNode(node, {title: 'sync node'})}>+</button>
+         <span class={titleClass} domPropsInnerHTML={node.title} onClick={() => {
+           this.$refs.tree1.nodeSelected(node)
+         }}></span>
+      <button class="treebtn2" onClick={() => this.asyncLoad1(node)}>async</button>
+      <button class="treebtn3" onClick={() => this.$refs.tree1.delNode(node, parent, index)}>delete</button>
+      </span>
     },
-    // 点击展开收起
-    expandClick:function(m){
-       console.log(JSON.parse(JSON.stringify(m)));
-       // 点击异步加载
-       if(m.isExpand) {
-          // 动态加载子节点, 模拟ajax请求数据
-         // 请注意 id 不能重复哦。
-         if(m.hasOwnProperty("children")){
-            
-            m.loadNode = 1; // 正在加载节点
-
-            setTimeout(()=>{
-
-              m.loadNode = 2; // 节点加载完毕
-
-              m.isFolder = !m.isFolder; 
-
-              m.children.push({
-                  id:+new Date(),
-                  name:"动态加载节点1",
-                  path:"",
-                  clickNode:false,
-                  isFolder:false,
-                  isExpand:false,
-                  loadNode:0,
-                  children:[{
-                        id:+new Date()+1,
-                        name:"动态加载末节点",
-                        path:"",
-                        clickNode:false,
-                        isExpand:false,
-                        isFolder:false,
-                        loadNode:0
-                  }]
-              })
-            },1000)
-            
-         }
-       }
+    async asyncLoad1 (node) {
+      const {checked = false} = node
+      this.$set(node, 'loading', true)
+      let pro = new Promise(resolve => {
+        setTimeout(resolve, 2000, ['async node1', 'async node2'])
+      })
+      this.$refs.tree1.addNodes(node, await pro)
+      this.$set(node, 'loading', false)
+      if (checked) {
+        this.$refs.tree1.childCheckedHandle(node, checked)
+      }
+    },
+    search () {
+      this.$refs.tree1.searchNodes(this.searchword)
     }
   }
 }
@@ -212,4 +185,6 @@ export default {
 <style lang="scss" scoped>
   @import '@/assets/styles/system-manage.scss';
 </style>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
+
+
