@@ -66,15 +66,408 @@
       <div class="table_container">
         <div class="left_table">
           <div class="three_tree_level">
-            <div class="tree3">
-              <input class="tree-search-input" type="text" v-model="searchword" placeholder="search..."/>
-              <button class=" tree-search-btn" type="button" @click="search">search</button>
-              <v-tree ref='tree1' :canDeleteRoot="true" :data='treeData1' :draggable='true' :tpl='tpl' :halfcheck='true' :multiple="true"/>
-            </div>
+            <groupTree></groupTree>
           </div>
         </div>
         <div class="right_table">
-
+          <table class="table_list">
+              <tr style="background: #A59226;">
+                <th>上级机构</th>
+                <th>机构编码/机构名称</th>
+                <th>联系人</th>
+                <th>联系人电话</th>
+                <th>备 注 </th>
+                <th style="padding: 0 30px">操作</th>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr> 
+            </table>
+          <div class="divide_pages">
+            <span class="pageing">1</span>
+            <span class="pageing">2</span>
+            <span class="pageing">3</span>
+          </div>
+        </div>
+      </div>
+      <div class="bottom_title_display">
+        <div class="orgnazition_title">
+          ◆ 用户管理 ◆
+        </div>
+        <div class="submit_btn">
+          新增
+        </div>
+      </div>
+      <div class="table_container">
+        <div class="left_table">
+          <div class="three_tree_level">
+            <groupTree></groupTree>
+          </div>
+        </div>
+        <div class="right_table">
+          <table class="table_list">
+              <tr style="background: #A59226;">
+                <th>用户名</th>
+                <th>姓名</th>
+                <th>所属机构</th>
+                <th>联系电话</th>
+                <th>email </th>
+                <th>状态</th>
+                <th style="padding: 0 30px">操作</th>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>10</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>10</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>12</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>18</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>12</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>23</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>12</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>22</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>23</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>12</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                    <div class="_record">
+                      删除
+                    </div>
+                  </div>
+                </td>
+              </tr> 
+            </table>
+          <div class="divide_pages">
+            <span class="pageing">1</span>
+            <span class="pageing">2</span>
+            <span class="pageing">3</span>
+          </div>
         </div>
       </div>
     </div>
@@ -83,10 +476,11 @@
 <script>
 import moment from 'moment'
 import Multiselect from 'vue-multiselect'
+import groupTree from '@/components/groupTree.vue'
 export default {
   name: 'monitoring',
   components: {
-    Multiselect
+    Multiselect,groupTree
   },
   data() {
     return {

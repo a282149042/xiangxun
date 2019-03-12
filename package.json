@@ -16,26 +16,25 @@
     "vue": "^2.6.6",
     "vue-multiselect": "^2.1.4",
     "vue-router": "^3.0.1",
-    "vue-tree-halower": "^1.8.0",
-    "vue-ztree-2.0": "^1.0.4"
+    "vue-tree-halower": "^1.8.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
     "@vue/cli-plugin-eslint": "^3.4.0",
     "@vue/cli-service": "^3.4.0",
-    "babel-eslint": "^10.0.1",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
     "babel-plugin-syntax-jsx": "^6.18.0",
-    "babel-plugin-transform-vue-jsx": "3.3.0",
+    "babel-plugin-transform-vue-jsx": "^3.7.0",
+    "babel-eslint": "^10.0.1",
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.8.0",
     "eslint-plugin-vue": "^5.0.0",
     "vue-template-compiler": "^2.5.21"
   },
   "eslintConfig": {
-    "root": false,
+    "root": true,
     "env": {
-      "node": false
+      "node": true
     },
     "extends": [
       "plugin:vue/essential",
