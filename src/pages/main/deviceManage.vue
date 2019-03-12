@@ -35,197 +35,333 @@
     </div>
     <div class="page_center">
       <div class="top_title_display">
-        <!-- 筛选框 -->
-        <div class="select_items select_items_year">
-          <div class="label_item">
-            请选择年份：
-          </div>
-          <div class="select_input">
-            <multiselect
-              @input="chooseYear"
-              selectLabel=''
-              :allow-empty="false"
-              selectGroupLabel=""
-              deselectLabel=''
-              selectedLabel=''
-              placeholder="年份"
-              v-model="selectedYear"
-              :options="yearsList">
-            </multiselect>
-          </div>
-        </div>
-        <div class="select_items select_items_month">
-          <div class="label_item">
-            月份：
-          </div>
-          <div class="select_input">
-            <multiselect
-              @input="chooseMonth"
-              :allow-empty="false"
-              selectLabel=""
-              selectGroupLabel=""
-              deselectLabel=""
-              selectedLabel=""
-              placeholder="月份"
-              v-model="selectedMonth"
-              :options="monthList">
-            </multiselect>
-          </div>
-        </div>
-        <div class="select_items select_items_area">
-          <div class="label_item">
-            区域：
-          </div>
-          <div class="select_input">
-            <multiselect
-              :allow-empty="false"
-              selectLabel=""
-              selectGroupLabel=""
-              deselectLabel=""
-              selectedLabel=""
-              placeholder=""
-              v-model="selectedArea"
-              :options="areaList">
-            </multiselect>
-          </div>
-        </div>
-        <div class="select_items select_items_terminal">
-          <div class="label_item">
-            终端类型：
-          </div>
-          <div class="select_input">
-            <multiselect
-              :allow-empty="false"
-              selectLabel=""
-              selectGroupLabel=""
-              deselectLabel=""
-              selectedLabel=""
-              placeholder=""
-              v-model="selectedTerminal"
-              :options="terminalList">
-            </multiselect>
-          </div>
+        <div class="orgnazition_title">
+          ◆ 终端管理 ◆
         </div>
         <div class="submit_btn">
-          确认
+          新增
         </div>
       </div>
-      <div class="echarts_container">
-        <div class="top_two_charts">
-          <div class="left_charts">
-            <div class="_title">
-              ◆ 终端数据分析 ◆
-            </div>
-            <div class="count_table">
-              <div class="temina_title">
-                该类型终端总数
-              </div>
-              <div class="number_">
-                  295
-              </div>
-            </div>
-            <div class="three_list">
-              <div class="nomal_number">
-                <div class="_title">
-                  正常
-                </div>
-                <div class="_numbers">
-                  258
-                </div>
-              </div>
-              <div class="nomal_number">
-                <div class="_title">
-                  异常
-                </div>
-                <div class="_numbers">
-                  10
-                </div>
-              </div>
-              <div class="nomal_number no_border">
-                <div class="_title">
-                  失联
-                </div>
-                <div class="_numbers">
-                  23
-                </div>
-              </div>
-            </div>
-            <div class="charts_nomal" id="teminaCharts">
-              <!-- ◆ 终端数据分析 ◆ -->
-            </div>
-          </div>
-          <div class="right_charts" id="monthDataCharts">
-            <!-- ◆ 月度数据分析 ◆ -->
+      <div class="table_container">
+        <div class="left_table">
+          <div class="three_tree_level">
+            <groupTree></groupTree>
           </div>
         </div>
-        <div class="bottom_two_charts">
-          <div class="left_charts" style="margin-right: 0.5%">
-            <div class="_title">
-              ◆ 异常数据分析 ◆
-            </div>
-            <div class="chars_table">
-              <div class="_left_charts" id="brokeAnalysis">
-                <!-- 故障种类分析 -->
-              </div>
-              <div class="unnomal_log">
-                <!-- 异常日志 -->
-                <div class="_title">
-                  异常日志
-                </div>
-                <div class="_logs_list" v-for="(item, index) in logsList" :key="index">
-                  <div class="log_detail_date">
-                    <div class="_detail">
-                      {{item.logs}}
-                    </div>
-                    <div class="_date_time">
-                        {{item.dateTime}}
-                    </div>
-                  </div>
-                  <div class="reason_isfixed">
-                    <div class="_reason">
-                      {{item.reason}}
-                    </div>
-                    <div class="_isFixed">
-                      {{item.status}}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+        <div class="right_table">
+          <table class="table_list">
+              <tr style="background: #A59226;">
+                <th>终端编号</th>
+                <th>终端描述</th>
+                <th>所属机构</th>
+                <th>工作模式</th>
+                <th>连接模式</th>
+                <th>基准经度</th>
+                <th>基准纬度</th>
+                <th>备注</th>
+                <th>安装单位</th>
+                <th>安装地点</th>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>             
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>一级管理10</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>测试样品00000111</td>
+                <td>测试样品00000111</td>
+              </tr> 
+            </table>
+          <div class="divide_pages">
+            <span class="pageing">1</span>
+            <span class="pageing">2</span>
+            <span class="pageing">3</span>
           </div>
-          <div class="right_charts" style="margin-left: 0.5%">
-            <div class="_title">
-              ◆ 异常数据分析 ◆
-            </div>
-            <div class="chars_table">
-              <div class="_left_charts" id="loseInfoAnalysis">
-                <!-- 故障种类分析 -->
-              </div>
-              <div class="unnomal_log">
-                <!-- 异常日志 -->
-                <div class="_title">
-                  失联日志
-                </div>
-                <div class="_logs_list" v-for="(item, index) in logsList" :key="index">
-                  <div class="log_detail_date">
-                    <div class="_detail">
-                      {{item.logs}}
-                    </div>
-                    <div class="_date_time">
-                        {{item.dateTime}}
+        </div>
+      </div>
+      <div class="bottom_title_display">
+        <div class="orgnazition_title">
+          ◆ 灯质类型 ◆
+        </div>
+        <div class="add_btn">
+          新增灯步
+        </div>
+        <div class="del_btn">
+          删除灯步
+        </div>
+      </div>
+      <div class="table_container">
+        <div class="left_table">
+          <div class="three_tree_level">
+            <groupTree></groupTree>
+          </div>
+        </div>
+        <div class="right_table">
+          <table class="table_list">
+              <tr style="background: #A59226;">
+                <th>编 号</th>
+                <th>四路控制</th>
+                <th>亮灯时间</th>
+                <th>灭灯时间</th>
+                <th>循环次数 </th>
+                <th style="padding: 0 30px">操作</th>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>10</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
                     </div>
                   </div>
-                  <div class="reason_isfixed">
-                    <div class="_reason">
-                      {{item.reason}}
-                    </div>
-                    <div class="_isFixed">
-                      {{item.status}}
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>10</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>12</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>18</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>12</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>23</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>12</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>22</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>23</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>根节点</td>
+                <td>杨工</td>
+                <td>18920209393</td>
+                <td>12</td>
+                <td>测试样品00000111</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data">
+                      编辑
+                    </div>
+                  </div>
+                </td>
+              </tr> 
+            </table>
+          <div class="divide_pages">
+            <span class="pageing">1</span>
+            <span class="pageing">2</span>
+            <span class="pageing">3</span>
           </div>
         </div>
       </div>
@@ -233,13 +369,12 @@
   </div>
 </template>
 <script>
-import echarts from 'echarts'
 import moment from 'moment'
-import Multiselect from 'vue-multiselect'
+import groupTree from '@/components/groupTree.vue'
 export default {
   name: 'monitoring',
   components: {
-    Multiselect
+    groupTree
   },
   data() {
     return {
@@ -249,68 +384,16 @@ export default {
       dateData: [],
       selectedYear: new Date().getFullYear(),
       selectedMonth: new Date().getMonth() + 1,
-      selectedArea: "长沙市",
-      areaList: ['长沙市', '浏阳市', '株洲市', '宁乡市'],
+      selectedArea: "长沙交警支队",
+      areaList: ['长沙交警支队', '浏阳市交警支队', '株洲市交警支队', '宁乡市交警支队'],
       selectedTerminal: '爆闪灯',
       terminalList: ['爆闪灯','黄慢（闪）灯', '点阵式主动发光标志','面阵式全透发光标志' ,'面阵式半透发光标志'],
       monthList: [1,2,3,4,5,6,7,8,9,10,11,12],
-      logsList: [
-        {
-          logs: '爆闪灯在某地发生了灯不闪烁等故障',
-          reason: "原因：得问问辅导费",
-          dateTime: moment().format('YYYY.MM.DD'),
-          status: "暂未修复"
-        },
-        {
-          logs: '爆闪灯在某地发生了灯不闪烁等故障',
-          reason: "原因：的非官方个",
-          dateTime: moment().subtract(10, 'day').format('YYYY.MM.DD'),
-          status: "暂未修复"
-        },
-        {
-          logs: '爆闪灯在某地发生了灯不闪烁等故障',
-          reason: "原因：是的是非得失",
-          dateTime: moment().subtract(3, 'day').format('YYYY.MM.DD'),
-          status: "暂未修复"
-        },
-        {
-          logs: '爆闪灯在某地发生了灯不闪烁等故障',
-          reason: "原因：sadadsd",
-          dateTime: moment().subtract(1, 'day').format('YYYY.MM.DD'),
-          status: "暂未修复"
-        },
-        {
-          logs: '爆闪灯在某地发生了灯不闪烁等故障',
-          reason: "原因：sadadsd",
-          dateTime: moment().subtract(1, 'day').format('YYYY.MM.DD'),
-          status: "暂未修复"
-        },
-        {
-          logs: '爆闪灯在某地发生了灯不闪烁等故障',
-          reason: "原因：sadadsd",
-          dateTime: moment().subtract(1, 'day').format('YYYY.MM.DD'),
-          status: "暂未修复"
-        },
-        {
-          logs: '爆闪灯在某地发生了灯不闪烁等故障',
-          reason: "原因：sadadsd",
-          dateTime: moment().subtract(1, 'day').format('YYYY.MM.DD'),
-          status: "暂未修复"
-        }
-      ]
     }
   },
   created() {
-    for(let i = 2000; i <= 2050; i++) {
-      this.yearsList.push(i)
-    }
   },
   mounted() {
-    this.makeDateListData()
-    this.getTeminaChars()
-    this.getMonthData()
-    this.getBrokeAnalysisData()
-    this.getLoseInfoAnalysisData()
   },
   methods:{
     openMonitoring() {
@@ -328,347 +411,44 @@ export default {
     openDeviceManage() {
       this.$router.push('deviceManage')
     },
-    chooseYear(year) {
-      this.selectedYear = year
-      this.makeDateListData()
+    nodechecked (node, v) {
+      alert('that a node-check envent ...' + node.title + v)
     },
-    chooseMonth(val) {
-      this.selectedMonth = val
-      this.makeDateListData()
+    // tpl (node, ctx, parent, index, props) {
+    tpl (...args) {
+      let {0: node, 2: parent, 3: index} = args
+      let titleClass = node.selected ? 'node-title node-selected' : 'node-title'
+      if (node.searched) titleClass += ' node-searched'
+      return <span>
+        <button class="treebtn1" onClick={() => this.$refs.tree1.addNode(node, {title: 'sync node'})}>+</button>
+         <span class={titleClass} domPropsInnerHTML={node.title} onClick={() => {
+           this.$refs.tree1.nodeSelected(node)
+         }}></span>
+      <button class="treebtn2" onClick={() => this.asyncLoad1(node)}>async</button>
+      <button class="treebtn3" onClick={() => this.$refs.tree1.delNode(node, parent, index)}>delete</button>
+      </span>
     },
-    getTeminaChars() {
-      const teminaChars = echarts.init(document.getElementById('teminaCharts'))
-      const option = {
-          color: ['#68BC63', '#F14D27', '#686868'],
-          tooltip : {
-              trigger: 'item',
-              formatter: "{a} <br/>{b} : {c} ({d}%)"
-          },
-          legend: {
-              x : 'center',
-              y : 'bottom',
-              textStyle: {
-                color: '#FFDE29'
-              },
-              data:['正常','异常','失联']
-          },
-          calculable : true,
-          series : [
-              {
-                  type:'pie',
-                  name: "终端",
-                  radius : [40, 80],
-                  center : ['50%', '50%'],
-                  roseType : 'area',
-                  label: {
-                    normal: {
-                      show: false
-                    },
-                    emphasis: {
-                      show: false
-                    }
-                  },
-                  lableLine: {
-                    normal: {
-                      show: false
-                    },
-                    emphasis: {
-                      show: false
-                    }
-                  },
-                  data:[
-                      {value:10, name:'正常'},
-                      {value:5, name:'异常'},
-                      {value:15, name:'失联'}
-                  ]
-              }
-          ]
-      }
-      teminaChars.setOption(option)
-    },
-    makeDateListData() {
-      let v = this.selectedMonth
-      let y = this.selectedYear
-      this.DateList = []
-      if (v === 1 || v === 3 || v === 5 || v === 7 || v === 8 || v === 10 || v === 12) {
-        for(let j = 1; j<= 31;j++) {
-          this.DateList.push(j)
-          this.dateData.push(Math.round(Math.random()*20))
-        }
-      } else if (v === 2){
-        if (y%4 === 0) {
-          for(let j = 1; j<= 29;j++) {
-            this.DateList.push(j)
-            this.dateData.push(Math.round(Math.random()*20))
-          }
-        } else {
-          for(let j = 1; j<= 28;j++) {
-            this.DateList.push(j)
-            this.dateData.push(Math.round(Math.random()*20))
-          }
-        }
-      } else {
-        for(let j = 1; j<= 30;j++) {
-          this.DateList.push(j)
-          this.dateData.push(Math.round(Math.random()*20))
-        }
+    async asyncLoad1 (node) {
+      const {checked = false} = node
+      this.$set(node, 'loading', true)
+      let pro = new Promise(resolve => {
+        setTimeout(resolve, 2000, ['async node1', 'async node2'])
+      })
+      this.$refs.tree1.addNodes(node, await pro)
+      this.$set(node, 'loading', false)
+      if (checked) {
+        this.$refs.tree1.childCheckedHandle(node, checked)
       }
     },
-    getMonthData() {
-      // 月度数据分析
-      let dateList = this.DateList
-      let dateData = this.dateData
-      const teminaChars = echarts.init(document.getElementById('monthDataCharts'))
-      const option = {
-        color: ['#68BC63', '#F14D27', '#686868'],
-        title: {
-            text: '◆ 月度数据分析 ◆',
-            x: "center",
-            padding: [10,0,0,0],
-            textStyle: {
-              fontSize: 12,
-              color: '#FFDE29',
-              rich: {
-                align: 'center'
-              }
-          }
-        },
-        tooltip : {
-            trigger: 'item',
-            formatter: "{a} <br/>{b} : {c}次"
-         },
-        legend: {
-              orient: 'horizontal',
-              top: '10',
-              left:'right',
-              padding: [0,20,0,0],
-              textStyle: {
-                color: "#FFDE29",
-                fontSize: 12
-              },
-              data:['正常','异常','离线']
-          },
-        calculable : true,
-        xAxis : [
-            {
-                type : 'category',
-                 axisLine: {
-                  lineStyle: {
-                    color:'#fff'
-                  }
-                },
-                data : dateList
-            }
-        ],
-        yAxis : [
-            {
-                type: 'value',
-                nameLocation:"center",
-                nameGap:35,
-                nameRotate:0,
-                min: 0,
-                max: 100,
-                nameTextStyle:{
-                    fontSize: 16,
-                },
-                 axisLine: {
-                  lineStyle: {
-                    color:'#fff'
-                  }
-                },
-                //默认以千分位显示，不想用的可以在这加一段
-                axisLabel : {   //调整左侧Y轴刻度， 直接按对应数据显示
-                    show:true,
-                    showMinLabel:true,
-                    showMaxLabel:true,
-                    formatter: function (value) {
-                        return value;
-                    }
-                }
-            },
-            {
-                type: 'value',
-                nameLocation:"center",
-                min: 0,
-                max: 500,
-                nameGap:35,
-                nameRotate:0,
-                 axisLine: {
-                  lineStyle: {
-                    color:'green'
-                  }
-                },
-                nameTextStyle:{
-                    fontSize: 12,
-                    color: 'green'
-                },
-                //默认以千分位显示，不想用的可以在这加一段
-                axisLabel : {   //调整左侧Y轴刻度， 直接按对应数据显示
-                    show:true,
-                    showMinLabel:true,
-                    showMaxLabel:true,
-                    formatter: function (value) {
-                        return value;
-                    }
-                }
-            }
-        ],
-        series : [
-            {
-                type:'line',
-                name: '正常',
-                smooth: true,
-                yAxisIndex: 0,
-                data: dateData,
-                itemStyle : { normal: {label : {show: true}}},
-            },
-            {
-                type:'line',
-                name: '异常',
-                smooth: true,
-                yAxisIndex: 0,
-                data:dateData,
-                itemStyle : { normal: {label : {show: true}}},
-            },
-             {
-                type:'line',
-                name: '离线',
-                smooth: true,
-                yAxisIndex: 0,
-                data:dateData,
-                itemStyle : { normal: {label : {show: true}}},
-            }
-        ]
-      }
-      teminaChars.setOption(option)
-    },
-    getBrokeAnalysisData() {
-      const brokeAnalysisChars = echarts.init(document.getElementById('brokeAnalysis'))
-      const option = {
-          title : {
-            text: '故障种类分析',
-            x:'center',
-            textStyle: {
-              fontSize: 14,
-              fontWeight: 'bolder',
-              color: '#FFDE29'
-            }
-          },
-          color: ['#56AAB7', '#E62129', '#F08519', '#68BC63', '#FFF000', '#B04B87'],
-          tooltip : {
-              trigger: 'item',
-              formatter: "{a} <br/>{b} : {c} ({d}%)"
-          },
-          legend: {
-              x : 'center',
-              y : 'bottom',
-              textStyle: {
-                color: '#FFDE29'
-              },
-              data:['输出','信号','太阳能电池', '蓄电池', '温度', '其他故障']
-          },
-          calculable : true,
-          series : [
-              {
-                  type:'pie',
-                  name: "终端",
-                  radius : [40, 80],
-                  center : ['50%', '50%'],
-                  roseType : 'area',
-                  label: {
-                    normal: {
-                      show: false
-                    },
-                    emphasis: {
-                      show: false
-                    }
-                  },
-                  lableLine: {
-                    normal: {
-                      show: false
-                    },
-                    emphasis: {
-                      show: false
-                    }
-                  },
-                  data:[
-                      {value:10, name:'输出'},
-                      {value:5, name:"信号"},
-                      {value:15, name:'太阳能电池'},
-                      {value:4, name:'蓄电池'},
-                      {value:8, name:'温度'},
-                      {value:23, name:'其他故障'}
-                  ]
-              }
-          ]
-      }
-      brokeAnalysisChars.setOption(option)
-    },
-    getLoseInfoAnalysisData() {
-      const brokeAnalysisChars = echarts.init(document.getElementById('loseInfoAnalysis'))
-      const option = {
-          title : {
-            text: '失联种类分析',
-            x:'center',
-            textStyle: {
-              fontSize: 14,
-              fontWeight: 'bolder',
-              color: '#FFDE29'
-            }
-          },
-          color: ['#56AAB7', '#E62129', '#F08519', '#68BC63', '#FFF000', '#B04B87'],
-          tooltip : {
-              trigger: 'item',
-              formatter: "{a} <br/>{b} : {c} ({d}%)"
-          },
-          legend: {
-              x : 'center',
-              y : 'bottom',
-              textStyle: {
-                color: '#FFDE29'
-              },
-              data:['面阵式半透型发光标志','面阵式全透型发光标志','点阵式发光标志', '爆闪灯', '黄（慢）灯']
-          },
-          calculable : true,
-          series : [
-              {
-                  type:'pie',
-                  name: "终端",
-                  radius : [40, 80],
-                  center : ['50%', '40%'],
-                  roseType : 'area',
-                  label: {
-                    normal: {
-                      show: false
-                    },
-                    emphasis: {
-                      show: false
-                    }
-                  },
-                  lableLine: {
-                    normal: {
-                      show: false
-                    },
-                    emphasis: {
-                      show: false
-                    }
-                  },
-                  data:[
-                      {value:10, name:'面阵式半透型发光标志'},
-                      {value:5, name:"面阵式全透型发光标志"},
-                      {value:15, name:'点阵式发光标志'},
-                      {value:4, name:'爆闪灯'},
-                      {value:8, name:'黄（慢）灯'}
-                  ]
-              }
-          ]
-      }
-      brokeAnalysisChars.setOption(option)
+    search () {
+      this.$refs.tree1.searchNodes(this.searchword)
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-  @import '@/assets/styles/system-manage.scss';
+  @import '@/assets/styles/device-manage.scss';
 </style>
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
+
+

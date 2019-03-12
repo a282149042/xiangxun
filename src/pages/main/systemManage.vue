@@ -494,31 +494,7 @@ export default {
       areaList: ['长沙交警支队', '浏阳市交警支队', '株洲市交警支队', '宁乡市交警支队'],
       selectedTerminal: '爆闪灯',
       terminalList: ['爆闪灯','黄慢（闪）灯', '点阵式主动发光标志','面阵式全透发光标志' ,'面阵式半透发光标志'],
-      monthList: [1,2,3,4,5,6,7,8,9,10,11,12],
-      searchword: '',
-      initSelected: ['node-1'],
-      treeData1: [{
-        title: 'node1',
-        expanded: true,
-        children: [{
-          title: 'node 1-1',
-          expanded: true,
-          children: [{
-            title: 'node 1-1-1'
-          }, {
-            title: 'node 1-1-2'
-          }, {
-            title: 'node 1-1-3'
-          }]
-        }, {
-          title: 'node 1-2',
-          children: [{
-            title: "<span style='color: red'>node 1-2-1</span>"
-          }, {
-            title: "<span style='color: red'>node 1-2-2</span>"
-          }]
-        }]
-      }]
+      monthList: [1,2,3,4,5,6,7,8,9,10,11,12]
     }
   },
   created() {
