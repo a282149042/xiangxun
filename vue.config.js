@@ -1,18 +1,4 @@
 module.exports = {
-  devServer: {
-    proxy: {
-      // '/api': {
-      //   target: 'http://api.zouzhengming.com', //对应自己的接口
-      //   changeOrigin: true,
-      //   ws: true,
-      //   pathRewrite: {
-      //     '^/api': ''
-      //   }
-      // }
-    }
-  }
-}
-module.exports = {
   chainWebpack: config => {
    config.module
     .rule('scss')
@@ -34,6 +20,20 @@ module.exports = {
         data: `
           @import "@/assets/styles/_variable.scss";
         `
+      }
+    }
+  }
+}
+module.exports = {
+  devServer: {
+    proxy: {
+      '/api': {
+        target: "http://api.zouzhengming.com/api", //对应自己的接口
+        changeOrigin: true,
+        ws: true,
+        pathRewrite: {
+          '^/api': ''
+        }
       }
     }
   }

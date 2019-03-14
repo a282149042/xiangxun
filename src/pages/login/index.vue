@@ -31,6 +31,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'login',
   components: {
@@ -41,6 +42,7 @@ export default {
     }
   },
   created() {
+    axios.get('/api/v1/checkCiYu/find?ciYu=我')
   },
   mounted() {
     this.clientHeight = `${document.documentElement.clientHeight}`;
