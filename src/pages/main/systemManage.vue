@@ -66,7 +66,7 @@
       <div class="table_container">
         <div class="left_table">
           <div class="three_tree_level">
-            <groupTree></groupTree>
+            <groupTree :treeData="treeData"></groupTree>
           </div>
         </div>
         <div class="right_table">
@@ -268,7 +268,7 @@
       <div class="table_container">
         <div class="left_table">
           <div class="three_tree_level">
-            <groupTree></groupTree>
+            <groupTree :treeData="treeData"></groupTree>
           </div>
         </div>
         <div class="right_table">
@@ -494,7 +494,48 @@ export default {
       areaList: ['长沙交警支队', '浏阳市交警支队', '株洲市交警支队', '宁乡市交警支队'],
       selectedTerminal: '爆闪灯',
       terminalList: ['爆闪灯','黄慢（闪）灯', '点阵式主动发光标志','面阵式全透发光标志' ,'面阵式半透发光标志'],
-      monthList: [1,2,3,4,5,6,7,8,9,10,11,12]
+      monthList: [1,2,3,4,5,6,7,8,9,10,11,12],
+      treeData: [{
+        title: '组织机构',
+        expanded: true,
+        children: [{
+          title: '一级菜单01',
+          expanded: true,
+          children: [{
+            expanded: true,
+            title: '二级菜单01',
+            children: [{
+                    title: '三级菜单01',
+                    expanded: true,
+                    children: [
+                        {
+                            title: '四级菜单01',
+                            expanded: false
+                        }, 
+                        {
+                            title: '四级菜单02',
+                            expanded: false
+                        },
+                        {
+                            title: '四级菜单03',
+                            expanded: false
+                        }]
+                }, {
+                    title: '三级菜单02',
+                    expanded: false
+                }, {
+                    title: '三级菜单03',
+                    expanded: false
+                }]
+            }, {
+            title: '二级菜单02',
+            expanded: false
+          }, {
+            title: '二级菜单03',
+            expanded: false
+          }]
+        }]
+      }]
     }
   },
   created() {

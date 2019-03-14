@@ -8,46 +8,12 @@
 
 <script>
 import icon from '@/assets/images/file.png'
+import iconfile from '@/assets/images/file_package.png'
 export default {
   name: 'groupTree',
+  props: ['treeData'],
   data () {
     return {
-      treeData: [{
-        title: '组织机构',
-        expanded: true,
-        children: [{
-          title: '一级菜单01',
-          expanded: true,
-          children: [{
-            expanded: true,
-            title: '二级菜单01',
-            children: [{
-                    title: '三级菜单01',
-                    expanded: true,
-                    children: [{
-                    title: '四级菜单01',
-                    expanded: true
-                }, {
-                    title: '四级菜单02',
-                    expanded: true
-                }, {
-                    title: '四级菜单03',
-                    expanded: true
-                }]
-                }, {
-                    title: '三级菜单02',
-                    expanded: true
-                }, {
-                    title: '三级菜单03',
-                    expanded: true
-                }]
-            }, {
-            title: '二级菜单02'
-          }, {
-            title: '二级菜单03',
-          }]
-        }]
-      }]
     }
   },
   methods: {
@@ -55,8 +21,9 @@ export default {
       let {0: node,1: children} = args
       let titleClass = node.selected ? 'node-title node-selected' : 'node-title'
       if (node.searched) titleClass += ' node-searched'
+      console.log('child-----', args)
       return (<span>
-            {children?<img src={{icon}}/>:null}
+            {children.expanded?<img style="vertical-align: middle;" src={icon}/>:<img style="vertical-align: middle;" src={iconfile}/>}
             <span class={titleClass} domPropsInnerHTML={node.title} onClick={() => {
             this.$refs.tree1.nodeSelected(node)
             }} />
@@ -322,6 +289,7 @@ export default {
 }
 
 .halo-tree .tree-node-el {
+    background: #000!important;
     padding-left: 2px;
     position: relative;
     z-index: 3

@@ -45,7 +45,7 @@
       <div class="table_container">
         <div class="left_table">
           <div class="three_tree_level">
-            <groupTree></groupTree>
+            <groupTree :treeData="treeData"></groupTree>
           </div>
         </div>
         <div class="right_table">
@@ -203,8 +203,23 @@
       </div>
       <div class="table_container">
         <div class="left_table">
-          <div class="three_tree_level">
-            <groupTree></groupTree>
+          <div class="light_type">
+              <div class="top_add_del">
+                <div class="_add_light" @click="addLight()">
+                  新增
+                </div>
+                <div class="_del_light"  @click="delLight()">
+                  删除
+                </div>
+              </div>
+              <div class="light_table_list">
+                <div class="list_head">
+                  灯质类型
+                </div>
+                <div class="light_item" v-for="item in lightList" :key="item">
+                  {{item}}
+                </div>
+              </div>
           </div>
         </div>
         <div class="right_table">
@@ -389,6 +404,48 @@ export default {
       selectedTerminal: '爆闪灯',
       terminalList: ['爆闪灯','黄慢（闪）灯', '点阵式主动发光标志','面阵式全透发光标志' ,'面阵式半透发光标志'],
       monthList: [1,2,3,4,5,6,7,8,9,10,11,12],
+      lightList: ['爆闪灯','黄慢（闪）灯', '点阵式主动发光标志','面阵式全透发光标志' ,'面阵式半透发光标志'],
+      treeData: [{
+        title: '组织机构',
+        expanded: true,
+        children: [{
+          title: '一级菜单01',
+          expanded: true,
+          children: [{
+            expanded: true,
+            title: '二级菜单01',
+            children: [{
+                    title: '三级菜单01',
+                    expanded: true,
+                    children: [
+                        {
+                            title: '四级菜单01',
+                            expanded: false
+                        }, 
+                        {
+                            title: '四级菜单02',
+                            expanded: false
+                        },
+                        {
+                            title: '四级菜单03',
+                            expanded: false
+                        }]
+                }, {
+                    title: '三级菜单02',
+                    expanded: false
+                }, {
+                    title: '三级菜单03',
+                    expanded: false
+                }]
+            }, {
+            title: '二级菜单02',
+            expanded: false
+          }, {
+            title: '二级菜单03',
+            expanded: false
+          }]
+        }]
+      }]
     }
   },
   created() {
@@ -410,6 +467,12 @@ export default {
     },
     openDeviceManage() {
       this.$router.push('deviceManage')
+    },
+    delLight() {
+      this.lightList.pop()
+    },
+    addLight() {
+      this.lightList.push('大灯真他妈亮啊')
     },
     nodechecked (node, v) {
       alert('that a node-check envent ...' + node.title + v)

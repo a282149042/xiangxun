@@ -134,6 +134,9 @@
             border-collapse: collapse;
             text-align: center;
         }
+        table > tr{
+            height: 30px;
+        }
         table,
         td,
         th {
@@ -199,12 +202,57 @@
               .three_tree_level{
                 color: #E0BC25;
               }
+              .light_type{
+                  margin-top: 20px;
+                  border: 1px solid #E0BC25;
+                  height: 450px;
+                  color: #E0BC25;
+                  .top_add_del{
+                      width: 80%;
+                      margin: 20px 10%;
+                      display: flex;
+                      justify-content: space-between;
+                      ._add_light, ._del_light{
+                            text-align: center;
+                            line-height: 40px;
+                            font-size: 9px;
+                            height: 40px;
+                            width: 100px;
+                            color: #010101;
+                            background:linear-gradient(90deg,rgba(188,72,1,1),rgba(243,204,23,1));
+                            border-radius:2px;
+                      }
+                  }
+                  .light_table_list{
+                    width: 80%;
+                    height: 360px;
+                    overflow: scroll;
+                    margin: 20px 10%;
+                    .list_head{
+                        height: 40px;
+                        line-height: 40px;
+                        text-align: center;
+                        border:1px solid #E0BC25;
+                        background: #FFDE29;
+                        color: #000;
+                    }
+                    .light_item{
+                        height: 40px;
+                        line-height: 40px;
+                        text-align: center;
+                        border:1px solid #E0BC25;
+                        border-top: none;
+                        color: #fff;
+                    }
+                  }
+              }
             }
             .right_table{
               width: 70%;
               margin-top: 20px;
               padding: 10px 0;
               border: 1px solid #E0BC25;
+              border-left: none;
                 .table_list {
                     width: 98%;
                     margin: 0 10px;
