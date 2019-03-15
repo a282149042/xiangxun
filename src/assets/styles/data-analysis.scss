@@ -278,6 +278,8 @@
         .chars_table{
           display: flex;
           padding-top: 10px;
+          height: 400px;
+          overflow: hidden;
           ._left_charts{
             // 左侧图表
             width: 35%;
@@ -287,7 +289,8 @@
           .unnomal_log{
             width: 60%;
             height: 350px;
-            overflow: scroll;
+            overflow-y: auto;
+            overflow-x: hidden;
             ._title{
               height: 30px;
               line-height: 30px;

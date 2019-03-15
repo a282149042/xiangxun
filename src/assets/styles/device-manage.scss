@@ -225,8 +225,8 @@
                   }
                   .light_table_list{
                     width: 80%;
-                    height: 360px;
-                    overflow: scroll;
+                    height: 300px;
+                    overflow-y: scroll;
                     margin: 20px 10%;
                     .list_head{
                         height: 40px;
