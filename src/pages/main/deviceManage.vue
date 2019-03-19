@@ -38,7 +38,7 @@
         <div class="orgnazition_title">
           ◆ 终端管理 ◆
         </div>
-        <div class="submit_btn">
+        <div class="submit_btn" @click="createTerm">
           新增
         </div>
       </div>
@@ -381,20 +381,23 @@
         </div>
       </div>
     </div>
+    <creatModal :isShowModal="isShowModal" :fieldList="fieldList" @callbackModal="callbackModal"/>
   </div>
 </template>
 <script>
 import moment from 'moment'
 import groupTree from '@/components/groupTree.vue'
+import creatModal from '@/components/modal.vue'
 export default {
   name: 'monitoring',
   components: {
-    groupTree
+    groupTree,creatModal
   },
   data() {
     return {
       dateTime: moment().format('YYYY.MM.DD'),
       yearsList: [],
+      isShowModal: false,
       DateList: [],
       dateData: [],
       selectedYear: new Date().getFullYear(),
@@ -445,7 +448,8 @@ export default {
             expanded: false
           }]
         }]
-      }]
+      }],
+      fieldList: []
     }
   },
   created() {
@@ -473,6 +477,26 @@ export default {
     },
     addLight() {
       this.lightList.push('大灯真他妈亮啊')
+    },
+    createTerm() {
+      let fieldList = [
+            {name: '终端编号', value: ''},
+            {name: '终端描述', value: ''},
+            {name: '所属机构', value: ''},
+            {name: '工作模式', value: ''},
+            {name: '连接模式', value: ''},
+            {name: '基准经度', value: ''},
+            {name: '基准纬度', value: ''},
+            {name: '备注', value: ''},
+            {name: '安装单位', value: ''},
+            {name: '安装地点', value: ''},
+        ]
+      this.isShowModal = true
+      this.fieldList = fieldList
+    },
+    callbackModal(val) {
+      // 弹窗回调
+      this.isShowModal = val
     },
     nodechecked (node, v) {
       alert('that a node-check envent ...' + node.title + v)
