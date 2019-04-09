@@ -27,13 +27,13 @@ module.exports = {
 module.exports = {
   devServer: {
     proxy: {
-      '/api': {
-        target: "http://api.zouzhengming.com/api", //对应自己的接口
+      '/sys': {
+        target: "http://47.93.224.3:8090", //对应自己的接口
         changeOrigin: true,
         ws: true,
-        pathRewrite: {
-          '^/api': ''
-        }
+        // pathRewrite: {
+        //   '^/api': ''
+        // }
       }
     }
   }

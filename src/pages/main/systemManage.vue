@@ -539,10 +539,25 @@ export default {
     }
   },
   created() {
+    this.getListData()
   },
   mounted() {
   },
   methods:{
+    getListData () {
+      let params = {
+        fetchUrl: '/sys/user/list',
+        listQuery: {
+          "page": 1,
+          "pageSize": 10,
+          "content": "",
+          "organizeId": 1002
+        }
+      }
+      this.$store.dispatch('GetList', params).then(res => {
+        console.log('res======', res)
+      })
+    },
     openMonitoring() {
       this.$router.push('main')
     },

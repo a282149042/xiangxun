@@ -10,13 +10,17 @@
   "dependencies": {
     "axios": "^0.18.0",
     "echarts": "^3.8.3",
+    "element-ui": "^2.7.2",
     "moment": "^2.24.0",
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
+    "md5": "^2.2.1",
     "vue": "^2.6.6",
+    "js-cookie": "2.2.0",
     "vue-multiselect": "^2.1.4",
     "vue-router": "^3.0.1",
-    "vue-tree-halower": "^1.8.0"
+    "vue-tree-halower": "^1.8.0",
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.4.0",
@@ -37,8 +41,7 @@
       "node": true
     },
     "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
+      "plugin:vue/essential"
     ],
     "rules": {},
     "parserOptions": {
