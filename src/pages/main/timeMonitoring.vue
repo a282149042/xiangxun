@@ -236,9 +236,22 @@
   </div>
 </template>
 <script>
+//中国地图（第一级地图）的ID、Name、Json数据
+var chinaId = 100000;
+var chinaName = "china";
+var chinaJson = null;
+
+//记录父级ID、Name
+var mapStack = [];
+var parentId = null;
+var parentName = null;
+
+//Echarts地图全局变量，主要是在返回上级地图的方法中会用到
+var myChart = null;
 import axios from 'axios'
 import moment from 'moment'
 import echarts from 'echarts'
+import cityMap from "@/assets/js/china-main-city-map.js";
 // const china = require('../../../public/json/china.json') 
 export default {
   name: 'monitoring',
@@ -315,7 +328,7 @@ export default {
   mounted() {
     this.statisticsClassification()
     this.statisticsStatus()
-    this.platformCount()
+    this.platformCount('platformCount')
   },
   methods:{
     openMonitoring() {
@@ -461,8 +474,203 @@ export default {
     randomData() {  
      return Math.round(Math.random()*500);  
     },
-    async platformCount () {
-     let china = await axios.get('./json/china.json')
+    async platformCount(divid) {
+      // './json/china.json'
+      let that = this
+      axios.get("./json/" + chinaId + ".json", {}).then(response => {
+        const mapJson = response.data;
+        chinaJson = mapJson;
+        myChart = echarts.init(document.getElementById(divid));
+        this.registerAndsetOption(myChart, chinaId, chinaName, mapJson, false);
+        parentId = chinaId;
+        parentName = "china";
+        myChart.on("click", function(param) {
+          var cityId = cityMap[param.name];
+          if (cityId) {
+            //代表有下级地图
+            axios
+              .get("./json/" + cityId + ".json", {})
+              .then(response => {
+                const mapJson = response.data;
+                that.registerAndsetOption(
+                  myChart,
+                  cityId,
+                  param.name,
+                  mapJson,
+                  true
+                );
+              });
+          } else {
+            //没有下级地图，回到一级中国地图，并将mapStack清空
+            that.registerAndsetOption(myChart, chinaId, chinaName, chinaJson, false);
+            mapStack = [];
+            parentId = chinaId;
+            parentName = chinaName;
+          }
+        });
+      });
+    },
+    registerAndsetOption(myChart, id, name, mapJson, flag) {
+        echarts.registerMap(name, mapJson);
+        const optionsParams = {
+          title: {  
+            text: '◆ 平台数据分布 ◆',  
+            subtext: '',  
+            x:'center',
+            textStyle: {
+              fontSize: 14,
+              fontWeight: 'bolder',
+              color: '#FFDE29'
+            }
+        },
+          tooltip: {
+            trigger: 'item',
+            formatter: function(params) {
+                var res = params.name+'<br/>';
+                var myseries = optionsParams.series;
+                for (var i = 0; i < myseries.length; i++) {
+                    for(var j=0;j<myseries[i].data.length;j++){
+                        if(myseries[i].data[j].name==params.name){
+                            res+=myseries[i].name +' : '+myseries[i].data[j].value+'</br>';
+                        }
+                    }
+                }
+                return res;
+            }
+        },
+          legend: {
+              orient: 'horizontal',
+              x: 'center',
+              bottom: '10',
+              textStyle: {
+                color: "#FFDE29",
+                fontSize: 12
+              },
+              data:['正常','异常','离线']
+          },
+        
+          series : [
+              {
+                  name: '正常',
+                  type: 'map',
+                  mapType: 'china',
+                  roam: false,
+                  itemStyle: {
+                    normal: {
+                        label: {
+                          show: true,//默认是否显示省份名称 
+                          textStyle: {
+                            color: "#fff"
+                          },   
+                        },
+                        color:'#1fa022',
+                        areaColor: '#21262b',
+                        borderWidth:1,
+                        borderColor:'#aca62f',
+                    },
+                    emphasis: {
+                        show: true,
+                        areaColor: '#1fa022'
+                    }
+                  },
+                  data:this.initMapData(mapJson)
+              },
+              // {
+              //     name: '异常',
+              //     type: 'map',
+              //     mapType: 'china',
+              //     roam: false,
+              //     itemStyle: {
+              //       normal: {
+              //           label: {
+              //             show: true,//默认是否显示省份名称
+              //             textStyle: {
+              //               color: "#fff"
+              //             },  
+              //           },
+              //           color:'#e6212a',
+              //           areaColor: '#21262b',
+              //           textStyle: {
+              //             color: "#fff"
+              //           },
+              //           borderWidth:1,
+              //           borderColor:'#aca62f',
+              //       },
+              //       emphasis: {
+              //             show: true,
+              //             areaColor: '#e6212a',
+              //       }
+              //     },
+              //     data: this.initMapData(mapJson)
+              // },
+              // {
+              //     name: '离线',
+              //     type: 'map',
+              //     roam: false,
+              //     mapType: 'china',
+              //     itemStyle: {
+              //       normal: {
+              //           color: '#848484',
+              //           areaColor: '#21262b',
+              //           label: {
+              //             show: true,//默认是否显示省份名称
+              //             textStyle: {
+              //               color: "#fff"
+              //             },    
+              //           },
+              //           borderWidth:1,
+              //           borderColor:'#aca62f',
+              //       },
+              //       emphasis: {
+              //           show: true,
+              //           areaColor: '#848484'
+              //       }
+              //     },
+              //     data:this.initMapData(mapJson)
+              // }
+          ]
+      };
+      myChart.setOption(optionsParams)
+        myChart.setOption({
+          series: [
+            {
+              type: "map",
+              map: name,
+              itemStyle: {
+                normal: {
+                  areaColor: "rgba(23, 27, 57,0)",
+                  borderColor: "#1dc199",
+                  borderWidth: 1
+                }
+              },
+              data: this.initMapData(mapJson)
+            }
+          ]
+        });
+
+        if (flag) {
+          //往mapStack里添加parentId，parentName,返回上一级使用
+          mapStack.push({
+            mapId: parentId,
+            mapName: parentName
+          });
+          parentId = id;
+          parentName = name;
+        }
+      },
+    initMapData(mapJson) {
+      var mapData = [];
+      for (var i = 0; i < mapJson.features.length; i++) {
+        mapData.push({
+          name: mapJson.features[i].properties.name
+          //id:mapJson.features[i].id
+        });
+      }
+      return mapData;
+    },
+    async platformCount111() {
+     let china = await axios.get('./json/100000.json')
+    //  let china = await axios.get('./json/china.json')
       echarts.registerMap('china', china.data);
       const platformCountEcharts = echarts.init(document.getElementById('platformCount'));
       const optionsParams = {

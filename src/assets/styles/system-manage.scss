@@ -262,6 +262,19 @@
                     font-size: 8px;
                     padding: 10px;
                   }
+                  .pageing:hover{
+                      cursor: pointer;
+                  }
+                  .active_pages{
+                    color: #E0BC25;
+                    // background: rgba(243, 204, 23, 1)
+                  }
+                  .change_pages{
+                    float: right;
+                    color: #E0BC25;
+                    font-size: 8px;
+                    padding: 10px;
+                  }
                 }
             }
         }

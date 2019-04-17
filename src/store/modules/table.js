@@ -64,6 +64,20 @@ const table = {
         })
       })
     },
+    GetTreeList({ commit }, params) {
+      return new Promise(resolve => {
+        getList(params).then( res => {
+            // let listQuery = {
+            //     page: res.data.page,
+            //     pageSize: res.data.pageSize
+            // }
+            // commit('SET_TOTAL', res.data.total)
+            // commit('SET_LIST_QUERY', listQuery)
+            // commit('SET_ITEMS', res.data.datas)
+            resolve(res)
+        })
+      })
+    },
     StoreCurCompanyData({ commit }, params) {
       return new Promise(resolve => {
         commit('SET_COMPANY_DATA', params)

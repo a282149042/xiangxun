@@ -21,10 +21,10 @@ export default {
       let {0: node,1: children} = args
       let titleClass = node.selected ? 'node-title node-selected' : 'node-title'
       if (node.searched) titleClass += ' node-searched'
-      console.log('child-----', args)
+    //   console.log('child-----', args)
       return (<span>
             {children.expanded?<img style="vertical-align: middle;" src={icon}/>:<img style="vertical-align: middle;" src={iconfile}/>}
-            <span class={titleClass} domPropsInnerHTML={node.title} onClick={() => {
+            <span class={titleClass} domPropsInnerHTML={node.name} onClick={() => {
             this.$refs.tree1.nodeSelected(node)
             }} />
       </span>)
