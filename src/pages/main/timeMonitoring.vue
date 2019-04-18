@@ -489,7 +489,7 @@ export default {
         fetchUrl: '/sys/monitoring/platformInfo',
         listQuery: {
           type,
-          cityName: cityName || ''
+          name: cityName || ''
         }
       }
       let data = await this.$store.dispatch('GetList', params)
@@ -499,40 +499,42 @@ export default {
       // './json/china.json'
       let that = this
       let {data} = await this.getEveryCityData(1)
-      let allDatas = data
-      console.log('platefrom====', allDatas)
+      this.allDatas = data
       axios.get("./json/" + chinaId + ".json", {}).then(response => {
         const mapJson = response.data;
         chinaJson = mapJson;
         myChart = echarts.init(document.getElementById(divid));
-        this.registerAndsetOption(myChart, chinaId, chinaName, mapJson, false, allDatas);
+        this.registerAndsetOption(myChart, chinaId, chinaName, mapJson, false, this.allDatas);
         parentId = chinaId;
         parentName = "china";
         myChart.on("click", function(param) {
-          console.log('click=======>>', param)
-          var cityId = cityMap[param.name];
-          if (cityId) {
-            //代表有下级地图
-            axios
-              .get("./json/" + cityId + ".json", {})
-              .then(response => {
-                const mapJson = response.data;
-                that.registerAndsetOption(
-                  myChart,
-                  cityId,
-                  param.name,
-                  mapJson,
-                  true,
-                  allDatas
-                );
-              });
-          } else {
-            //没有下级地图，回到一级中国地图，并将mapStack清空
-            that.registerAndsetOption(myChart, chinaId, chinaName, chinaJson, false, allDatas);
-            mapStack = [];
-            parentId = chinaId;
-            parentName = chinaName;
-          }
+            var cityId = cityMap[param.name];
+            console.log('param.nameparam.nameparam.name', param.name)
+            if (cityId) {
+              //代表有下级地图
+              axios
+                .get("./json/" + cityId + ".json", {})
+                .then(response => {
+                  that.getEveryCityData(2, param.name).then(res => {
+                    let cityDatas = res.data
+                    const mapJson = response.data;
+                    that.registerAndsetOption(
+                      myChart,
+                      cityId,
+                      param.name,
+                      mapJson,
+                      true,
+                      cityDatas
+                    );
+                  })
+                });
+            } else {
+              //没有下级地图，回到一级中国地图，并将mapStack清空
+              that.registerAndsetOption(myChart, chinaId, chinaName, chinaJson, false, that.allDatas);
+              mapStack = [];
+              parentId = chinaId;
+              parentName = chinaName;
+            }
         });
       });
     },
@@ -684,10 +686,11 @@ export default {
         }
       },
     initMapData(mapJson, allDatas, type) {
-      var mapData = [];
+      console.log('allDatasallDatasallDatasallDatas', allDatas)
         for (var j = 0; j < allDatas.length; j++) {
+          var mapData = [];
           for (var i = 0; i < mapJson.features.length; i++) {
-              if (mapJson.features[i].properties.name === allDatas[j].name) {
+              if (mapJson.features[i].properties.name.indexOf(allDatas[j].name) !== -1) {
                 mapData.push({
                   name: mapJson.features[i].properties.name,
                   value: allDatas[j][type]
@@ -698,10 +701,10 @@ export default {
                   value: 0
                 });
               }
-              
           }
+          console.log('mapdata=========', mapData)
+          return  mapData
         }
-      return mapData;
     }
   }
 }
