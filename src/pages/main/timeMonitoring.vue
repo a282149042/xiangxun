@@ -36,16 +36,16 @@
     <div class="page_center">
       <div class="top_title_display">
         <div class="_left">
-          ◆ 总采集数据量&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;123  条
+          ◆ 总采集数据量&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{totalCountObj.totalCount}}  条
         </div>
         <div class="_center">
-          ◆ 系统终端数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;235  条
+          ◆ 系统终端数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{totalCountObj.sysCount}}  条
         </div>
         <div class="_right">
           ◆ 平均太阳能电压&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          13.5 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          {{totalCountObj.avgSolarVolt}} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           |&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          ◆ 平均电池电压&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;11.5
+          ◆ 平均电池电压&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{totalCountObj.avgBatteryVolt}}
         </div>
       </div>
       <div class="echart_content">
@@ -81,120 +81,26 @@
                 <th>终端状态</th>
                 <th style="padding: 0 30px">操作</th>
               </tr>
-              <tr>
-                <td>黄（慢）闪灯</td>
-                <td>正常</td>
-                <td>12</td>
-                <td>13</td>
-                <td>22</td>
-                <td>100</td>
-                <td>正常</td>
+              <tr v-for="item in monitoringList" :key="item.id">
+                <td>{{item.name}}</td>
+                <td>{{item.gsm}}</td>
+                <td>{{item.solarVolt}}</td>
+                <td>{{item.batteryVolt}}</td>
+                <td>{{item.temperature}}</td>
+                <td>{{item.temperature}}</td>
+                <td>{{statusMap[item.status]}}</td>
                 <td class="opration_table">
                   <div class="opration_btn">
-                    <div class="_record">
+                    <div class="_record" @click="goAlarmRecordList(item.alarmRecord)">
                       报警记录
                     </div>
-                    <div class="history_data">
+                    <div class="history_data" @click="goRecordList(item.record)">
                       历史数据
                     </div>
                   </div>
                 </td>
               </tr>
-              <tr>
-                <td>太阳能点阵式标志</td>
-                <td>正常</td>
-                <td>12</td>
-                <td>13</td>
-                <td>22</td>
-                <td>100</td>
-                <td>正常</td>
-                <td class="opration_table">
-                  <div class="opration_btn">
-                    <div class="_record">
-                      报警记录
-                    </div>
-                    <div class="history_data">
-                      历史数据
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>面阵式半透型主动发光标志</td>
-                <td>正常</td>
-                <td>12</td>
-                <td>13</td>
-                <td>22</td>
-                <td>100</td>
-                <td>正常</td>
-                <td class="opration_table">
-                  <div class="opration_btn">
-                    <div class="_record">
-                      报警记录
-                    </div>
-                    <div class="history_data">
-                      历史数据
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>面阵式全透型主动发光标志</td>
-                <td>正常</td>
-                <td>12</td>
-                <td>13</td>
-                <td>22</td>
-                <td>100</td>
-                <td>正常</td>
-                <td class="opration_table">
-                  <div class="opration_btn">
-                    <div class="_record">
-                      报警记录
-                    </div>
-                    <div class="history_data">
-                      历史数据
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>爆闪灯</td>
-                <td>正常</td>
-                <td>12</td>
-                <td>13</td>
-                <td>22</td>
-                <td>100</td>
-                <td>正常</td>
-                <td class="opration_table">
-                  <div class="opration_btn">
-                    <div class="_record">
-                      报警记录
-                    </div>
-                    <div class="history_data">
-                      历史数据
-                    </div>
-                  </div>
-                </td>
-              </tr>
-              <tr>
-                <td>爆闪灯</td>
-                <td>正常</td>
-                <td>12</td>
-                <td>13</td>
-                <td>22</td>
-                <td>100</td>
-                <td>正常</td>
-                <td class="opration_table">
-                  <div class="opration_btn">
-                    <div class="_record">
-                      报警记录
-                    </div>
-                    <div class="history_data">
-                      历史数据
-                    </div>
-                  </div>
-                </td>
-              </tr>
+            
             </table>
           </div>
         </div>
@@ -205,34 +111,51 @@
           </div>
           <div class="alarm_info">
             <!-- 中间告警信息 -->
-            <div class="circle">
+            <div class="circle" @click="changeAlarmList(2)">
               <div class="big" style="left: 30px;border: 5px solid #E60012;border-bottom: none;color: #E60012">告警信息</div>
-              <div class="small" style="left: 25px">5条</div>
+              <div class="small" style="left: 25px">{{alarmInfoList.length}}条</div>
             </div>
-            <div class="circle">
+            <div class="circle" @click="changeAlarmList(3)">
               <div class="big" style="right: 30px;border: 5px solid #AC2FB1;border-bottom: none;color: #AC2FB1">失联信息</div>
-              <div class="small" style="right: 25px">10条</div>
+              <div class="small" style="right: 25px">{{alarmInfoList.length}}条</div>
             </div>
           </div>
           <div class="alarm_list">
             <!-- 告警列表 -->
-            <div class="alarm_item" v-for="(item, index) in alarmList" :key="index"> 
+            <div class="alarm_item" v-for="(item, index) in alarmInfoList" :key="index"> 
               <div class="alarm_address_time">
                 <div class="_address">
                   告警地点
                 </div>
                 <div class="_time">
-                  {{item.time}}
+                  {{moment.unix(item.craeteTime).format("YYYY-MM-DD")}}
                 </div>
               </div>
               <div class="address_detail">
-                  {{item.address}}
+                  {{item.location || "暂无地址或地址不详"}}
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+    <el-dialog :title="`${statusType}详细记录`" :visible.sync="checkDetailVisible">
+      <el-form :model="detailInfo" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+        <el-form-item :label="`${statusType}类型`">
+          <span>{{ statusTypeMap[detailInfo.type]}}</span>
+      </el-form-item>
+      <el-form-item label="详情">
+          <span>{{ detailInfo.edescs}}</span>
+      </el-form-item>
+      <el-form-item label="地理位置">
+          <span>{{detailInfo.longitude}}</span>
+          <span>{{detailInfo.latitude}}</span>
+      </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="checkDetailSubmit">关闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -320,17 +243,99 @@ export default {
           address: '湖南省长沙市岳麓区梅溪湖街道步步高新天地120号',
           time: moment().format('YYYY.MM.DD')
         }
-      ]
+      ],
+      moment,
+      statusMap: {
+        1: '正常',
+        2: "异常",
+        3: "离线"
+      },
+      statusTypeMap: {
+        1: '正常',
+        2: "告警",
+        3: "失联"
+      },
+      checkDetailVisible: false,
+      statusType: "报警",
+      detailInfo: {
+         "type": 1,
+          "edescs": "",
+          "location": "{'longitude':123.123123,'latitude':234.123123}",
+          "craeteTime": moment().format("YYYY-MM-DD hh:mm:ss")
+      },
+      totalCountObj: {},
+      kindsCountList: [],
+      monitoringList: [],
+      listMoniQuery: {
+          "page": 1,
+          "pageSize": 10
+        },
+      listAlarmInfoQuery: {
+        "page": 1,
+        "pageSize": 1000,
+        "type": 2 //类型（1-正常，2告警，3-失联）
+      },
+      alarmInfoList: [],
+
     }
   },
   created() {
   },
   mounted() {
+    this.getMonitoringTotalCount()
     this.statisticsClassification()
+    this.getMonitoringList()
     this.statisticsStatus()
+    this.getAlarmInfoList()
     this.platformCount('platformCount')
   },
   methods:{
+    goAlarmRecordList(item) {
+      this.statusType = "报警"
+      this.detailInfo = item[0] || this.detailInfo
+      this.checkDetailVisible = true
+    },
+    goRecordList(item) {
+      this.statusType = "历史数据"
+      this.detailInfo = item[0] || this.detailInfo
+      this.checkDetailVisible = true
+    },
+    checkDetailSubmit() {
+      this.checkDetailVisible = false
+    },
+    getMonitoringList() {
+      let params = {
+        fetchUrl: '/sys/monitoring/monitoringList',
+        listQuery: this.listMoniQuery
+      }
+      this.$store.dispatch('GetList', params).then(res => {
+        this.monitoringList = res.data.datas
+      })
+    },
+    changeAlarmList(type) {
+      this.listAlarmInfoQuery.type = type
+      this.getAlarmInfoList()
+    },
+    getAlarmInfoList() {
+      let params = {
+        fetchUrl: '/sys/monitoring/alarmInfo',
+        listQuery: this.listAlarmInfoQuery
+      }
+      this.$store.dispatch('GetList', params).then(res => {
+        this.alarmInfoList = res.data
+      })
+    },
+    // /sys/monitoring/alarmInfo
+    // /sys/monitoring/monitoringList
+    getMonitoringTotalCount() {
+      let params = {
+        fetchUrl: '/sys/monitoring/totalCount',
+        listQuery: {}
+      }
+      this.$store.dispatch('GetList', params).then(res => {
+        this.totalCountObj = res.data
+      })
+    },
     openMonitoring() {
       this.$router.push('main')
     },
@@ -346,7 +351,16 @@ export default {
     openDeviceManage() {
       this.$router.push('deviceManage')
     },
-    statisticsClassification() {
+   async statisticsClassification() {
+      let params = {
+        fetchUrl: '/sys/monitoring/kindsCount',
+        listQuery: {}
+      }
+      const {data} = await this.$store.dispatch('GetList', params)
+      let dataKeyList = data.map(item => item.productName)
+      let dataValueList = data.map(item => item.num)
+      let formatDataList = []
+      dataKeyList.forEach((key, index) => formatDataList.push({name: key, value: dataValueList[index]}));
       const countRangeEcharts = echarts.init(document.getElementById('countRange'));
       const options = {
           title : {
@@ -370,13 +384,7 @@ export default {
                 color: "#FFDE29",
                 fontSize: 12
               },
-              data:[
-                '爆闪灯',
-                '黄慢（闪）灯',
-                '点阵式主动发光标志',
-                '面阵式全透发光标志',
-                '面阵式半透发光标志'
-              ]
+              data: dataKeyList
           },
           calculable : true,
           series : [
@@ -402,19 +410,18 @@ export default {
                           show: true
                       }
                   },
-                  data:[
-                      {value:10, name:'爆闪灯'},
-                      {value:5, name:'黄慢（闪）灯'},
-                      {value:15, name:'点阵式主动发光标志'},
-                      {value:25, name:'面阵式全透发光标志'},
-                      {value:20, name:'面阵式半透发光标志'}
-                  ]
+                  data:formatDataList
               }
           ]
       }
       countRangeEcharts.setOption(options)
     },
-    statisticsStatus(){
+    async statisticsStatus(){
+      let params = {
+        fetchUrl: '/sys/monitoring/proportionInfo',
+        listQuery: {}
+      }
+      const {data} = await this.$store.dispatch('GetList', params)
       const countStatusEcharts = echarts.init(document.getElementById('countStatus'));
       const options = {
           color: ['#7C6FB0', '#F08519', '#62C3D0'],
@@ -462,9 +469,9 @@ export default {
                       }
                   },
                   data:[
-                      {value:335, name:'正常'},
-                      {value:310, name:'异常'},
-                      {value:234, name:'离线'}
+                      {value:data.type1, name:'正常'},
+                      {value:data.type2, name:'异常'},
+                      {value:data.type3, name:'离线'}
                   ]
               }
           ]
@@ -474,17 +481,35 @@ export default {
     randomData() {  
      return Math.round(Math.random()*500);  
     },
+    async getEveryCityData(type,cityName) {
+      //type 1-所有省份数据，2-省数据,3-市数据
+      let that = this
+      // /sys/monitoring/platformInfo
+      let params = {
+        fetchUrl: '/sys/monitoring/platformInfo',
+        listQuery: {
+          type,
+          cityName: cityName || ''
+        }
+      }
+      let data = await this.$store.dispatch('GetList', params)
+      return data
+    },
     async platformCount(divid) {
       // './json/china.json'
       let that = this
+      let {data} = await this.getEveryCityData(1)
+      let allDatas = data
+      console.log('platefrom====', allDatas)
       axios.get("./json/" + chinaId + ".json", {}).then(response => {
         const mapJson = response.data;
         chinaJson = mapJson;
         myChart = echarts.init(document.getElementById(divid));
-        this.registerAndsetOption(myChart, chinaId, chinaName, mapJson, false);
+        this.registerAndsetOption(myChart, chinaId, chinaName, mapJson, false, allDatas);
         parentId = chinaId;
         parentName = "china";
         myChart.on("click", function(param) {
+          console.log('click=======>>', param)
           var cityId = cityMap[param.name];
           if (cityId) {
             //代表有下级地图
@@ -497,12 +522,13 @@ export default {
                   cityId,
                   param.name,
                   mapJson,
-                  true
+                  true,
+                  allDatas
                 );
               });
           } else {
             //没有下级地图，回到一级中国地图，并将mapStack清空
-            that.registerAndsetOption(myChart, chinaId, chinaName, chinaJson, false);
+            that.registerAndsetOption(myChart, chinaId, chinaName, chinaJson, false, allDatas);
             mapStack = [];
             parentId = chinaId;
             parentName = chinaName;
@@ -510,7 +536,7 @@ export default {
         });
       });
     },
-    registerAndsetOption(myChart, id, name, mapJson, flag) {
+    registerAndsetOption(myChart, id, name, mapJson, flag, allDatas) {
         echarts.registerMap(name, mapJson);
         const optionsParams = {
           title: {  
@@ -573,175 +599,7 @@ export default {
                         areaColor: '#1fa022'
                     }
                   },
-                  data:this.initMapData(mapJson)
-              },
-              // {
-              //     name: '异常',
-              //     type: 'map',
-              //     mapType: 'china',
-              //     roam: false,
-              //     itemStyle: {
-              //       normal: {
-              //           label: {
-              //             show: true,//默认是否显示省份名称
-              //             textStyle: {
-              //               color: "#fff"
-              //             },  
-              //           },
-              //           color:'#e6212a',
-              //           areaColor: '#21262b',
-              //           textStyle: {
-              //             color: "#fff"
-              //           },
-              //           borderWidth:1,
-              //           borderColor:'#aca62f',
-              //       },
-              //       emphasis: {
-              //             show: true,
-              //             areaColor: '#e6212a',
-              //       }
-              //     },
-              //     data: this.initMapData(mapJson)
-              // },
-              // {
-              //     name: '离线',
-              //     type: 'map',
-              //     roam: false,
-              //     mapType: 'china',
-              //     itemStyle: {
-              //       normal: {
-              //           color: '#848484',
-              //           areaColor: '#21262b',
-              //           label: {
-              //             show: true,//默认是否显示省份名称
-              //             textStyle: {
-              //               color: "#fff"
-              //             },    
-              //           },
-              //           borderWidth:1,
-              //           borderColor:'#aca62f',
-              //       },
-              //       emphasis: {
-              //           show: true,
-              //           areaColor: '#848484'
-              //       }
-              //     },
-              //     data:this.initMapData(mapJson)
-              // }
-          ]
-      };
-      myChart.setOption(optionsParams)
-        myChart.setOption({
-          series: [
-            {
-              type: "map",
-              map: name,
-              itemStyle: {
-                normal: {
-                  areaColor: "rgba(23, 27, 57,0)",
-                  borderColor: "#1dc199",
-                  borderWidth: 1
-                }
-              },
-              data: this.initMapData(mapJson)
-            }
-          ]
-        });
-
-        if (flag) {
-          //往mapStack里添加parentId，parentName,返回上一级使用
-          mapStack.push({
-            mapId: parentId,
-            mapName: parentName
-          });
-          parentId = id;
-          parentName = name;
-        }
-      },
-    initMapData(mapJson) {
-      var mapData = [];
-      for (var i = 0; i < mapJson.features.length; i++) {
-        mapData.push({
-          name: mapJson.features[i].properties.name
-          //id:mapJson.features[i].id
-        });
-      }
-      return mapData;
-    },
-    async platformCount111() {
-     let china = await axios.get('./json/100000.json')
-    //  let china = await axios.get('./json/china.json')
-      echarts.registerMap('china', china.data);
-      const platformCountEcharts = echarts.init(document.getElementById('platformCount'));
-      const optionsParams = {
-          title: {  
-            text: '◆ 平台数据分布 ◆',  
-            subtext: '',  
-            x:'center',
-            textStyle: {
-              fontSize: 14,
-              fontWeight: 'bolder',
-              color: '#FFDE29'
-            }
-        },  
-          tooltip: {
-            trigger: 'item',
-            formatter: function(params) {
-                var res = params.name+'<br/>';
-                var myseries = optionsParams.series;
-                for (var i = 0; i < myseries.length; i++) {
-                    for(var j=0;j<myseries[i].data.length;j++){
-                        if(myseries[i].data[j].name==params.name){
-                            res+=myseries[i].name +' : '+myseries[i].data[j].value+'</br>';
-                        }
-                    }
-                }
-                return res;
-            }
-        },
-          legend: {
-              orient: 'horizontal',
-              x: 'center',
-              bottom: '10',
-              textStyle: {
-                color: "#FFDE29",
-                fontSize: 12
-              },
-              data:['正常','异常','离线']
-          },
-        
-          series : [
-              {
-                  name: '正常',
-                  type: 'map',
-                  mapType: 'china',
-                  roam: false,
-                  itemStyle: {
-                    normal: {
-                        label: {
-                          show: true,//默认是否显示省份名称 
-                          textStyle: {
-                            color: "#fff"
-                          },   
-                        },
-                        color:'#1fa022',
-                        areaColor: '#21262b',
-                        borderWidth:1,
-                        borderColor:'#aca62f',
-                    },
-                    emphasis: {
-                        show: true,
-                        areaColor: '#1fa022'
-                    }
-                  },
-                  data:[
-                      {name: '天津',value: 2},
-                      {name: '安徽',value: 3},
-                      {name: '山东',value: 3},
-                      {name: '新疆',value: 3},
-                      {name: '陕西',value: 3},
-                      {name: '北京',value: 3}
-                  ]
+                  data:this.initMapData(mapJson, allDatas, 'type1')
               },
               {
                   name: '异常',
@@ -769,12 +627,7 @@ export default {
                           areaColor: '#e6212a',
                     }
                   },
-                  data:[
-                      {name: '河北',value: 3},
-                      {name: '安徽',value: 3},
-                      {name: '吉林',value: 3},
-                      {name: '福建',value: 3}
-                  ]
+                  data:this.initMapData(mapJson, allDatas, 'type2')
               },
               {
                   name: '离线',
@@ -799,15 +652,56 @@ export default {
                         areaColor: '#848484'
                     }
                   },
-                  data:[
-                      {name: '北京',value: 3},
-                      {name: '香港',value: 3}
-                  ]
+                  data:this.initMapData(mapJson, allDatas, 'type3')
               }
           ]
       };
-      //使用制定的配置项和数据显示图表
-      platformCountEcharts.setOption(optionsParams);
+      myChart.setOption(optionsParams)
+        myChart.setOption({
+          series: [
+            {
+              type: "map",
+              map: name,
+              itemStyle: {
+                normal: {
+                  areaColor: "rgba(23, 27, 57,0)",
+                  borderColor: "#1dc199",
+                  borderWidth: 1
+                }
+              }
+            }
+          ]
+        });
+
+        if (flag) {
+          //往mapStack里添加parentId，parentName,返回上一级使用
+          mapStack.push({
+            mapId: parentId,
+            mapName: parentName
+          });
+          parentId = id;
+          parentName = name;
+        }
+      },
+    initMapData(mapJson, allDatas, type) {
+      var mapData = [];
+        for (var j = 0; j < allDatas.length; j++) {
+          for (var i = 0; i < mapJson.features.length; i++) {
+              if (mapJson.features[i].properties.name === allDatas[j].name) {
+                mapData.push({
+                  name: mapJson.features[i].properties.name,
+                  value: allDatas[j][type]
+                });
+              } else {
+                mapData.push({
+                  name: mapJson.features[i].properties.name,
+                  value: 0
+                });
+              }
+              
+          }
+        }
+      return mapData;
     }
   }
 }

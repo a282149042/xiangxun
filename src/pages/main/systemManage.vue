@@ -255,7 +255,7 @@ import groupTree from '@/components/groupTree.vue'
 export default {
   name: 'monitoring',
   components: {
-    Multiselect,groupTree
+    groupTree
   },
   data() {
     return {
@@ -453,9 +453,6 @@ export default {
       if (type === 1) {
         this.$refs['organizeDataForm'].validate((valid) => {
           if (valid) {
-            // this.organizeDataForm.status = this.switchValue ? 1 : 2
-            // this.organizeDataForm.userType = this.userType
-            // this.organizeDataForm.pwd = md5(this.organizeDataForm.pwd)
             let params = {
               fetchUrl: '/sys/organize/edit',
               data: this.organizeDataForm

@@ -300,12 +300,13 @@
 </template>
 <script>
 import moment from 'moment'
+import { Message, MessageBox } from 'element-ui'
 import groupTree from '@/components/groupTree.vue'
 import creatModal from '@/components/modal.vue'
 export default {
   name: 'monitoring',
   components: {
-    groupTree,creatModal
+    groupTree
   },
   data() {
     return {
@@ -327,12 +328,12 @@ export default {
       listTermQuery: {
         page: 1,
         pageSize: 10,
-        "organizeId": 1002
+        "organizeId": 1001
       },
       listLightQuery: {
         page: 1,
         pageSize: 10,
-        "organizeId": 1002
+        "organizeId": 1001
       },
       activeTermIndex: 1,
       activeLightIndex: 1,
@@ -377,7 +378,7 @@ export default {
           "installTime": 465646,
           "solarVolt": 12.3,
           "batteryVolt": 12.6,
-          "location": "{'longitude':123.123123,'latitude':234.123123}",
+          "location": {longitude:123.123123,latitude:234.123123},
           "province": "湖南省",
           "city": "长沙市",
           "gsm": "1",
