@@ -201,7 +201,7 @@
           border: 1px solid #083775;
           margin-right: 5%;
           height: 250px;
-          overflow-y: scroll;
+          overflow-y: auto;
           .table_title{
             width: 98%;
             margin: 0 1%;
@@ -314,7 +314,7 @@
           text-align: left;
           margin-top: 140px;
           height: 840px;
-          overflow-y: scroll;
+          overflow-y: auto;
           .alarm_item{
             width: 90%;
             margin:10px 5%;
