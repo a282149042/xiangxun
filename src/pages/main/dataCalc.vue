@@ -417,13 +417,13 @@ export default {
           x:'center',
           textStyle: {
             fontSize: 12,
-            color: '#FFDE29',
+            color: '#7dd7f9',
             rich: {
               align: 'center'
             }
           }
         },
-          color: ['#FFDE29'],
+          color: ['#083775'],
           tooltip : {
               trigger: 'axis',
               axisPointer : {            // 坐标轴指示器，坐标轴触发有效
@@ -481,7 +481,7 @@ export default {
           x:'center',
           textStyle: {
             fontSize: 12,
-            color: '#FFDE29',
+            color: '#7dd7f9',
             rich: {
               align: 'center'
             }
