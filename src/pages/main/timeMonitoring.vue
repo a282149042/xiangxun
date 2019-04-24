@@ -369,7 +369,7 @@ export default {
               textStyle: {
               fontSize: 14,
               fontWeight: 'bolder',
-              color: '#FFDE29'
+              color: '#7dd7f9'
             },
 
           },
@@ -381,7 +381,7 @@ export default {
               x : 'center',
               y : 'bottom',
               textStyle: {
-                color: "#FFDE29",
+                color: "#ccc",
                 fontSize: 12
               },
               data: dataKeyList
@@ -431,7 +431,7 @@ export default {
             textStyle: {
               fontSize: 14,
               fontWeight: 'bolder',
-              color: '#FFDE29'
+              color: '#7dd7f9'
             }
           },
           legend: {
@@ -439,7 +439,7 @@ export default {
               x: 'center',
               bottom: '10',
               textStyle: {
-                color: "#FFDE29",
+                color: "#ccc",
                 fontSize: 12
               },
               data:['正常','异常','离线']
@@ -548,7 +548,7 @@ export default {
             textStyle: {
               fontSize: 14,
               fontWeight: 'bolder',
-              color: '#FFDE29'
+              color: '#7dd7f9'
             }
         },
           tooltip: {

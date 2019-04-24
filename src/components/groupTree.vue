@@ -36,10 +36,10 @@ export default {
 .tree3{
   /* float: left; */
   /* width: 30%; */
-  margin-top: 20px;
+  margin-top: 0px;
   padding: 24px;
   box-sizing: border-box;
-  border: 1px solid #A59226;
+  border: 1px solid #083775;
   overflow: auto;
   height: 450px;
 }

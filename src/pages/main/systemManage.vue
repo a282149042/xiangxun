@@ -79,7 +79,7 @@
         </div>
         <div class="right_table">
           <table class="table_list">
-              <tr style="background: #A59226;">
+              <tr>
                 <th>上级机构</th>
                 <th>机构编码/机构名称</th>
                 <th>联系人</th>
@@ -606,6 +606,7 @@ export default {
 <style lang="scss" scoped>
   @import '@/assets/styles/system-manage.scss';
 </style>
+
 
 
 
