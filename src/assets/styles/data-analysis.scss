@@ -228,16 +228,18 @@
           line-height: 40px;
           display: flex;
           justify-content: space-around;
+          color: #fff;
           .no_border{
             border: none !important;
           }
           .nomal_number{
             width: 33%;
             border-right: 1px solid #083775;
+            text-align: center;
             ._title{
               font-size: 0.5625rem;
-            border-right: 1px solid #083775;
-            text-align: center;
+            }
+            
             ._title_1{
               color: green;
             }
@@ -253,8 +255,8 @@
               color: #fff;
               font-size: 0.5625rem;
             }
-          }
-        }
+      }
+      }
         .charts_nomal{
           width: 90%;
           margin: 0 5%;
@@ -262,7 +264,6 @@
           border-top: none;
           height: 220px;
         }
-      }
     }
       .right_charts{
         width: 65.3%;
