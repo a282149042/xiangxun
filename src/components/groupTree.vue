@@ -116,7 +116,7 @@ export default {
 }
 
 .halo-tree {
-    font-size: 16px;
+    font-size: 1rem;
     -webkit-transition: height .3s ease-in-out, padding-top .3s ease-in-out, padding-bottom .3s ease-in-out;
     transition: height .3s ease-in-out, padding-top .3s ease-in-out, padding-bottom .3s ease-in-out
 }
@@ -140,7 +140,7 @@ export default {
     border-radius: 2px;
     top: 4px;
     text-align: center;
-    font-size: 14px;
+    font-size: 0.875rem;
     line-height: 14px
 }
 
@@ -181,7 +181,7 @@ export default {
 .halo-tree .check {
     display: block;
     position: absolute;
-    font-size: 14px;
+    font-size: 0.875rem;
     width: 16px;
     height: 16px;
     left: -5px;
@@ -675,7 +675,7 @@ circle[data-v-e7743bdc]:nth-child(12n+12) {
     height: 30px;
     box-sizing: border-box;
     margin: 5px auto 0;
-    font-size: 14px;
+    font-size: 0.875rem;
     text-indent: 1em;
     outline: none
 }
@@ -725,7 +725,7 @@ circle[data-v-e7743bdc]:nth-child(12n+12) {
     width: 15px;
     height: 15px;
     line-height: 15px;
-    font-size: 12px;
+    font-size: 0.75rem;
     background-color: #b3b3b3;
     color: #ececec;
     border-radius: 50%;

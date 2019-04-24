@@ -22,7 +22,7 @@
           background: #E0BC25;
         }
         .monitoring_btn{
-          font-size: 14px;
+          font-size: 0.875rem;
           text-align: center;
           line-height: 30px;
           margin-right: 10%;
@@ -57,7 +57,7 @@
     .header_center{
       width: 33%;
       height: 50px;
-      font-size:20px;
+      font-size:1.25rem;
       font-family:NotoSansHans-Light;
       font-weight:300;
       color:#7dd7f9;
@@ -79,7 +79,7 @@
         margin-right: 30px;
         width: 100%;
         .monitoring_btn{
-          font-size: 14px;
+          font-size: 0.875rem;
           text-align: center;
           line-height: 30px;
           margin-right: 10%;
@@ -113,7 +113,7 @@
     }
     .monitoring_date{
       position: absolute;
-      font-size:13px;
+      font-size:0.8125rem;
       right: 6%;
       top: 10px;
       font-family:NotoSansHans-Regular;
@@ -135,11 +135,11 @@
     tr>td{
       width: 25%;
       color: #FFDE29;
-      font-size: 9px;
+      font-size: 0.5625rem;
     }
     th{
       color: #FFDE29;
-      font-size: 9px;
+      font-size: 0.5625rem;
     }
    .top_title_display{
       display: flex;
@@ -198,8 +198,8 @@
         padding-top: 10px;
         ._title{
           text-align: center;
+          font-size: 0.5625rem;
           color: #7dd7f9;
-          font-size: 9px;
           padding-bottom:10px;
         }
         .count_table{
@@ -211,12 +211,12 @@
           display: flex;
           justify-content: space-around;
           .temina_title{
+            font-size: 0.5625rem;
             color: #1764ca;
-            font-size: 9px;
           }
           .number_{
             color: #fff;
-            font-size: 9px;
+            font-size: 0.5625rem;
           }
         }
         .three_list{
@@ -234,7 +234,9 @@
           .nomal_number{
             width: 33%;
             border-right: 1px solid #083775;
-            font-size: 9px;
+            ._title{
+              font-size: 0.5625rem;
+            border-right: 1px solid #083775;
             text-align: center;
             ._title_1{
               color: green;
@@ -249,6 +251,7 @@
             ._numbers{
               text-align: center;
               color: #fff;
+              font-size: 0.5625rem;
             }
           }
         }
@@ -260,12 +263,13 @@
           height: 220px;
         }
       }
+    }
       .right_charts{
         width: 65.3%;
         border: 1px solid #083775;
         height: 410px;
       }
-    }
+  }
     .bottom_two_charts{
       margin-top: 20px;
       width: 100%;
@@ -279,7 +283,7 @@
         padding-top: 10px;
         ._title{
           text-align: center;
-          font-size: 12px;
+          font-size: 0.75rem;
           color: #7dd7f9;
         }
         .chars_table{
@@ -303,8 +307,8 @@
               line-height: 30px;
               border: 1px solid #083775;
               text-align: center;
+              font-size: 0.75rem;
               background: #083775;
-              font-size: 12px;
               color: #fff;
             }
             ._logs_list{
@@ -315,13 +319,13 @@
                 border: 1px solid #083775;
                 border-bottom: none;
                 ._detail{
-                  font-size:8px;
+                  font-size:0.5rem;
                   font-family:MicrosoftYaHei;
                   font-weight:400;
                   color:rgba(191,193,198,1);
                 }
                 ._date_time{
-                  font-size:8px;
+                  font-size:0.5rem;
                   font-family:MicrosoftYaHei;
                   font-weight:400;
                   color:rgba(191,193,198,1);
@@ -335,14 +339,14 @@
                 border-top:none;
                 ._reason{
                   text-align: left;
-                  font-size:8px;
+                  font-size:0.5rem;
                   font-family:MicrosoftYaHei;
                   font-weight:400;
                   color:rgba(191,193,198,1);
                 }
                 ._isFixed{
                   color: #E6671A;
-                  font-size: 8px;
+                  font-size: 0.5rem;
                 }
               }
             }

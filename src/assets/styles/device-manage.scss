@@ -23,7 +23,7 @@
                     background: #E0BC25;
                 }
                 .monitoring_btn {
-                    font-size: 14px;
+                    font-size: 0.875rem;
                     text-align: center;
                     line-height: 30px;
                     margin-right: 10%;
@@ -58,7 +58,7 @@
         .header_center {
             width: 33%;
             height: 50px;
-            font-size: 20px;
+            font-size: 1.25rem;
             font-family: NotoSansHans-Light;
             font-weight: 300;
             color: #7dd7f9;
@@ -84,7 +84,7 @@
                     background: #E0BC25;
                 }
                 .monitoring_btn {
-                    font-size: 14px;
+                    font-size: 0.875rem;
                     text-align: center;
                     line-height: 30px;
                     margin-right: 10%;
@@ -119,7 +119,7 @@
         }
         .monitoring_date {
             position: absolute;
-            font-size: 13px;
+            font-size: 0.8125rem;
             right: 6%;
             top: 10px;
             font-family: NotoSansHans-Regular;
@@ -145,19 +145,19 @@
         }
         tr>td {
             // width: 25%;
+            font-size: 0.5625rem;
             color: #ccc;
-            font-size: 9px;
         }
         th {
             color: #fff;
-            font-size: 9px;
+            font-size: 0.5625rem;
         }
         .top_title_display {
             display: flex;
             justify-content: space-between;
             .orgnazition_title {
+                font-size: 0.5625rem;
                 color: #7dd7f9;
-                font-size: 9px;
                 height: 15px;
                 line-height: 15px;
             }
@@ -179,8 +179,10 @@
           display: flex;
           justify-content: space-between;
           .orgnazition_title {
+              font-size: 0.5625rem;
+              height: 40px;
+              line-height: 40px;
               color: #7dd7f9;
-              font-size: 9px;
               width: 80%;
           }
           .add_btn,.del_btn {
@@ -215,8 +217,10 @@
                       justify-content: space-between;
                       ._add_light, ._del_light{
                             text-align: center;
+                            font-size: 0.5625rem;
+                            width: 100px;
+                            color: #010101;
                             line-height: 20px;
-                            font-size: 9px;
                             height: 20px;
                             padding: 2px 15px;
                             color: #fff;
@@ -274,7 +278,7 @@
                                 width: 60px;
                                 height: 12px;
                                 background: #E62129;
-                                font-size: 8px;
+                                font-size: 0.5rem;
                                 padding: 4px;
                                 border-radius: 2px;
                                 line-height: 12px;
@@ -286,7 +290,7 @@
                                 line-height: 12px;
                                 padding: 4px;
                                 background: #56AAB7;
-                                font-size: 8px;
+                                font-size: 0.5rem;
                             }
                         }
                     }
@@ -301,7 +305,7 @@
                   border-top: none;
                   .pageing{
                     color: #fff;
-                    font-size: 8px;
+                    font-size: 0.5rem;
                     padding: 10px;
                   }
                 }
