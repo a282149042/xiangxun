@@ -22,7 +22,7 @@
           background: #E0BC25;
         }
         .monitoring_btn{
-          font-size: 14px;
+          font-size: 0.875rem;
           text-align: center;
           line-height: 30px;
           margin-right: 10%;
@@ -57,7 +57,7 @@
     .header_center{
       width: 33%;
       height: 50px;
-      font-size:20px;
+      font-size:1.25rem;
       font-family:NotoSansHans-Light;
       font-weight:300;
       color:rgba(20,41,117,1);
@@ -79,7 +79,7 @@
         margin-right: 30px;
         width: 100%;
         .monitoring_btn{
-          font-size: 14px;
+          font-size: 0.875rem;
           text-align: center;
           line-height: 30px;
           margin-right: 10%;
@@ -113,7 +113,7 @@
     }
     .monitoring_date{
       position: absolute;
-      font-size:13px;
+      font-size:0.8125rem;
       right: 6%;
       top: 10px;
       font-family:NotoSansHans-Regular;
@@ -135,11 +135,11 @@
     tr>td{
       width: 25%;
       color: #FFDE29;
-      font-size: 9px;
+      font-size: 0.5625rem;
     }
     th{
       color: #FFDE29;
-      font-size: 9px;
+      font-size: 0.5625rem;
     }
    .top_title_display{
       display: flex;
@@ -200,7 +200,7 @@
         ._title{
           text-align: center;
           color: #FFDE29;
-          font-size: 9px;
+          font-size: 0.5625rem;
         }
         .count_table{
           width: 90%;
@@ -212,11 +212,11 @@
           justify-content: space-around;
           .temina_title{
             color: #FFDE29;
-            font-size: 9px;
+            font-size: 0.5625rem;
           }
           .number_{
             color: #fff;
-            font-size: 9px;
+            font-size: 0.5625rem;
           }
         }
         .three_list{
@@ -236,12 +236,12 @@
             border-right: 1px solid #E0BC25;
             ._title{
               color: #FFDE29;
-              font-size: 9px;
+              font-size: 0.5625rem;
             }
             ._numbers{
               text-align: center;
               color: #fff;
-              font-size: 9px;
+              font-size: 0.5625rem;
             }
           }
         }
@@ -272,7 +272,7 @@
         padding-top: 10px;
         ._title{
           text-align: center;
-          font-size: 12px;
+          font-size: 0.75rem;
           color: #E0BC25;
         }
         .chars_table{
@@ -297,7 +297,7 @@
               border: 1px solid #A59226;
               text-align: center;
               background: #E0BC25;
-              font-size: 12px;
+              font-size: 0.75rem;
               color: #000000;
             }
             ._logs_list{
@@ -308,13 +308,13 @@
                 border: 1px solid #A59226;
                 border-bottom: none;
                 ._detail{
-                  font-size:8px;
+                  font-size:0.5rem;
                   font-family:MicrosoftYaHei;
                   font-weight:400;
                   color:rgba(191,193,198,1);
                 }
                 ._date_time{
-                  font-size:8px;
+                  font-size:0.5rem;
                   font-family:MicrosoftYaHei;
                   font-weight:400;
                   color:rgba(191,193,198,1);
@@ -328,14 +328,14 @@
                 border-top:none;
                 ._reason{
                   text-align: left;
-                  font-size:8px;
+                  font-size:0.5rem;
                   font-family:MicrosoftYaHei;
                   font-weight:400;
                   color:rgba(191,193,198,1);
                 }
                 ._isFixed{
                   color: #E6671A;
-                  font-size: 8px;
+                  font-size: 0.5rem;
                 }
               }
             }

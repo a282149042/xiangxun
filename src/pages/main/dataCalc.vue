@@ -255,7 +255,7 @@ export default {
       selectedArea: "长沙市",
       areaList: ['长沙市', '浏阳市', '株洲市', '宁乡市'],
       selectedTerminal: '爆闪灯',
-      terminalList: ['爆闪灯','黄慢（闪）灯', '点阵式主动发光标志','面阵式全透发光标志' ,'面阵式半透发光标志'],
+      terminalList: [],
       monthList: [1,2,3,4,5,6,7,8,9,10,11,12],
     }
   },
@@ -268,6 +268,10 @@ export default {
       this.hoursData.push(Math.round(Math.random()*20))
     }
     this.isFebMonthData()
+
+   // 获取接口数据开始
+   this.getDengZhiList()
+
   },
   mounted() {
     let sunMonthParams = {
@@ -337,6 +341,22 @@ export default {
     this.getSignAndTempData(signCalcYesterdayParams)
   },
   methods:{
+    getDengZhiList() {
+      let params = {
+        fetchUrl: '/sys/product/list',
+        listQuery: {
+          page: 1,
+          pageSize: 10000
+        }
+      }
+      this.$store.dispatch('GetList', params).then(res => {
+        this.terminalList = res.data.datas
+        // console.log('res.data.datasres.data.datasres.data.datas', res.data.datas)
+        // this.pageLightSum = Math.ceil(res.data.total/this.listLightQuery.pageSize)
+      })
+    },
+
+
     isFebMonthData() {
       let curMonth = this.selectedMonth
       let curYear = this.selectedYear
