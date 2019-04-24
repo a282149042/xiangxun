@@ -1,6 +1,6 @@
 .system_manage_page {
     position: relative;
-    background: #000;
+    background: #0b122e;
     height: 1200px;
     width: 100%;
     .header {
@@ -12,7 +12,7 @@
             width: 33%;
             height: 50px;
             margin-left: 15px;
-            border-top: 1px solid #DDC128;
+            border-top: 1px solid #083775;
             .left_three_btn {
                 display: flex;
                 justify-content: space-between;
@@ -39,10 +39,10 @@
             position: absolute;
             width: 0px;
             height: 0px;
-            left: 6px;
-            top: 15px;
+            left: 10px;
+            top: 18px;
             border-radius: 50%;
-            border: 5px dashed #E0BC25;
+            border: 3px dashed #083775;
         }
         .header_left:after {
             content: '';
@@ -50,10 +50,10 @@
             position: absolute;
             width: 0px;
             height: 0px;
-            left: 33.5%;
-            top: 15px;
+            left: 34%;
+            top: 18px;
             border-radius: 50%;
-            border: 5px dashed #E0BC25;
+            border: 3px dashed #083775;
         }
         .header_center {
             width: 33%;
@@ -61,8 +61,8 @@
             font-size: 1.25rem;
             font-family: NotoSansHans-Light;
             font-weight: 300;
-            color: rgba(20, 41, 117, 1);
-            background: #DDC128;
+            color: #7dd7f9;
+            background: linear-gradient(to right,#092a5d , #0c5b2e);
             text-align: center;
             line-height: 50px;
         }
@@ -70,7 +70,7 @@
             width: 22%;
             height: 50px;
             position: relative;
-            border-top: 1px solid #DDC128;
+            border-top: 1px solid #083775;
             display: flex;
             justify-content: space-between;
             .right_two_btn {
@@ -102,20 +102,20 @@
             width: 0px;
             height: 0px;
             right: 0;
-            top: -5px;
+            top: -3px;
             border-radius: 50%;
-            border: 5px dashed #E0BC25;
+            border: 3px dashed #083775;
         }
         .header_right:after {
             content: '';
             display: block;
             position: absolute;
-            top: -5px;
-            left: -5px;
+            top: -3px;
+            left: -3px;
             width: 0px;
             height: 0px;
             border-radius: 50%;
-            border: 5px dashed #E0BC25;
+            border: 3px dashed #083775;
         }
         .monitoring_date {
             position: absolute;
@@ -128,7 +128,7 @@
         }
     }
     .page_center {
-        margin-top: 50px;
+        margin-top: 30px;
         margin-left: 45px;
         margin-right: 6%;
         table {
@@ -141,12 +141,12 @@
         table,
         td,
         th {
-            border: 1px solid #E0BC25;
+            border: 1px solid #083775;
         }
         tr>td {
             // width: 25%;
-            color: #fff;
             font-size: 0.5625rem;
+            color: #ccc;
         }
         th {
             color: #fff;
@@ -156,21 +156,22 @@
             display: flex;
             justify-content: space-between;
             .orgnazition_title {
-                color: #FFDE29;
                 font-size: 0.5625rem;
-                height: 40px;
-                line-height: 40px;
+                color: #7dd7f9;
+                height: 15px;
+                line-height: 15px;
             }
             .submit_btn {
+                height:20px;
+                line-height:20px;
+                font-size:9px;
                 margin-right: 10px;
-                height: 20px;
-                width: 80px;
-                line-height: 20px;
                 text-align: center;
-                padding: 10px;
-                background: linear-gradient(90deg, rgba(188, 72, 1, 1), rgba(243, 204, 23, 1));
-                border-radius: 4px;
-                cursor: pointer
+                padding: 2px 15px;
+                color:#fff;
+                background: linear-gradient(to bottom, #0c5b2e, #092a5d);
+                border-radius: 4px 4px 0px 0px;
+                cursor: pointer;
             }
         }
         .bottom_title_display{
@@ -178,34 +179,35 @@
           display: flex;
           justify-content: space-between;
           .orgnazition_title {
-              color: #FFDE29;
               font-size: 0.5625rem;
               height: 40px;
               line-height: 40px;
+              color: #7dd7f9;
               width: 80%;
           }
           .add_btn,.del_btn {
+            font-size:9px;
             margin-right: 10px;
+            color:#fff;
             height: 20px;
-            width: 80px;
-            line-height: 20px;
+            line-height:20px;
             text-align: center;
-            padding: 10px;
-            background: linear-gradient(90deg, rgba(188, 72, 1, 1), rgba(243, 204, 23, 1));
-            border-radius: 4px;
+            padding: 2px 15px;
+            background: linear-gradient(to bottom, #0c5b2e, #092a5d);
+            border-radius: 4px 4px 0px 0px;
             cursor: pointer
         }
         }
         .table_container {
           display: flex;
             .left_table {
-              width: 30%;
+              width: 25%;
               .three_tree_level{
                 color: #E0BC25;
               }
               .light_type{
-                  margin-top: 20px;
-                  border: 1px solid #E0BC25;
+                  //margin-top: 20px;
+                  border: 1px solid #083775;
                   height: 450px;
                   color: #E0BC25;
                   .top_add_del{
@@ -215,51 +217,56 @@
                       justify-content: space-between;
                       ._add_light, ._del_light{
                             text-align: center;
-                            line-height: 40px;
                             font-size: 0.5625rem;
-                            height: 40px;
                             width: 100px;
                             color: #010101;
-                            background:linear-gradient(90deg,rgba(188,72,1,1),rgba(243,204,23,1));
+                            line-height: 20px;
+                            height: 20px;
+                            padding: 2px 15px;
+                            color: #fff;
+                            background:linear-gradient(to bottom, #0c5b2e, #092a5d);
                             border-radius:2px;
                       }
                   }
                   .light_table_list{
                     width: 80%;
-                    height: 300px;
-                    overflow-y: scroll;
-                    margin: 20px 10%;
+                    height: 360px;
+                    overflow-y: auto;
+                    margin: 0 10%;
                     .list_head{
-                        height: 40px;
-                        line-height: 40px;
+                        height: 30px;
+                        line-height: 30px;
                         text-align: center;
-                        border:1px solid #E0BC25;
-                        background: #FFDE29;
-                        color: #000;
+                        border:1px solid #083775;
+                        background: #083775;
+                        color: #7dd7f9;
+                        font-size: 12px;
                     }
                     .light_item{
-                        height: 40px;
-                        line-height: 40px;
+                        height: 30px;
+                        line-height: 30px;
                         text-align: center;
-                        border:1px solid #E0BC25;
+                        border:1px solid #083775;
                         border-top: none;
-                        color: #fff;
+                        color: #ccc;
+                        font-size: 12px;
                     }
                   }
               }
             }
             .right_table{
-              width: 70%;
-              margin-top: 20px;
+              width: 75%;
+              //margin-top: 20px;
               padding: 10px 0;
-              border: 1px solid #E0BC25;
+              border: 1px solid #083775;
               border-left: none;
                 .table_list {
                     width: 98%;
                     margin: 0 10px;
-                    border: 1px solid #E0BC25;
+                    border: 1px solid #083775;
                     th{
-                      color: #fff;
+                      color: #7dd7f9;
+                      background:#083775;
                     }
                     .opration_table {
                         .opration_btn {
@@ -289,10 +296,12 @@
                     }
                 }
                 .divide_pages{
-                  border: 1px solid #E0BC25;
-                  margin: 0px 13px 0 10px;
-                  padding-top: 10px;
-                  height: 60px;
+                  border: 1px solid #083775;
+                  margin: 0px 10px 0 10px;
+                  line-height:30px;
+                  width:98%;
+                  box-sizing: border-box;
+                  height: 30px;
                   border-top: none;
                   .pageing{
                     color: #fff;

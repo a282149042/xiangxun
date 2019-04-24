@@ -636,6 +636,7 @@ export default {
             {name: '所属机构', value: ''},
             {name: '工作模式', value: ''},
             {name: '连接模式', value: ''},
+            {name: '闪灯方式', value: ''},
             {name: '基准经度', value: ''},
             {name: '基准纬度', value: ''},
             {name: '备注', value: ''},
