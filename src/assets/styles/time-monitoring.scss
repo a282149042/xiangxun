@@ -194,6 +194,35 @@
             width: 70%;
             margin-right: 5%;
             height: 736px;
+            position: relative;
+            .platform_button{
+              position: absolute;
+              top: 5%;
+              left: 10%;
+              z-index: 9999;
+              .back_behide_page{
+                margin: 10px 0;
+                width: 100px;
+                height: 30px;
+                button{
+                  width: 100px;
+                  height: 30px;
+                }
+              }
+              .back_index_page{
+                margin: 20px 0;
+                width: 100px;
+                height: 30px;
+                button{
+                  width: 100px;
+                  height: 30px;
+                }
+              }
+            }
+            .platform_charts{
+              height: 736px;
+              width: 100%;
+            }
           }
         }
         ._left_bottom{

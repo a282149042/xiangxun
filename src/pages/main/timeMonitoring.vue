@@ -61,8 +61,14 @@
                 <!-- ◆ 终端状态比例 ◆ -->
               </div>
             </div>
-            <div class="platform_distribution" id="platformCount">
-              <!-- 平台数据分布 -->
+            <div class="platform_distribution">
+              <div class="platform_button">
+                <div class="back_behide_page"><button @click="backOnePage()">返回上一级</button></div>
+                <div class="back_index_page" @click="backIndexPage"><button>返回首层</button></div>
+              </div>
+               <div class="platform_charts" id="platformCount">
+                <!-- 平台数据分布 -->
+              </div>
             </div>
           </div>
           <div class="_left_bottom monitoring_list">
@@ -292,6 +298,31 @@ export default {
     this.platformCount("platformCount");
   },
   methods: {
+    backIndexPage() {
+
+    },
+    backOnePage() {
+      console.log('map========', mapStack)
+      if (mapStack.length != 0) {
+        //如果有上级目录则执行
+        var map = mapStack.pop();
+        axios
+          .get("./json/" + map.mapId + ".json", {})
+          .then(response => {
+            const mapJson = response.data;
+            this.registerAndsetOption(
+              myChart,
+              map.mapId,
+              map.mapName,
+              mapJson,
+              false
+            );
+            //返回上一级后，父级的ID、Name随之改变
+            parentId = map.mapId;
+            parentName = map.mapName;
+          })
+      }
+    },
     goAlarmRecordList(item) {
       this.statusType = "报警";
       this.detailInfo = item[0] || this.detailInfo;
@@ -603,8 +634,7 @@ export default {
 
         series: [
           {
-            name: name,
-            // type: 'map',
+            name: '正常',
             type: "map",
             coordinateSystem: "geo",
             symbolSize: 12,
@@ -629,100 +659,80 @@ export default {
               }
             },
             data: this.initMapData(mapJson, allDatas)
-              // data: [{coord:['2018/02/06','152.26']},{coord:['2018/03/02','1052.72']},{coord:['2018/04/11','2300']}],
-            // "data": this.initMapData(mapJson, allDatas, 'type1'),
-            // "markPoint": { //图表标注。
-            // "symbol": 'path://M512 39.384615l169.353846 295.384615 342.646154 63.015385-240.246154 248.123077L827.076923 984.615385l-315.076923-145.723077L196.923077 984.615385l43.323077-334.769231L0 401.723077l342.646154-63.015385L512 39.384615',
-            // "symbolSize": 14,//图形大小
-            // symbol: 'circle',
-            // "label": {
-            //     "normal": {
-            //         "show": true,
-            //     },
-            //     "emphasis": {
-            //         show: true,
-            //     }
-            // },
-            // "itemStyle": {
-            //     "normal": {
-            //         "color": 'rgba(72,150,128,1)'
-            //     }
-            // },
-            // "data": this.initMapData(mapJson, allDatas, 'type1')
-            // }
+           
           }
-          // ,
-          // {
-          //     name: '异常',
-          //     type: 'map',
-          //     mapType: 'china',
-          //     roam: false,
-          //     itemStyle: {
-          //       normal: {
-          //           label: {
-          //             show: true,//默认是否显示省份名称
-          //             textStyle: {
-          //               color: "#fff"
-          //             },
-          //           },
-          //           color:'#e6212a',
-          //           areaColor: '#21262b',
-          //           textStyle: {
-          //             color: "#fff"
-          //           },
-          //           borderWidth:1,
-          //           borderColor:'#aca62f',
-          //       },
-          //       emphasis: {
-          //             show: true,
-          //             areaColor: '#e6212a',
-          //       }
-          //     },
-          //     data:this.initMapData(mapJson, allDatas, 'type2')
-          // },
-          // {
-          //     name: '离线',
-          //     type: 'map',
-          //     roam: false,
-          //     mapType: 'china',
-          //     itemStyle: {
-          //       normal: {
-          //           color: '#848484',
-          //           areaColor: '#21262b',
-          //           label: {
-          //             show: true,//默认是否显示省份名称
-          //             textStyle: {
-          //               color: "#fff"
-          //             },
-          //           },
-          //           borderWidth:1,
-          //           borderColor:'#aca62f',
-          //       },
-          //       emphasis: {
-          //           show: true,
-          //           areaColor: '#848484'
-          //       }
-          //     },
-          //     data:this.initMapData(mapJson, allDatas, 'type3')
-          // }
+          ,
+          {
+              name: '异常',
+              type: 'map',
+              mapType: 'china',
+              roam: false,
+              itemStyle: {
+                normal: {
+                    label: {
+                      show: true,//默认是否显示省份名称
+                      textStyle: {
+                        color: "#fff"
+                      },
+                    },
+                    color:'#e6212a',
+                    areaColor: '#21262b',
+                    textStyle: {
+                      color: "#fff"
+                    },
+                    borderWidth:1,
+                    borderColor:'#aca62f',
+                },
+                emphasis: {
+                      show: true,
+                      areaColor: '#e6212a',
+                }
+              },
+              data:this.initMapData(mapJson, allDatas, 'type2')
+          },
+          {
+              name: '离线',
+              type: 'map',
+              roam: false,
+              mapType: 'china',
+              itemStyle: {
+                normal: {
+                    color: '#848484',
+                    areaColor: '#21262b',
+                    label: {
+                      show: true,//默认是否显示省份名称
+                      textStyle: {
+                        color: "#fff"
+                      },
+                    },
+                    borderWidth:1,
+                    borderColor:'#aca62f',
+                },
+                emphasis: {
+                    show: true,
+                    areaColor: '#848484'
+                }
+              },
+              data:this.initMapData(mapJson, allDatas, 'type3')
+          }
         ]
       };
       myChart.setOption(optionsParams);
-      // myChart.setOption({
-      //   series: [
-      //     {
-      //       type: "map",
-      //       map: name,
-      //       itemStyle: {
-      //         normal: {
-      //           areaColor: "rgba(23, 27, 57,0)",
-      //           borderColor: "#1dc199",
-      //           borderWidth: 1
-      //         }
-      //       }
-      //     }
-      //   ]
-      // });
+      myChart.setOption({
+        series: [
+          {
+            type: "map",
+            map: name,
+            itemStyle: {
+              normal: {
+                areaColor: "rgba(23, 27, 57,0)",
+                borderColor: "#1dc199",
+                borderWidth: 1
+              }
+            }
+          }
+        ]
+      });
 
       if (flag) {
         //往mapStack里添加parentId，parentName,返回上一级使用
