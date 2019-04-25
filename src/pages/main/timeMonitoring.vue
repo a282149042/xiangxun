@@ -392,7 +392,7 @@ export default {
                   name:'半径模式',
                   type:'pie',
                   radius : [10, 70],
-                  center : ['50%', '40%'],
+                  center : ['50%', '30%'],
                   roseType : 'radius',
                   label: {
                       normal: {

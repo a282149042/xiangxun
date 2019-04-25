@@ -44,16 +44,6 @@
             机构名称：
           </div>
           <div class="select_input">
-            <!-- <multiselect
-              :allow-empty="false"
-              selectLabel=""
-              selectGroupLabel=""
-              deselectLabel=""
-              selectedLabel=""
-              placeholder=""
-              v-model="selectedArea"
-              :options="areaList">
-            </multiselect> -->
             <el-select v-model="organizeDataForm.parentId" clearable>
               <el-option
                 v-for="(item, index) in organizeListData"
@@ -170,6 +160,7 @@
       <el-form ref="organizeDataForm" :rules="rules" :model="organizeDataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
         <el-form-item label="上级机构" prop="parentId">
           <el-select v-model="organizeDataForm.parentId" clearable>
+            <el-option label="无" value="0"></el-option>
             <el-option
               v-for="(item, index) in organizeListData"
               :key="index"
@@ -349,8 +340,7 @@ export default {
     getTreeList(){
       // /organize/getTreeList
       let params = {
-        fetchUrl: '/sys/organize/getTreeList',
-        listQuery: this.listQuery
+        fetchUrl: '/sys/organize/getTreeList'
       }
       this.$store.dispatch('GetList', params).then(res => {
         this.treeData = res.data

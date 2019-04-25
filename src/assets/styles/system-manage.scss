@@ -18,8 +18,8 @@
                 margin-top: 12px;
                 margin-left: 30px;
                 .active {
-                    color: #000000 !important;
-                    background: #E0BC25;
+                    color: #fff !important;
+                    background: linear-gradient(to bottom,#092a5d , #0c5b2e);
                 }
                 .monitoring_btn {
                     font-size: 14px;
@@ -79,8 +79,8 @@
                 margin-right: 30px;
                 width: 100%;
                 .active {
-                    color: #000000 !important;
-                    background: #E0BC25;
+                    color: #fff !important;
+                    background: linear-gradient(to bottom,#092a5d , #0c5b2e);
                 }
                 .monitoring_btn {
                     font-size: 14px;
@@ -217,7 +217,7 @@
             .left_table {
               width: 25%;
               .three_tree_level{
-                color: #E0BC25;
+                color: #0f76a1;
               }
               
             }
@@ -226,6 +226,8 @@
               //margin-top: 20px;
               padding: 10px 0;
               border: 1px solid #083775;
+              border-left:none;
+              box-shadow:0px 0px  3px 0px #083775;
                 .table_list {
                     width: 98%;
                     margin: 0 10px;
