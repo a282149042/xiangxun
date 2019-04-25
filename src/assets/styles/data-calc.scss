@@ -18,8 +18,8 @@
         margin-top: 12px;
         margin-left: 30px;
         .active{
-          color: #000000 !important;
-          background: #E0BC25;
+          color: #fff !important;
+          background: linear-gradient(to bottom,#092a5d , #0c5b2e);
         }
         .monitoring_btn{
           font-size: 0.875rem;
@@ -122,7 +122,7 @@
     }
   }
   .page_center{
-    margin-top: 50px;
+    margin-top: 30px;
     margin-left: 45px;
     margin-right: 6%;
     table{
@@ -131,6 +131,7 @@
     }
     table, td, th {
       border: 1px solid #083775;
+      box-shadow:0px 0px  3px 0px #083775;
     }
     tr>td{
       width: 25%;
@@ -204,6 +205,7 @@
          margin-bottom: 20px;
          .row_one{
            border: 1px solid #083775;
+           box-shadow:0px 0px  3px 0px #083775;
            width: 48%;
             height: 260px;
            margin-right: 2%;
@@ -214,6 +216,7 @@
          }
          .row_two{
           border: 1px solid #083775;
+          box-shadow:0px 0px  3px 0px #083775;
           width: 48%;
           height: 260px;
           .sun_yesterday{
@@ -228,6 +231,7 @@
       .big_data_calc{
         height: 542px;
         border: 1px solid #083775;
+        box-shadow:0px 0px  3px 0px #083775;
         margin-bottom: 20px;
         margin-right: 1.4%;
         ._title{
@@ -248,6 +252,7 @@
         margin-bottom: 20px;
         .row_one{
          border: 1px solid #083775;
+         box-shadow:0px 0px  3px 0px #083775;
           width: 48%;
           height: 260px;
           margin-right: 2%;
@@ -258,6 +263,7 @@
         }
         .row_two{
           border: 1px solid #083775;
+          box-shadow:0px 0px  3px 0px #083775;
           width: 48%;
           height: 260px;
           .sun_yesterday{
