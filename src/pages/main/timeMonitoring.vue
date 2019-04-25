@@ -169,12 +169,10 @@
 var chinaId = 100000;
 var chinaName = "china";
 var chinaJson = null;
-
 //记录父级ID、Name
 var mapStack = [];
 var parentId = null;
 var parentName = null;
-
 //Echarts地图全局变量，主要是在返回上级地图的方法中会用到
 var myChart = null;
 import axios from "axios";
@@ -299,7 +297,6 @@ export default {
   },
   methods: {
     backIndexPage() {
-
     },
     backOnePage() {
       console.log('map========', mapStack)
@@ -631,7 +628,6 @@ export default {
           },
           data:['正常','异常','离线']
         },
-
         series: [
           {
             name: '正常',
@@ -733,7 +729,6 @@ export default {
           }
         ]
       });
-
       if (flag) {
         //往mapStack里添加parentId，parentName,返回上一级使用
         mapStack.push({

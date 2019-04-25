@@ -21,7 +21,6 @@ export default {
       let {0: node,1: children} = args
       let titleClass = node.selected ? 'node-title node-selected' : 'node-title'
       if (node.searched) titleClass += ' node-searched'
-    //   console.log('child-----', args)
       return (<span>
             {children.expanded?<img style="vertical-align: middle;" src={icon}/>:<img style="vertical-align: middle;" src={iconfile}/>}
             <span class={titleClass} domPropsInnerHTML={node.name} onClick={() => {
@@ -40,6 +39,7 @@ export default {
   padding: 24px;
   box-sizing: border-box;
   border: 1px solid #083775;
+  box-shadow:0px 0px  3px 0px #083775;
   overflow: auto;
   height: 450px;
 }
@@ -136,8 +136,8 @@ export default {
     position: relative;
     width: 14px;
     height: 14px;
-    border: 1px solid #888;
-    border-radius: 2px;
+    border: 1px solid #0f76a1!important;
+    border-radius: 50%!important;
     top: 4px;
     text-align: center;
     font-size: 0.875rem;
@@ -186,7 +186,7 @@ export default {
     height: 16px;
     left: -5px;
     top: -4px;
-    border: 1px solid #000;
+    border: 1px solid #0f76a1!important;
     opacity: 0;
     cursor: pointer;
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
@@ -217,7 +217,7 @@ export default {
 }
 
 .halo-tree li:before {
-    border-left: 1px dashed #999;
+    border-left: 1px dashed #0f76a1!important;
     bottom: 50px;
     height: 100%;
     top: -8px;
@@ -225,7 +225,7 @@ export default {
 }
 
 .halo-tree li:after {
-    border-top: 1px dashed #999;
+    border-top: 1px dashed #0f76a1!important;
     height: 20px;
     top: 17px;
     width: 28px
@@ -244,11 +244,11 @@ export default {
 }
 
 .halo-tree>li.first-node.only-node:before {
-    border-left: none
+    border-left: none!important;
 }
 
 .halo-tree>li.only-node:after {
-    border-top: none
+    border-top: none!important;
 }
 
 .halo-tree>ul {
@@ -266,9 +266,9 @@ export default {
     height: 14px;
     text-align: center;
     line-height: 13px;
-    border: 1px solid #888;
+    border: 1px solid #0f76a1!important;
+    background:#0b122e!important;
     border-radius: 2px;
-    background: #fff;
     font-style: normal
 }
 
@@ -277,11 +277,13 @@ export default {
 }
 
 .halo-tree .tree-close:after {
-    content: "+"
+    content: "+";
+    color:#0f76a1;
 }
 
 .halo-tree .tree-open:after {
-    content: "\2013"
+    content: "-";
+    color:#0f76a1;
 }
 
 .halo-tree .tree-empty:after {
@@ -289,7 +291,7 @@ export default {
 }
 
 .halo-tree .tree-node-el {
-    background: #000!important;
+    background: #0b122e!important;
     padding-left: 2px;
     position: relative;
     z-index: 3
@@ -305,7 +307,7 @@ export default {
     position: absolute;
     right: auto;
     border-width: 1px;
-    border-top: 1px dashed #999;
+    border-top: 1px dashed #0f76a1;
     height: 20px;
     top: 17px;
     width: 25px
@@ -332,11 +334,12 @@ export default {
     padding: 3px;
     border-radius: 3px;
     cursor: pointer;
-    margin: 0 2px
+    margin: 0 2px;
+    color:#7dd7f9;
 }
 
 .halo-tree .node-title:hover {
-    background-color: #ccc
+    background-color: #2b2626!important;
 }
 
 .halo-tree .node-title-disabled {
@@ -354,7 +357,7 @@ export default {
 
 .halo-tree .node-selected {
     border: 1px solid #ddd;
-    background-color: #ddd
+    background-color: #2b2626!important;
 }
 
 .halo-tree .node-title.node-searched {
