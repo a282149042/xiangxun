@@ -69,7 +69,7 @@ export default {
         padding-top: 40px;
         ._title{
             text-align: center;
-            font-size: 20px;
+            font-size: 1.25rem;
             color: #E0BC25;
             font-weight: 800;
             margin-bottom: 40px;

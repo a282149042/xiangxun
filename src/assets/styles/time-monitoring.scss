@@ -22,7 +22,7 @@
           background: linear-gradient(to bottom,#092a5d , #0c5b2e);
         }
         .monitoring_btn{
-          font-size: 14px;
+          font-size: 0.875rem;
           text-align: center;
           line-height: 30px;
           margin-right: 10%;
@@ -57,7 +57,7 @@
     .header_center{
       width: 33%;
       height: 50px;
-      font-size:20px;
+      font-size:1.25rem;
       font-family:NotoSansHans-Light;
       font-weight:300;
       color:#7dd7f9;
@@ -79,7 +79,7 @@
         margin-right: 30px;
         width: 100%;
         .monitoring_btn{
-          font-size: 14px;
+          font-size: 0.875rem;
           text-align: center;
           line-height: 30px;
           margin-right: 10%;
@@ -113,7 +113,7 @@
     }
     .monitoring_date{
       position: absolute;
-      font-size:13px;
+      font-size:0.8125rem;
       right: 6%;
       top: 10px;
       font-family:NotoSansHans-Regular;
@@ -133,7 +133,7 @@
       width: 100%;
       height: 50px;
       ._left{
-        font-size: 12px;
+        font-size: 0.75rem;
         width: 20%;
         height: 50px;
         line-height: 50px;
@@ -141,7 +141,7 @@
         background: #064ea0;
       }
       ._center{
-        font-size: 12px;
+        font-size: 0.75rem;
         width: 20%;
         height: 50px;
         line-height: 50px;
@@ -149,7 +149,7 @@
         background: #064ea0;
       }
       ._right{
-        font-size: 12px;
+        font-size: 0.75rem;
         width: 50%;
         height: 50px;
         line-height: 50px;
@@ -198,6 +198,35 @@
             width: 70%;
             margin-right: 5%;
             height: 662px;
+            position: relative;
+            .platform_button{
+              position: absolute;
+              top: 5%;
+              left: 10%;
+              z-index: 9999;
+              .back_behide_page{
+                margin: 10px 0;
+                width: 100px;
+                height: 30px;
+                button{
+                  width: 100px;
+                  height: 30px;
+                }
+              }
+              .back_index_page{
+                margin: 20px 0;
+                width: 100px;
+                height: 30px;
+                button{
+                  width: 100px;
+                  height: 30px;
+                }
+              }
+            }
+            .platform_charts{
+              height: 736px;
+              width: 100%;
+            }
           }
         }
         ._left_bottom{
@@ -216,7 +245,7 @@
             color: #7dd7f9;
             text-align: center;
             line-height: 30px;
-            font-size: 14px;
+            font-size: 0.875rem;
           }
           .table_list{
             width: 98%;
@@ -232,7 +261,7 @@
                   width: 60px;
                   height: 12px;
                   background: #E62129;
-                  font-size: 6px;
+                  font-size: 0.5rem;
                   padding: 2px;
                   border-radius: 2px;
                   line-height: 12px;
@@ -244,7 +273,7 @@
                   line-height: 12px;
                   padding: 2px;
                   background: #56AAB7;
-                  font-size: 6px;
+                  font-size: 0.5rem;
                 }
               }
               
@@ -260,14 +289,17 @@
         border: 1px solid #083775;
       }
       tr>td{
+        font-size: 0.5625rem;
+      }
+      th{
+        font-size: 0.5625rem;
         color: #ccc;
-        font-size: 9px;
         line-height:10px;
         height:10px;
       }
       th{
         color: #FF6421;
-        font-size: 9px;
+        font-size: 0.5625rem;
         padding-top:5px;
         padding-bottom: 5px;
       }
@@ -278,7 +310,7 @@
         box-shadow:0px 0px  3px 0px #083775;
         padding: 10px 0;
         .head_title{
-          font-size:14px;
+          font-size:0.875rem;
           color: #7dd7f9;
           text-align: center;
         }
@@ -296,7 +328,7 @@
               margin: auto;
               text-align: center;
               line-height: 52px;
-              font-size: 9px;
+              font-size: 0.5625rem;
               top: 24px;
               box-sizing: border-box;
             }
@@ -312,7 +344,7 @@
               text-align: center;
               line-height: 120px;
               color: #EDEDED;
-              font-size: 9px;
+              font-size: 0.5625rem;
             }
           }
         }
@@ -332,10 +364,10 @@
               justify-content: space-between;
               ._address{
                 color: #E60012;
-                font-size: 8px;
+                font-size: 0.5rem;
               }
               ._time{
-                font-size: 8px;
+                font-size: 0.5rem;
                 color: #9e9e9e;
               }
             }
