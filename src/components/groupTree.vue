@@ -1,7 +1,7 @@
 <template>
  <div>
     <div class="tree3">
-      <v-tree ref='tree1' :canDeleteRoot="true" :data='treeData' :draggable='true' :tpl='tplJsx' :halfcheck='true' :multiple="true"/>
+      <v-tree ref='tree1' :canDeleteRoot="false" :data='treeData' :draggable='false' :tpl='tplJsx' :halfcheck='true'/>
     </div>
  </div>
 </template>
@@ -20,11 +20,12 @@ export default {
     tplJsx (...args) {
       let {0: node,1: children} = args
       let titleClass = node.selected ? 'node-title node-selected' : 'node-title'
-      if (node.searched) titleClass += ' node-searched'
+      let icon1 = (node.children && node.children.length) > 0 ? iconfile : icon;
+      node.expanded = true
       return (<span>
-            {children.expanded?<img style="vertical-align: middle;" src={icon}/>:<img style="vertical-align: middle;" src={iconfile}/>}
+            {<img style="vertical-align: middle;" src={icon1}/>}
             <span class={titleClass} domPropsInnerHTML={node.name} onClick={() => {
-            this.$refs.tree1.nodeSelected(node)
+                
             }} />
       </span>)
     }
