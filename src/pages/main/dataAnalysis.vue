@@ -126,7 +126,7 @@
             </div>
             <div class="three_list">
               <div class="nomal_number">
-                <div class="_title">
+                <div class="_title_1">
                   正常
                 </div>
                 <div class="_numbers">
@@ -134,7 +134,7 @@
                 </div>
               </div>
               <div class="nomal_number">
-                <div class="_title">
+                <div class="_title_2">
                   异常
                 </div>
                 <div class="_numbers">
@@ -142,7 +142,7 @@
                 </div>
               </div>
               <div class="nomal_number no_border">
-                <div class="_title">
+                <div class="_title_3">
                   失联
                 </div>
                 <div class="_numbers">
@@ -420,14 +420,14 @@ export default {
       let dateData = this.dateData
       const teminaChars = echarts.init(document.getElementById('monthDataCharts'))
       const option = {
-        color: ['#68BC63', '#F14D27', '#686868'],
+        color: ['green', 'red', '#999'],
         title: {
             text: '◆ 月度数据分析 ◆',
             x: "center",
             padding: [10,0,0,0],
             textStyle: {
               fontSize: 12,
-              color: '#FFDE29',
+              color: '#7dd7f9',
               rich: {
                 align: 'center'
               }
@@ -443,7 +443,7 @@ export default {
               left:'right',
               padding: [0,20,0,0],
               textStyle: {
-                color: "#FFDE29",
+                color: "#ccc",
                 fontSize: 12
               },
               data:['正常','异常','离线']
@@ -551,7 +551,7 @@ export default {
             textStyle: {
               fontSize: 14,
               fontWeight: 'bolder',
-              color: '#FFDE29'
+              color: '#7dd7f9'
             }
           },
           color: ['#56AAB7', '#E62129', '#F08519', '#68BC63', '#FFF000', '#B04B87'],
@@ -563,7 +563,7 @@ export default {
               x : 'center',
               y : 'bottom',
               textStyle: {
-                color: '#FFDE29'
+                color: '#ccc'
               },
               data:['输出','信号','太阳能电池', '蓄电池', '温度', '其他故障']
           },
@@ -613,7 +613,7 @@ export default {
             textStyle: {
               fontSize: 14,
               fontWeight: 'bolder',
-              color: '#FFDE29'
+              color: '#7dd7f9'
             }
           },
           color: ['#56AAB7', '#E62129', '#F08519', '#68BC63', '#FFF000', '#B04B87'],
@@ -625,7 +625,7 @@ export default {
               x : 'center',
               y : 'bottom',
               textStyle: {
-                color: '#FFDE29'
+                color: '#ccc'
               },
               data:['面阵式半透型发光标志','面阵式全透型发光标志','点阵式发光标志', '爆闪灯', '黄（慢）灯']
           },

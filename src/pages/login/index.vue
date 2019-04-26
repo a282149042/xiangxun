@@ -9,7 +9,7 @@
             用户名：
           </div>
           <div class="_field">
-            <input type="text" placeholder="">
+            <input type="text" placeholder="" v-model="account">
           </div>
         </div>
         <div class="login_usename">
@@ -17,7 +17,7 @@
             密码：
           </div>
           <div class="_field">
-            <input type="password" placeholder="">
+            <input type="password" placeholder="" v-model="password">
           </div>
         </div>
         <div class="login_btn" @click="login()">
@@ -31,18 +31,20 @@
 </template>
 
 <script>
-import axios from 'axios'
+// import axios from 'axios'
+import md5 from 'md5'
 export default {
   name: 'login',
   components: {
   },
   data() {
     return {
-      clientHeight: ''
+      clientHeight: '',
+      account: 'admin',
+      password: '123456'
     }
   },
   created() {
-    axios.get('/api/v1/checkCiYu/find?ciYu=我')
   },
   mounted() {
     this.clientHeight = `${document.documentElement.clientHeight}`;
@@ -60,7 +62,16 @@ export default {
       this.$refs.login.style.height = clientHeight+'px';
     },
     login () {
-      this.$router.push('main')
+      let {account, password} = this
+      let params = {
+        account,
+        password: md5(password)
+      }
+      this.$store.dispatch("LoginAdmin", params).then(res => {
+        if (res) {
+          this.$router.push('main')
+        }
+      })
     }
   }
 }
