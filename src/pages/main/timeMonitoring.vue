@@ -296,28 +296,24 @@ export default {
     this.platformCount("platformCount");
   },
   methods: {
-    backIndexPage() {
-    },
+    backIndexPage() {},
     backOnePage() {
-      console.log('map========', mapStack)
       if (mapStack.length != 0) {
         //如果有上级目录则执行
         var map = mapStack.pop();
-        axios
-          .get("./json/" + map.mapId + ".json", {})
-          .then(response => {
-            const mapJson = response.data;
-            this.registerAndsetOption(
-              myChart,
-              map.mapId,
-              map.mapName,
-              mapJson,
-              false
-            );
-            //返回上一级后，父级的ID、Name随之改变
-            parentId = map.mapId;
-            parentName = map.mapName;
-          })
+        axios.get("./json/" + map.mapId + ".json", {}).then(response => {
+          const mapJson = response.data;
+          this.registerAndsetOption(
+            myChart,
+            map.mapId,
+            map.mapName,
+            mapJson,
+            false
+          );
+          //返回上一级后，父级的ID、Name随之改变
+          parentId = map.mapId;
+          parentName = map.mapName;
+        });
       }
     },
     goAlarmRecordList(item) {
@@ -518,23 +514,31 @@ export default {
     },
     async getEveryCityData(type, cityName) {
       //type 1-所有省份数据，2-省数据,3-市数据
+       // province 
       let that = this;
-      // /sys/monitoring/platformInfo
       let params = {
         fetchUrl: "/sys/monitoring/platformInfo",
         listQuery: {
           type,
-          name: cityName || ""
+          "province": type === 2 ? cityName : '',
+          "city": type === 3 ? cityName : '',
+          "county": type === 4 ? cityName : '',
         }
       };
       let data = await this.$store.dispatch("GetList", params);
       return data;
     },
+    producePositionData(data) {
+      let tempData = []
+      data.map(item => item.children.map(ele => tempData.push({value: [JSON.parse(ele.location).longitude, JSON.parse(ele.location).latitude, 1], name: ele.province})))
+      return tempData
+    },
     async platformCount(divid) {
       // './json/china.json'
       let that = this;
       let { data } = await this.getEveryCityData(1);
-      this.allDatas = data;
+      this.allDatas = this.producePositionData(data);
+      console.log('alldata==========', this.allDatas)
       axios.get("./json/" + chinaId + ".json", {}).then(response => {
         const mapJson = response.data;
         chinaJson = mapJson;
@@ -551,21 +555,18 @@ export default {
         parentName = "china";
         myChart.on("click", function(param) {
           var cityId = cityMap[param.name];
-          console.log("param.nameparam.nameparam.name", param);
           if (cityId) {
             //代表有下级地图
             axios.get("./json/" + cityId + ".json", {}).then(response => {
-             
-             that.getEveryCityData(2, param.name).then(res => {
+              that.getEveryCityData(2, param.name).then(res => {
                 let cityDatas = res.data;
                 const mapJson = response.data;
-                 
                 that.registerAndsetOption(
                   myChart,
                   cityId,
                   param.name,
                   mapJson,
-                  true,
+                  true
                   // cityDatas
                 );
               });
@@ -577,7 +578,7 @@ export default {
               chinaId,
               chinaName,
               chinaJson,
-              false,
+              false
               // that.allDatas
             );
             mapStack = [];
@@ -588,38 +589,36 @@ export default {
       });
     },
     registerAndsetOption(myChart, id, name, mapJson, flag, allDatas) {
-     var geoCoordMap = {
-		    "海门":[121.15,31.89],
-		    "鄂尔多斯":[109.781327,39.608266],
-		    "招远":[120.38,37.35],
-		    "舟山":[122.207216,29.985295],
-		    "齐齐哈尔":[123.97,47.33],
-		    "盐城":[120.13,33.38],
-		    "赤峰":[118.87,42.28],
-		    "青岛":[120.33,36.07],
-		    "乳山":[121.52,36.89],
-		    "金昌":[102.188043,38.520089],
-		};
- 
-    var convertData = function (data) {
-		    var res = [];
-		    for (var i = 0; i < data.length; i++) {
-		        var geoCoord = geoCoordMap[data[i].name];//获取坐标
-		        if (geoCoord) {//如果有坐标
-		        	res.push({//创建对象数组，
-                        name: data[i].name,  
-                        value: geoCoord.concat(data[i].value)  //用连接数组的形式将value值加入
-                    });  
-		            //res.push(geoCoord.concat(data[i].value));
-		            //res.push(geoCoord.concat(data[i].name));
-		        }
-		    }
-		    return res;
-		};
+      var geoCoordMap = {
+        海门: [121.15, 31.89],
+        鄂尔多斯: [109.781327, 39.608266],
+        招远: [120.38, 37.35],
+        舟山: [122.207216, 29.985295],
+        齐齐哈尔: [123.97, 47.33],
+        盐城: [120.13, 33.38],
+        赤峰: [118.87, 42.28],
+        青岛: [120.33, 36.07],
+        乳山: [121.52, 36.89],
+        金昌: [102.188043, 38.520089]
+      };
 
-
+      var convertData = function(data) {
+        var res = [];
+        for (var i = 0; i < data.length; i++) {
+          var geoCoord = geoCoordMap[data[i].name]; //获取坐标
+          if (geoCoord) {
+            //如果有坐标
+            res.push({
+              //创建对象数组，
+              name: data[i].name,
+              value: geoCoord.concat(data[i].value) //用连接数组的形式将value值加入
+            });
+          }
+        }
+        return res;
+      };
       echarts.registerMap(name, mapJson);
-      const optionsParams = {
+      myChart.setOption({
         title: {
           text: "◆ 平台数据分布 ◆",
           subtext: "",
@@ -630,26 +629,6 @@ export default {
             color: "#FFDE29"
           }
         },
-        tooltip: {
-          trigger: "item",
-          formatter: function(params) {
-            var res = params.name + "<br/>";
-            var myseries = optionsParams.series;
-            // console.log("myseries=============>>>", myseries);
-            for (var i = 0; i < myseries.length; i++) {
-              for (var j = 0; j < myseries[i].data.length; j++) {
-                if (myseries[i].data[j].name == params.name) {
-                  res +=
-                    myseries[i].name +
-                    " : " +
-                    myseries[i].data[j].value +
-                    "</br>";
-                }
-              }
-            }
-            return res;
-          }
-        },
         legend: {
           orient: "horizontal",
           x: "center",
@@ -658,46 +637,27 @@ export default {
             color: "#FFDE29",
             fontSize: 12
           },
-          data:['正常','异常','离线']
+          data: ["正常", "异常", "离线"]
         },
-        series: [
-          
-        
-        ]
-      };
-    
- 
-      // myChart.setOption(optionsParams);
-      myChart.setOption({
-          legend: {
-          orient: "horizontal",
-          x: "center",
-          bottom: "10",
-          textStyle: {
-            color: "#FFDE29",
-            fontSize: 12
+        geo: {
+          map: name,
+          label: {
+            emphasis: {
+              show: false
+            }
           },
-          data:['正常','异常','离线']
+          itemStyle: {
+            //未激活样式
+            normal: {
+              areaColor: "#323c48",
+              borderColor: "red"
+            },
+            //激活样式
+            emphasis: {
+              areaColor: "#2a333d"
+            }
+          }
         },
-         geo: {
-		        map: name,
-		        label: {
-		            emphasis: {
-		                show: false
-		            }
-		        },
-		        itemStyle: {
-		        	//未激活样式
-		            normal: {
-		                areaColor: '#323c48',
-		                borderColor: 'red'
-		            },
-		            //激活样式
-		            emphasis: {
-		                areaColor: '#2a333d'
-		            }
-		        }
-		    },
         series: [
           {
             type: "map",
@@ -711,53 +671,114 @@ export default {
             },
             data: this.initMapData(mapJson)
           },
-           {
-		            name: '正常',
-		            type: 'scatter',
-		            coordinateSystem: 'geo',
-		            data: convertData([
-		                {name: "海门", value: 9},
-		                {name: "鄂尔多斯", value: 12},
-		                {name: "招远", value: 12},
-		                {name: "舟山", value: 12},
-		                {name: "齐齐哈尔", value: 14,},
-		                {name: "盐城", value: 15},
-		                {name: "赤峰", value: 100},
-		                {name: "青岛", value: 18},
-		                {name: "乳山", value: 300},
-		                {name: "金昌", value: 19},
-		            ]),
-                symbolSize: 12,
-                 legend: {
-                  orient: "horizontal",
-                  x: "center",
-                  bottom: "10",
-                  textStyle: {
-                    color: "#FFDE29",
-                    fontSize: 12
-                  },
-                },
-		            //直接在点上显示标签
-		            label: {
-		            	show:false,
-		                normal: {
-		                    show: true
-		                },
-		                emphasis: {
-		                    show: true
-		                },
-		                formatter:'{b}',
-		                offset:[15,-15],//文字的相对偏移
-		            },
-		            //标签的样式
-		            itemStyle: {
-		                normal: {
-		                    borderColor: '#E62129',
-		                    borderWidth: 1
-		                }
-		            }
+          {
+            name: "正常",
+            type: "scatter",
+            coordinateSystem: "geo",
+            symbol: 'rect',
+            data: [{name: '衡东县', value: [112.487345,26.9038430000001, 1]},{name: '北京', value: [116.405285, 39.904989, 1]}],
+            symbolSize: 16,
+            legend: {
+              orient: "horizontal",
+              x: "center",
+              bottom: "10",
+              textStyle: {
+                color: "#1FA122",
+                fontSize: 12
+              }
+            },
+            //直接在点上显示标签
+            label: {
+              show: false,
+              normal: {
+                show: true
+              },
+              emphasis: {
+                show: true
+              },
+              formatter: "{b}",
+              offset: [15, -15] //文字的相对偏移
+            },
+            //标签的样式
+            itemStyle: {
+              normal: {
+                color: "#1FA122",
+                borderWidth: 1
+              }
             }
-             
+          },
+          {
+            name: "异常",
+            type: "scatter",
+            coordinateSystem: "geo",
+            symbol: 'rect',
+            data: [{name: '望城区', value: [112.887345, 27.983843, 1]}, {name: '上海', value: [121.472644, 31.231706, 1]}],
+            symbolSize: 16,
+            legend: {
+              orient: "horizontal",
+              x: "center",
+              bottom: "10",
+              textStyle: {
+                color: "#1FA122",
+                fontSize: 12
+              }
+            },
+            //直接在点上显示标签
+            label: {
+              show: false,
+              normal: {
+                show: true
+              },
+              emphasis: {
+                show: true
+              },
+              formatter: "{b}",
+              offset: [15, -15] //文字的相对偏移
+            },
+            //标签的样式
+            itemStyle: {
+              normal: {
+                color: "#E62129",
+                borderWidth: 1
+              }
+            }
+          },
+          {
+            name: "离线",
+            type: "scatter",
+            coordinateSystem: "geo",
+            symbol: 'rect',
+            data: [{name: '宁乡', value: [112.704832792969, 28.333843,1]}],
+            symbolSize: 16,
+            legend: {
+              orient: "horizontal",
+              x: "center",
+              bottom: "10",
+              textStyle: {
+                color: "#1FA122",
+                fontSize: 12
+              }
+            },
+            //直接在点上显示标签
+            label: {
+              show: false,
+              normal: {
+                show: true
+              },
+              emphasis: {
+                show: true
+              },
+              formatter: "{b}",
+              offset: [15, -15] //文字的相对偏移
+            },
+            //标签的样式
+            itemStyle: {
+              normal: {
+                color: "#848484",
+                borderWidth: 1
+              }
+            }
+          }
         ]
       });
       if (flag) {
@@ -771,29 +792,14 @@ export default {
       }
     },
     initMapData(mapJson, allDatas, type) {
-      // for (var j = 0; j < allDatas.length; j++) {
-        var mapData = [];
-        for (var i = 0; i < mapJson.features.length; i++) {
-          mapData.push({
-            name: mapJson.features[i].properties.name
-            //id:mapJson.features[i].id
-          });
-        }
-        // for (var i = 0; i < mapJson.features.length; i++) {
-        //   if (mapJson.features[i].properties.name.indexOf(allDatas[j].name) !== -1) {
-        //     mapData.push({
-        //       name: mapJson.features[i].properties.name,
-        //       value: allDatas[j][type]
-        //     });
-        //   } else {
-        //     mapData.push({
-        //       name: mapJson.features[i].properties.name,
-        //       value: 0
-        //     });
-        //   }
-        // }
-        return mapData;
+      var mapData = [];
+      for (var i = 0; i < mapJson.features.length; i++) {
+        mapData.push({
+          name: mapJson.features[i].properties.name
+        });
       }
+      return mapData;
+    }
   }
 };
 </script>
