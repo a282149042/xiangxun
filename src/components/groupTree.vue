@@ -25,7 +25,7 @@ export default {
       return (<span>
             {<img style="vertical-align: middle;" src={icon1}/>}
             <span class={titleClass} domPropsInnerHTML={node.name} onClick={() => {
-                
+                this.props.getTermList();
             }} />
       </span>)
     }

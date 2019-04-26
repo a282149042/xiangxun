@@ -137,10 +137,10 @@
         </div>
       </div>
     </div>
-    <el-dialog :title="`${userStatus}机构`" :visible.sync="organizeDialogFormVisible">
-      <el-form ref="organizeDataForm" :rules="rules" :model="organizeDataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+    <el-dialog :title="`${userStatus}机构`" :visible.sync="organizeDialogFormVisible" width="710px">
+      <el-form ref="organizeDataForm" :rules="rules" :model="organizeDataForm" label-position="left" label-width="100px">
         <el-form-item label="上级机构" prop="parentId">
-          <el-select v-model="organizeDataForm.parentId" clearable>
+          <el-select v-model="organizeDataForm.parentId" clearable  style="width:510px">
             <el-option label="无" value="0">无</el-option>
             <el-option
               v-for="(item, index) in organizeListData"
@@ -151,16 +151,16 @@
           </el-select>
         </el-form-item>
         <el-form-item label="机构名称" prop="name">
-          <el-input v-model="organizeDataForm.name"/>
+          <el-input v-model="organizeDataForm.name"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="联系人" prop="contacts">
-          <el-input v-model="organizeDataForm.contacts"/>
+          <el-input v-model="organizeDataForm.contacts"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="organizeDataForm.remark"/>
+          <el-input v-model="organizeDataForm.remark"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="联系方式" prop="phone">
-          <el-input v-model="organizeDataForm.phone"/>
+          <el-input v-model="organizeDataForm.phone"  style="width:510px"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -169,8 +169,8 @@
       </div>
     </el-dialog>
    <!-- <el-dialog :title="`${textMap[dialogStatus]}管理员`" :visible.sync="dialogFormVisible"> -->
-   <el-dialog :title="`${userStatus}管理员`" :visible.sync="userDialogFormVisible">
-      <el-form ref="userDataForm" :rules="rules" :model="userDataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+   <el-dialog :title="`${userStatus}管理员`" :visible.sync="userDialogFormVisible" width="710px">
+      <el-form ref="userDataForm" :rules="rules" :model="userDataForm" label-position="left" label-width="100px">
         <el-form-item label="类型" prop="userType">
           <template>
               <el-radio v-model="userType" label="1">超级管理员</el-radio>
@@ -178,7 +178,7 @@
           </template>
         </el-form-item>
         <el-form-item label="所属机构" prop="organizeId">
-          <el-select v-model="userDataForm.organizeId" clearable>
+          <el-select v-model="userDataForm.organizeId" clearable  style="width:510px">
             <el-option
               v-for="(item, index) in organizeListData"
               :key="index"
@@ -188,19 +188,19 @@
           </el-select>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
-          <el-input v-model="userDataForm.name"/>
+          <el-input v-model="userDataForm.name"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="登录名" prop="uname">
-          <el-input v-model="userDataForm.uname"/>
+          <el-input v-model="userDataForm.uname"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="密码" prop="pwd">
-          <el-input v-model="userDataForm.pwd" type="password"/>
+          <el-input v-model="userDataForm.pwd" type="password"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="手机" prop="phone">
-          <el-input v-model="userDataForm.phone"/>
+          <el-input v-model="userDataForm.phone"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="userDataForm.email"/>
+          <el-input v-model="userDataForm.email"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="账号状态" prop="status">
            <!-- 是否禁用 -->
