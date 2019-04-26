@@ -45,7 +45,7 @@
       <div class="table_container">
         <div class="left_table">
           <div class="three_tree_level">
-            <groupTree :treeData="treeData"></groupTree>
+            <groupTree :treeData="treeData" @searchTermList="searchTermList" :mtype="1"></groupTree>
           </div>
         </div>
         <div class="right_table">
@@ -535,6 +535,11 @@ export default {
       this.$store.dispatch('GetList', params).then(res => {
         this.treeData = res.data
       })
+    },
+    searchTermList(organizeId){
+      this.listTermQuery.organizeId=organizeId
+      this.listTermQuery.page=1
+      this.getTermList()
     },
      getTermList(){
       // 获取终端列表
