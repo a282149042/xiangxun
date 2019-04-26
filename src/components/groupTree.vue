@@ -11,7 +11,7 @@ import icon from '@/assets/images/file.png'
 import iconfile from '@/assets/images/file_package.png'
 export default {
   name: 'groupTree',
-  props: ['treeData'],
+  props: ['treeData','mtype'],
   data () {
     return {
     }
@@ -25,9 +25,18 @@ export default {
       return (<span>
             {<img style="vertical-align: middle;" src={icon1}/>}
             <span class={titleClass} domPropsInnerHTML={node.name} onClick={() => {
-                
+                this.doRefreshList(node.id)
             }} />
       </span>)
+    },
+    doRefreshList (organizeId){
+        if(this.mtype == 1){
+            this.$emit('searchTermList',organizeId)
+        }else if(this.mtype == 2){
+            this.$emit('searchOrganizeList',organizeId)
+        }else if(this.mtype == 3){
+            this.$emit('searchUserListData',organizeId)
+        }
     }
   }
 }
