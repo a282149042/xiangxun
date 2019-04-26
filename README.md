@@ -2,7 +2,7 @@
 
 ## 安装依赖
 ```
-npm install
+npm install -d
 ```
 
 ### 本地开发启动
