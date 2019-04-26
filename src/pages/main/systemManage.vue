@@ -45,7 +45,7 @@
       <div class="table_container">
         <div class="left_table">
           <div class="three_tree_level">
-            <groupTree :treeData="treeData"></groupTree>
+            <groupTree :treeData="treeData" @searchOrganizeList="searchOrganizeList" :mtype="2"></groupTree>
           </div>
         </div>
         <div class="right_table">
@@ -75,10 +75,19 @@
                   </div>
                 </td>
               </tr>
+              <tr class="divide_pages">
+                  <td colspan="7" v-if="organizeListData.length == 0 && listOrganizeQuery.page == 1">
+                    没有更多的数据了
+                  </td>
+                  <td colspan="7" v-else>
+                    共条{{organizeTotal}}记录，当前显示第{{listOrganizeQuery.page}}/{{pageOrganSum}}页
+                    <a @click="changeOrganPages(1)">首页</a>
+                    <a @click="changeOrganPages(listOrganizeQuery.page-1)">上一页</a>
+                    <a @click="changeOrganPages(listOrganizeQuery.page+1)">下一页</a>
+                    <a @click="changeOrganPages(pageOrganSum)">尾页</a>
+                  </td>
+              </tr>
             </table>
-            <div class="divide_pages">
-              <span class="pageing" :class="pages === activeOrganizationIndex ? 'active_pages':''" v-for="(pages) in pageOrganSum" :key="pages" @click="changeOrganPages(pages)">{{pages}}</span>              
-            </div>
           <!-- <div class="divide_pages">
             
             <span class="pageing">1</span>
@@ -98,7 +107,7 @@
       <div class="table_container">
         <div class="left_table">
           <div class="three_tree_level">
-            <groupTree :treeData="treeData"></groupTree>
+            <groupTree :treeData="treeData" @searchUserListData="searchUserListData" :mtype="3"></groupTree>
           </div>
         </div>
         <div class="right_table">
@@ -130,10 +139,19 @@
                   </div>
                 </td>
               </tr>
+              <tr class="divide_pages">
+                  <td colspan="7" v-if="userListData.length == 0 && listQuery.page == 1">
+                    没有更多的数据了
+                  </td>
+                  <td colspan="7" v-else>
+                    共条{{userTotal}}记录，当前显示第{{listQuery.page}}/{{pageSum}}页
+                    <a @click="changePages(1)">首页</a>
+                    <a @click="changePages(listQuery.page-1)">上一页</a>
+                    <a @click="changePages(listQuery.page+1)">下一页</a>
+                    <a @click="changePages(pageSum)">尾页</a>
+                  </td>
+              </tr>
             </table>
-          <div class="divide_pages">
-            <span class="pageing" :class="page === activeUserIndex ? 'active_pages':''" v-for="(page) in pageSum" :key="page" @click="changePages(page)">{{page}}</span>
-          </div>
         </div>
       </div>
     </div>
@@ -274,15 +292,15 @@ export default {
       listQuery: {
         "page": 1,
         "pageSize": 10,
-        "content": "",
-        // "organizeId": 1002
+        "organizeId": 0
       },
+      userTotal:0,
       listOrganizeQuery: {
         "page": 1,
         "pageSize": 10,
-        "content": "",
-        // "organizeId": 1002
+        "organizeId": 0
       },
+      organizeTotal: 0,
       organizeTreeListData: [],
       organizeListData: [],
       rules: {
@@ -302,7 +320,7 @@ export default {
   },
   created() {
     this.getTreeList()
-    this.getInstitution()
+    this.getOrganizeList()
     this.getUserListData()
   },
   mounted() {
@@ -316,7 +334,7 @@ export default {
     changeOrganPages(pages){
       this.activeOrganizationIndex = pages
       this.listOrganizeQuery.page = pages
-      this.getInstitution()
+      this.getOrganizeList()
     },
     getTreeList(){
       // /organize/getTreeList
@@ -327,7 +345,12 @@ export default {
         this.treeData = res.data
       })
     },
-    getInstitution(){
+    searchOrganizeList(organizeId){
+      this.listOrganizeQuery.organizeId = organizeId
+      this.listOrganizeQuery.page=1
+      this.getOrganizeList()
+    },
+    getOrganizeList(){
       // 获取机构列表
       let params = {
         fetchUrl: '/sys/organize/list',
@@ -335,8 +358,14 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         this.organizeListData = res.data.datas
+        this.organizeTotal = res.data.total
         this.pageOrganSum = Math.ceil(res.data.total/this.listOrganizeQuery.pageSize)
       })
+    },
+    searchUserListData(organizeId){
+      this.listQuery.organizeId = organizeId
+      this.listQuery.page=1
+      this.getUserListData ()
     },
     getUserListData () {
       let params = {
@@ -345,6 +374,7 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         this.userListData = res.data.datas
+        this.userTotal = res.data.total
         this.pageSum = Math.ceil(res.data.total/this.listQuery.pageSize)
       })
     },
@@ -413,7 +443,7 @@ export default {
               });
               this.activeOrganizationIndex = 1 // 机构分页
               this.listOrganizeQuery.page = 1
-              this.getInstitution()
+              this.getOrganizeList()
               this.organizeDataForm = Object.assign({}, this.$options.data().organizeDataForm)
             })
           }
@@ -437,7 +467,7 @@ export default {
                 message: '修改机构资料成功',
                 type: 'success'
               });
-              this.getInstitution()
+              this.getOrganizeList()
               this.organizeDataForm = Object.assign({}, this.$options.data().organizeDataForm)
             })
           }
@@ -489,7 +519,7 @@ export default {
             this.$store.dispatch('DeleteMembers', params).then(res => {
               this.activeUserIndex = 1
               this.listQuery.page = 1
-              this.getInstitution()
+              this.getOrganizeList()
             })
           }
           if (type === 2) {
