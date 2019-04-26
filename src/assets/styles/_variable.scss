@@ -2,13 +2,13 @@
   background-color:#999;
 }
 ::-webkit-scrollbar {//滚动条的宽度
-  width:3px;
+  width:5px;
   border-radius: 4px;
   //height: 9px;
 }
 ::-webkit-scrollbar-thumb {//滚动条的设置
   //background:linear-gradient(90deg,rgba(188,72,1,1),#083775);
-  background: #fff;
+  background:linear-gradient(to right,#092a5d , #0c5b2e);
   
   background-clip:padding-box;
   // min-height:28px;
