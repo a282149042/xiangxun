@@ -123,7 +123,7 @@
             </multiselect>
           </div>
         </div>
-        <div class="submit_btn">
+        <div class="submit_btn" @click="searchAll()">
           确认
         </div>
       </div>
@@ -175,43 +175,43 @@
             <table class="table_list">
               <tr>
                 <th>该类终端总数</th>
-                <th colspan="3">8</th>
+                <th colspan="3">{{allSourceData.numCount}}</th>
               </tr>
               <tr>
                 <td>该月/日太阳能最高电压</td>
                 <td>正常</td>
                 <td>出现时间</td>
-                <td>13</td>
+                <td>{{allSourceData.highSolarVolt}}</td>
               </tr>
               <tr>
                 <td>该月/日太阳能最低电压</td>
                 <td>正常</td>
                 <td>出现时间</td>
-                <td>13</td>
+                <td>{{allSourceData.lowSolarVolt}}</td>
               </tr>
               <tr>
                 <td>该月/日电池最高电压</td>
                 <td>正常</td>
                 <td>出现时间</td>
-                <td>13</td>
+                <td>{{allSourceData.highBtteryVolt}}</td>
               </tr>
               <tr>
                 <td>该月/日电池最低电压</td>
                 <td>正常</td>
                 <td>出现时间</td>
-                <td>13</td>
+                <td>{{allSourceData.lowBtteryVolt}}</td>
               </tr>
               <tr>
                 <td>该月/日最高温度</td>
                 <td>正常</td>
                 <td>出现时间</td>
-                <td>13</td>
+                <td>{{allSourceData.highTemperature}}</td>
               </tr>
               <tr>
                 <td>该月/日最低温度</td>
                 <td>正常</td>
                 <td>出现时间</td>
-                <td>13</td>
+                <td>{{allSourceData.lowTemperature}}</td>
               </tr>
             </table>
           </div>
@@ -255,8 +255,35 @@ export default {
       selectedArea: "长沙市",
       areaList: ['长沙市', '浏阳市', '株洲市', '宁乡市'],
       selectedTerminal: '爆闪灯',
-      terminalList: [],
+      terminalList: ['爆闪灯','黄慢（闪）灯', '点阵式主动发光标志','面阵式全透发光标志' ,'面阵式半透发光标志'],
+      terminalAllList:[],
       monthList: [1,2,3,4,5,6,7,8,9,10,11,12],
+      listQuery:{
+        "year": "",
+        "month": "",
+        "day": "",
+        "cityName": "",
+        "productId": "",
+        "type": 1,
+        "cycle": 1
+      },
+      //所有
+      allData:{},
+      allSourceData:{
+          "numCount": 10,
+          "highSolarVolt": 10,
+          "highSolarVoltTime": 1456151230,
+          "lowSolarVolt": 10,
+          "lowSolarVoltTime": 1456151230,
+          "highBtteryVolt": 20,
+          "highBtteryVoltTime": 45546,
+          "lowBtteryVolt": 20,
+          "lowBtteryVoltTime": 45546,
+          "highTemperature": 24,
+          "highTemperatureTime": 24,
+          "lowTemperature": 4,
+          "lowTemperatureTime": 48879879
+        }
     }
   },
   created() {
@@ -268,95 +295,134 @@ export default {
       this.hoursData.push(Math.round(Math.random()*20))
     }
     this.isFebMonthData()
-
-   // 获取接口数据开始
-   this.getDengZhiList()
-
+    this.getDengZhiList()
   },
   mounted() {
-    let sunMonthParams = {
-      eleId:'sunMonth',
-      timeData: this.DateList,
-      data: this.dateData,
-      title: '◆ 太阳能电压分析 ◆',
-      label: '月度'
-    }
-    let sunHoursParams = {
-      eleId:'sunYesterday',
-      timeData: this.hoursList,
-      data: this.hoursData,
-      title: '昨日◆ 太阳能电压分析 ◆',
-      label: moment().subtract(1, 'day').format('YYYY.MM.DD')
-    }
-    let chargeMonthParams = {
-      eleId:'chargeMonth',
-      timeData: this.DateList,
-      data: this.dateData,
-      title: '◆ 电池电压统计 ◆',
-      label: '月度'
-    }
-    let chargeHoursParams = {
-      eleId:'chargeYesterday',
-      timeData: this.hoursList,
-      data: this.hoursData,
-      title: '昨日◆ 电池电压统计 ◆',
-      label: moment().subtract(1, 'day').format('YYYY.MM.DD')
-    }
-    this.getMonthAndDateData(sunMonthParams)
-    this.getMonthAndDateData(sunHoursParams)
-    this.getMonthAndDateData(chargeHoursParams)
-    this.getMonthAndDateData(chargeMonthParams)
-
-    let tempCalcParams = {
-      eleId:'tempCalc',
-      xAxisData: this.DateList,
-      seriesData: this.dateData,
-      title: '◆ 温度统计 ◆',
-      label: '月度'
-    }
-    let tempCalcYesterdayParams = {
-      eleId:'tempCalcYesterday',
-      xAxisData: this.hoursList,
-      seriesData: this.hoursData,
-      title: '昨日◆ 温度统计 ◆',
-      label: moment().subtract(1, 'day').format('YYYY.MM.DD')
-    }
-    let signCalcParams = {
-      eleId:'signCalc',
-      xAxisData: this.DateList,
-      seriesData: this.dateData,
-      title: '◆ 信号统计 ◆',
-      label: '月度'
-    }
-    let signCalcYesterdayParams = {
-      eleId:'signCalcYesterday',
-      xAxisData: this.hoursList,
-      seriesData: this.hoursData,
-      title: '昨日◆ 信号统计 ◆',
-      label: moment().subtract(1, 'day').format('YYYY.MM.DD')
-    }
-    this.getSignAndTempData(tempCalcParams)
-    this.getSignAndTempData(tempCalcYesterdayParams)
-    this.getSignAndTempData(signCalcParams)
-    this.getSignAndTempData(signCalcYesterdayParams)
+    this.setQuest()
   },
   methods:{
+    getAllData(listQuery){
+      let _this = this
+      let eleId = ''
+      let title = ''
+      let label = ''
+      for(let j=1;j<3;j++){
+        for(let i=1;i<5;i++){
+          listQuery.type=i
+          let params = {
+            fetchUrl: '/sys/count/temperatureCount',
+            listQuery: listQuery
+          }
+          this.$store.dispatch('GetList', params).then(res => {
+            console.log('****33**********',res.data)
+            if(j==1){//月
+                label= '月度'
+                if(i==1){
+                  eleId="tempCalc"
+                  title= '◆ 温度统计 ◆'
+                }else if(i==2){
+                  eleId="signCalc"
+                  title= '◆ 信号统计 ◆'
+                }else if(i==3){
+                  eleId="sunMonth"
+                  title= '◆ 太阳能电压分析 ◆'
+                }else if(i==4){
+                  eleId="chargeMonth"
+                  title= '◆ 电池电压统计 ◆'
+                }
+                if((res.data).length>0){
+                  _this.allData = res.data
+                }else{
+                  _this.allData = _this.dateData
+                }
+                let params = {
+                  eleId:eleId,
+                  timeData: _this.DateList,
+                  data: _this.allData,
+                  title: title,
+                  label: label
+                }
+                _this.getMonthAndDateData(params)
+            }else{//日
+                label=moment().subtract(1, 'day').format('YYYY.MM.DD')
+                if(i==1){
+                  eleId="tempCalcYesterday"
+                  title= '昨日◆ 温度统计 ◆'
+                }else if(i==2){
+                  eleId="signCalcYesterday"
+                  title= '昨日◆ 信号统计 ◆'
+                }else if(i==3){
+                  eleId="sunYesterday"
+                  title='昨日◆ 太阳能电压分析 ◆'
+                }else if(i==4){
+                  eleId="chargeYesterday"
+                  title='昨日◆ 电池电压统计 ◆'
+                }
+                if((res.data).length>0){
+                  _this.allData = res.data
+                }else{
+                  _this.allData = _this.hoursData
+                }
+                let params2 = {
+                  eleId:eleId,
+                  xAxisData: _this.hoursList,
+                  seriesData: _this.allData,
+                  title: title,
+                  label: label
+                }
+                _this.getSignAndTempData(params2)
+            }
+          })
+        }
+      }
+    },
     getDengZhiList() {
       let params = {
         fetchUrl: '/sys/product/list',
-        listQuery: {
-          page: 1,
-          pageSize: 10000
-        }
+        listQuery: {}
       }
       this.$store.dispatch('GetList', params).then(res => {
-        this.terminalList = res.data.datas
-        // console.log('res.data.datasres.data.datasres.data.datas', res.data.datas)
-        // this.pageLightSum = Math.ceil(res.data.total/this.listLightQuery.pageSize)
+        var list = res.data.datas
+        this.terminalList = []
+        var firstList=[]
+        for(let i = 0; i <list.length; i++) {
+          this.terminalList.push(list[i].name)
+          var itemlist={
+            id:list[i].name,
+            name:list[i].id
+          }
+          firstList.push(itemlist)
+        }
+        firstList.map((item)=>this.terminalAllList[item.id] = item.name)
       })
     },
+    getAllSourceList(listQuery) {
+      let params = {
+        fetchUrl: '/sys/count/dataSummary',
+        listQuery: listQuery
+      }
+      this.$store.dispatch('GetList', params).then(res => {
+        let data = res.data
+        if(data.numCount>0){
+          this.allSourceData = data
+        }
+      })
+    },
+    setQuest(){
+      this.listQuery.year = this.selectedYear
+      this.listQuery.month = this.selectedMonth
+      this.listQuery.day = this.selectedDate
+      this.listQuery.cityName =  this.selectedArea
+      this.listQuery.productId = this.terminalAllList[this.selectedTerminal]
+      if(!this.listQuery.productId) this.listQuery.productId=1001
+      
+      this.getAllData(this.listQuery)
+      this.getAllSourceList(this.listQuery)
 
-
+    },
+    searchAll(){
+      this.setQuest()
+    },
     isFebMonthData() {
       let curMonth = this.selectedMonth
       let curYear = this.selectedYear
