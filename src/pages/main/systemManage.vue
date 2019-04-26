@@ -38,25 +38,6 @@
         <div class="orgnazition_title">
           ◆ 组织机构 ◆
         </div>
-        <!-- 筛选框 -->
-        <div class="select_items select_items_area">
-          <div class="label_item">
-            机构名称：
-          </div>
-          <div class="select_input">
-            <el-select v-model="organizeDataForm.parentId" clearable>
-              <el-option
-                v-for="(item, index) in organizeListData"
-                :key="index"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </div>
-        </div>
-        <div class="submit_btn">
-          搜索
-        </div>
         <div class="submit_btn" @click="addInstitution">
           新增
         </div>
@@ -160,7 +141,7 @@
       <el-form ref="organizeDataForm" :rules="rules" :model="organizeDataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
         <el-form-item label="上级机构" prop="parentId">
           <el-select v-model="organizeDataForm.parentId" clearable>
-            <el-option label="无" value="0"></el-option>
+            <el-option label="无" value="0">无</el-option>
             <el-option
               v-for="(item, index) in organizeListData"
               :key="index"
@@ -213,7 +194,7 @@
           <el-input v-model="userDataForm.uname"/>
         </el-form-item>
         <el-form-item label="密码" prop="pwd">
-          <el-input v-model="userDataForm.pwd"/>
+          <el-input v-model="userDataForm.pwd" type="password"/>
         </el-form-item>
         <el-form-item label="手机" prop="phone">
           <el-input v-model="userDataForm.phone"/>
@@ -467,7 +448,9 @@ export default {
           if (valid) {
             this.userDataForm.status = this.switchValue ? 1 : 2
             this.userDataForm.userType = this.userType
-            this.userDataForm.pwd = md5(this.userDataForm.pwd)
+            if(this.userDataForm.pwd.length != 32){
+              this.userDataForm.pwd = md5(this.userDataForm.pwd)
+            }
             let params = {
               fetchUrl: '/sys/user/edit',
               data: this.userDataForm
@@ -499,7 +482,6 @@ export default {
           }
         ).then(() => {
           if (type === 1){
-            // /sys/organize/delete?id=1001
             let params = {
               fetchUrl: '/sys/organize/delete?id='+id,
               data: {}
