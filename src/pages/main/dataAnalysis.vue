@@ -74,19 +74,22 @@
         </div>
         <div class="select_items select_items_area">
           <div class="label_item">
-            区域：
+            区域(省)：
+          </div>
+          <el-select v-model="selectedProvice"  placeholder="请选择" @change="getAreaList();">
+            <el-option v-for="item in proviceList" :key="item.value" :label="item.label" :value="item">
+            </el-option>
+          </el-select>
+        </div>
+        <div class="select_items select_items_area" style="margin-left:40px">
+          <div class="label_item">
+            区域(市)：
           </div>
           <div class="select_input">
-            <multiselect
-              :allow-empty="false"
-              selectLabel=""
-              selectGroupLabel=""
-              deselectLabel=""
-              selectedLabel=""
-              placeholder=""
-              v-model="selectedArea"
-              :options="areaList">
-            </multiselect>
+            <el-select v-model="selectedArea"  placeholder="请选择">
+              <el-option v-for="item in areaList" :key="item.value" :label="item.label" :value="item">
+              </el-option>
+            </el-select>
           </div>
         </div>
         <div class="select_items select_items_terminal">
@@ -250,8 +253,11 @@ export default {
       selectedDate: new Date().getDate(),
       selectedYear: new Date().getFullYear(),
       selectedMonth: new Date().getMonth() + 1,
+      selectedProvice:"湖南省",
       selectedArea: "长沙市",
-      areaList: ['长沙市', '浏阳市', '株洲市', '宁乡市'],
+      proviceList: [],
+      areaAllList:{},
+      areaList: [],
       selectedTerminal: '爆闪灯',
       terminalList: ['爆闪灯','黄慢（闪）灯', '点阵式主动发光标志','面阵式全透发光标志' ,'面阵式半透发光标志'],
       terminalAllList:[],
@@ -369,7 +375,7 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         let data = res.data
-        console.log("___________zd_______",data)
+        console.log("___________终端数据分析_______",data)
         if(data){
           this.zdData = data
           let list = [
@@ -391,7 +397,7 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         let data = res.data
-        console.log("___________mouth_______",data)
+        console.log("___________月度数据分析_______",data)
         let arr1 = [],arr2 = [],arr3 = [],arr = []
         if(data){
           if(data.normal){
@@ -418,7 +424,7 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         let data = res.data
-        console.log("_________analysis_______",data)
+        console.log("_________故障数据分析_______",data)
         let datelist = []
         let datalist = []
         if(data){
@@ -449,7 +455,7 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         let data = res.data
-        console.log("_________lose_______",data)
+        console.log("_________失联数据_______",data)
         let datelist = []
         let datalist = []
         if(data){
@@ -463,12 +469,12 @@ export default {
            for (let i = 0; i < 5; i++) {
              let va = "kind"+(i+1)
              list[i].value = data[va] 
+             datelist.push(list[i].name)
            }
-          datelist = Object.keys(list)
           datalist = list
         }
-        console.log(datelist)
-        this.getLoseInfoAnalysisDataPar(datalist,datelist)//故障数据分析
+        console.log("失联数据分析图表数据：",datelist)
+        this.getLoseInfoAnalysisDataPar(datalist,datelist)//失联数据分析
       })
     },
     getTeminaChars(data) {
@@ -554,7 +560,7 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         let data = res.data.datas
-        console.log("_________logsList_analysis_______",data)
+        console.log("_________故障异常日志_______",data)
         if(data.length>0){
           this.logsList_analysis = data
         }else{
@@ -568,7 +574,7 @@ export default {
       }
       this.$store.dispatch('GetList', params2).then(res => {
         let data = res.data.datas
-        console.log("_________logsList_offLine_______",data)
+        console.log("_________失联异常日志_______",data)
         if(data.length>0){
           this.logsList_offLine = data
         }else{
@@ -787,7 +793,7 @@ export default {
               textStyle: {
                 color: '#ccc'
               },
-              data:["爆闪灯", "黄（慢）灯", "点阵式发光标志", "面阵式全透型发光标志", "面阵式半透型发光标志"]
+              data:datelist
           },
           calculable : true,
           series : [
@@ -852,15 +858,25 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         var list = res.data
-        console.log("省市数据：",list)
+        console.log("省shi数据：",list)
+        this.proviceList = Object.keys(list)
+        this.areaAllList = list
+        this.areaList = Object.keys(this.areaAllList[this.selectedProvice])
+        console.log("省数据：",this.proviceList)
       })
+    },
+    getAreaList() {
+      var list = this.areaAllList[this.selectedProvice]
+      var items = Object.keys(list)
+      this.areaList = items
+      this.selectedArea = this.areaList[0]
     },
     setQuest(){
       this.listQuery.year = this.selectedYear
       this.listQuery.month = this.selectedMonth
       this.listQuery.day = this.selectedDate
       this.listQuery.city =  this.selectedArea
-      this.listQuery.province = '湖南'
+      this.listQuery.province = this.selectedProvice
       this.listQuery.productId = this.terminalAllList[this.selectedTerminal]
       if(!this.listQuery.productId) this.listQuery.productId=1001
       

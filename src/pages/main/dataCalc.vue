@@ -89,21 +89,24 @@
             </multiselect>
           </div>
         </div>
+        <div class="select_items select_items_area" style="margin-left:-20px">
+          <div class="label_item">
+            区域(省)：
+          </div>
+          <el-select v-model="selectedProvice"  style="width:90px" placeholder="请选择" @change="getAreaList();">
+            <el-option v-for="item in proviceList" :key="item.value" :label="item.label" :value="item">
+            </el-option>
+          </el-select>
+        </div>
         <div class="select_items select_items_area">
           <div class="label_item">
-            区域：
+            区域(市)：
           </div>
-          <div class="select_input">
-            <multiselect
-              :allow-empty="false"
-              selectLabel=""
-              selectGroupLabel=""
-              deselectLabel=""
-              selectedLabel=""
-              placeholder=""
-              v-model="selectedArea"
-              :options="areaList">
-            </multiselect>
+           <div class="select_input">
+            <el-select v-model="selectedArea" style="width:90px"  placeholder="请选择">
+              <el-option v-for="item in areaList" :key="item.value" :label="item.label" :value="item">
+              </el-option>
+            </el-select>
           </div>
         </div>
         <div class="select_items select_items_terminal">
@@ -252,8 +255,11 @@ export default {
       selectedDate: new Date().getDate(),
       selectedYear: new Date().getFullYear(),
       selectedMonth: new Date().getMonth() + 1,
+      selectedProvice:"湖南省",
       selectedArea: "长沙市",
-      areaList: ['长沙市', '浏阳市', '株洲市', '宁乡市'],
+      proviceList: [],
+      areaAllList:{},
+      areaList: [],
       selectedTerminal: '爆闪灯',
       terminalList: ['爆闪灯','黄慢（闪）灯', '点阵式主动发光标志','面阵式全透发光标志' ,'面阵式半透发光标志'],
       terminalAllList:[],
@@ -296,6 +302,7 @@ export default {
     }
     this.isFebMonthData()
     this.getDengZhiList()
+    this.getArea()
   },
   mounted() {
     this.setQuest()
@@ -410,11 +417,41 @@ export default {
         }
       })
     },
+    getArea() {
+      let params = {
+        fetchUrl: '/sys/areas/dlist',
+        listQuery: {
+          'level':'1',
+          "province":'2',
+          "city":'0'
+        }
+      }
+      this.$store.dispatch('GetList', params).then(res => {
+        var list = res.data
+        console.log("省shi数据：",list)
+        this.proviceList = Object.keys(list)
+        this.areaAllList = list
+        this.areaList = Object.keys(this.areaAllList[this.selectedProvice])
+        console.log("省数据：",this.proviceList)
+      })
+    },
+    getAreaList() {
+      var list = this.areaAllList[this.selectedProvice]
+      var items = Object.keys(list)
+      this.areaList = items
+      this.selectedArea = this.areaList[0]
+    },
     setQuest(){
+      // this.listQuery.year = this.selectedYear
+      // this.listQuery.month = this.selectedMonth
+      // this.listQuery.day = this.selectedDate
+      // this.listQuery.cityName =  this.selectedArea
+      // this.listQuery.productId = this.terminalAllList[this.selectedTerminal]
       this.listQuery.year = this.selectedYear
       this.listQuery.month = this.selectedMonth
       this.listQuery.day = this.selectedDate
-      this.listQuery.cityName =  this.selectedArea
+      this.listQuery.city =  this.selectedArea
+      this.listQuery.province = this.selectedProvice
       this.listQuery.productId = this.terminalAllList[this.selectedTerminal]
       if(!this.listQuery.productId) this.listQuery.productId=1001
       
