@@ -843,11 +843,11 @@ export default {
     },
     getArea() {
       let params = {
-        fetchUrl: '/sys/area/dlist',
+        fetchUrl: '/sys/areas/dlist',
         listQuery: {
           'level':'1',
           "province":'2',
-          "city":''
+          "city":'0'
         }
       }
       this.$store.dispatch('GetList', params).then(res => {
