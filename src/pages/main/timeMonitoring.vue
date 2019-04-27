@@ -108,10 +108,10 @@
                 <td>{{statusMap[item.status]}}</td>
                 <td class="opration_table">
                   <div class="opration_btn">
-                    <div class="_record" @click="goAlarmRecordList(item.alarmRecord)">
+                    <div class="_record" @click="goAlarmRecordList(item)">
                       报警记录
                     </div>
-                    <div class="history_data" @click="goRecordList(item.record)">
+                    <div class="history_data" @click="goRecordList(item)">
                       历史数据
                     </div>
                   </div>
@@ -173,86 +173,6 @@
         <el-button type="primary" @click="checkDetailSubmit">关闭</el-button>
       </div>
     </el-dialog>
-    <div class="map_detail_info">
-       <table class="table_list" id="mapTable">
-        <tr>
-          <th>所属机构</th>
-          <th colspan="3">全国>>二级管理>>三级管理>>老化架测试</th>
-        </tr>
-        <tr>
-          <td>终端识别号</td>
-          <td>9010210118070008</td>
-          <td>终端名称</td>
-          <td>test_3</td>
-        </tr>
-        <tr>
-          <td>当前坐标位置</td>
-          <td>28.3668,112.893</td>
-          <td>信号强度</td>
-          <td>24</td>
-        </tr>
-        <tr>
-          <td>安装单位</td>
-          <td>老化架</td>
-          <td>安装时间</td>
-          <td>2018-08-30 00:00:00.0</td>
-        </tr>
-        <tr>
-          <td>联系方式</td>
-          <td>136872266223</td>
-          <td>电池类型</td>
-          <td>市电</td>
-        </tr>
-        <tr>
-          <td>电池电压</td>
-          <td>12.7</td>
-          <td>运行模式</td>
-          <td>夏季模式</td>
-        </tr>
-        <tr>
-          <td>开始运行时间</td>
-          <td>2018-08-30 08:30:34.0</td>
-          <td>位移报警</td>
-          <td>正常</td>
-        </tr>
-        <tr>
-          <td>终端识别号</td>
-          <td>9010210118070008</td>
-          <td>终端名称</td>
-          <td>test_3</td>
-        </tr>
-        <tr>
-          <td>当前坐标位置</td>
-          <td>28.3668,112.893</td>
-          <td>信号强度</td>
-          <td>24</td>
-        </tr>
-        <tr>
-          <td>安装单位</td>
-          <td>老化架</td>
-          <td>安装时间</td>
-          <td>2018-08-30 00:00:00.0</td>
-        </tr>
-        <tr>
-          <td>联系方式</td>
-          <td>136872266223</td>
-          <td>电池类型</td>
-          <td>市电</td>
-        </tr>
-        <tr>
-          <td>电池电压</td>
-          <td>12.7</td>
-          <td>运行模式</td>
-          <td>夏季模式</td>
-        </tr>
-        <tr>
-          <td>开始运行时间</td>
-          <td>2018-08-30 08:30:34.0</td>
-          <td>位移报警</td>
-          <td>正常</td>
-        </tr>
-      </table>
-    </div>
   </div>
 </template>
 <script>
@@ -426,6 +346,7 @@ export default {
       }
     },
     goAlarmRecordList(item) {
+      console.log('item====>>', item)
       this.statusType = "报警";
       this.detailInfo = item[0] || this.detailInfo;
       this.checkDetailVisible = true;
