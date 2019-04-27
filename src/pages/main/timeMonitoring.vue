@@ -176,6 +176,7 @@ var parentName = null;
 //Echarts地图全局变量，主要是在返回上级地图的方法中会用到
 var myChart = null;
 import axios from "axios";
+import _ from "lodash";
 import moment from "moment";
 import echarts from "echarts";
 import cityMap from "@/assets/js/china-main-city-map.js";
@@ -186,6 +187,7 @@ export default {
   data() {
     return {
       dateTime: moment().format("YYYY.MM.DD"),
+      threeStatusData: [],
       alarmList: [
         {
           address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
@@ -530,15 +532,22 @@ export default {
     },
     producePositionData(data) {
       let tempData = []
-      data.map(item => item.children.map(ele => tempData.push({value: [JSON.parse(ele.location).longitude, JSON.parse(ele.location).latitude, 1], name: ele.province})))
+      data.map(item => item.children.map(ele => tempData.push({value: [JSON.parse(ele.location).longitude, JSON.parse(ele.location).latitude, 1], name: ele.province, status: ele.status})))
       return tempData
     },
     async platformCount(divid) {
       // './json/china.json'
       let that = this;
       let { data } = await this.getEveryCityData(1);
-      this.allDatas = this.producePositionData(data);
-      console.log('alldata==========', this.allDatas)
+      let unFormatData = this.producePositionData(data);
+      const testData = [
+        {name: '衡东县', value: [112.487345,26.9038430000001, 1] , status: 1},
+        {name: '北京', value: [116.405285, 39.904989, 1], status: 1},
+        {name: '望城区', value: [112.887345, 27.983843, 1], status: 2},
+        {name: '上海', value: [121.472644, 31.231706, 1], status: 2},
+        {name: '宁乡', value: [112.704832792969, 28.333843,1], status: 3}
+        ]
+      this.threeStatusData = _.groupBy(unFormatData, 'status')
       axios.get("./json/" + chinaId + ".json", {}).then(response => {
         const mapJson = response.data;
         chinaJson = mapJson;
@@ -567,7 +576,6 @@ export default {
                   param.name,
                   mapJson,
                   true
-                  // cityDatas
                 );
               });
             });
@@ -579,7 +587,6 @@ export default {
               chinaName,
               chinaJson,
               false
-              // that.allDatas
             );
             mapStack = [];
             parentId = chinaId;
@@ -589,34 +596,6 @@ export default {
       });
     },
     registerAndsetOption(myChart, id, name, mapJson, flag, allDatas) {
-      var geoCoordMap = {
-        海门: [121.15, 31.89],
-        鄂尔多斯: [109.781327, 39.608266],
-        招远: [120.38, 37.35],
-        舟山: [122.207216, 29.985295],
-        齐齐哈尔: [123.97, 47.33],
-        盐城: [120.13, 33.38],
-        赤峰: [118.87, 42.28],
-        青岛: [120.33, 36.07],
-        乳山: [121.52, 36.89],
-        金昌: [102.188043, 38.520089]
-      };
-
-      var convertData = function(data) {
-        var res = [];
-        for (var i = 0; i < data.length; i++) {
-          var geoCoord = geoCoordMap[data[i].name]; //获取坐标
-          if (geoCoord) {
-            //如果有坐标
-            res.push({
-              //创建对象数组，
-              name: data[i].name,
-              value: geoCoord.concat(data[i].value) //用连接数组的形式将value值加入
-            });
-          }
-        }
-        return res;
-      };
       echarts.registerMap(name, mapJson);
       myChart.setOption({
         title: {
@@ -676,7 +655,7 @@ export default {
             type: "scatter",
             coordinateSystem: "geo",
             symbol: 'rect',
-            data: [{name: '衡东县', value: [112.487345,26.9038430000001, 1]},{name: '北京', value: [116.405285, 39.904989, 1]}],
+            data: this.threeStatusData[1] || [],
             symbolSize: 16,
             legend: {
               orient: "horizontal",
@@ -712,7 +691,7 @@ export default {
             type: "scatter",
             coordinateSystem: "geo",
             symbol: 'rect',
-            data: [{name: '望城区', value: [112.887345, 27.983843, 1]}, {name: '上海', value: [121.472644, 31.231706, 1]}],
+            data: this.threeStatusData[2] || [],
             symbolSize: 16,
             legend: {
               orient: "horizontal",
@@ -748,7 +727,7 @@ export default {
             type: "scatter",
             coordinateSystem: "geo",
             symbol: 'rect',
-            data: [{name: '宁乡', value: [112.704832792969, 28.333843,1]}],
+            data: this.threeStatusData[3] || [],
             symbolSize: 16,
             legend: {
               orient: "horizontal",
