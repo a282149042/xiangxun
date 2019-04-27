@@ -17,6 +17,7 @@
     "node-sass": "^4.11.0",
     "sass-loader": "^7.1.0",
     "vue": "^2.6.6",
+    "vue-amap": "^0.5.9",
     "vue-multiselect": "^2.1.4",
     "vue-router": "^3.0.1",
     "vue-tree-halower": "^1.8.0",

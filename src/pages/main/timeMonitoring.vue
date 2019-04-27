@@ -69,6 +69,17 @@
                <div class="platform_charts" id="platformCount">
                 <!-- 平台数据分布 -->
               </div>
+              <div v-if="isShowMap" class="amap-wrapper">
+                <el-amap class="amap-box" :vid="'amap-vue'" :center="curPositionData">
+                  <el-amap-info-window
+                    :position="currentWindow.position"
+                    :content="currentWindow.content"
+                    :visible="currentWindow.visible"
+                    :events="currentWindow.events">
+                  </el-amap-info-window>
+                  <!-- <el-amap-marker vid="component-marker" :position="componentMarker.position" :content-render="componentMarker.contentRender" ></el-amap-marker> -->
+                </el-amap>
+              </div>
             </div>
           </div>
           <div class="_left_bottom monitoring_list">
@@ -162,6 +173,86 @@
         <el-button type="primary" @click="checkDetailSubmit">关闭</el-button>
       </div>
     </el-dialog>
+    <div class="map_detail_info">
+       <table class="table_list" id="mapTable">
+        <tr>
+          <th>所属机构</th>
+          <th colspan="3">全国>>二级管理>>三级管理>>老化架测试</th>
+        </tr>
+        <tr>
+          <td>终端识别号</td>
+          <td>9010210118070008</td>
+          <td>终端名称</td>
+          <td>test_3</td>
+        </tr>
+        <tr>
+          <td>当前坐标位置</td>
+          <td>28.3668,112.893</td>
+          <td>信号强度</td>
+          <td>24</td>
+        </tr>
+        <tr>
+          <td>安装单位</td>
+          <td>老化架</td>
+          <td>安装时间</td>
+          <td>2018-08-30 00:00:00.0</td>
+        </tr>
+        <tr>
+          <td>联系方式</td>
+          <td>136872266223</td>
+          <td>电池类型</td>
+          <td>市电</td>
+        </tr>
+        <tr>
+          <td>电池电压</td>
+          <td>12.7</td>
+          <td>运行模式</td>
+          <td>夏季模式</td>
+        </tr>
+        <tr>
+          <td>开始运行时间</td>
+          <td>2018-08-30 08:30:34.0</td>
+          <td>位移报警</td>
+          <td>正常</td>
+        </tr>
+        <tr>
+          <td>终端识别号</td>
+          <td>9010210118070008</td>
+          <td>终端名称</td>
+          <td>test_3</td>
+        </tr>
+        <tr>
+          <td>当前坐标位置</td>
+          <td>28.3668,112.893</td>
+          <td>信号强度</td>
+          <td>24</td>
+        </tr>
+        <tr>
+          <td>安装单位</td>
+          <td>老化架</td>
+          <td>安装时间</td>
+          <td>2018-08-30 00:00:00.0</td>
+        </tr>
+        <tr>
+          <td>联系方式</td>
+          <td>136872266223</td>
+          <td>电池类型</td>
+          <td>市电</td>
+        </tr>
+        <tr>
+          <td>电池电压</td>
+          <td>12.7</td>
+          <td>运行模式</td>
+          <td>夏季模式</td>
+        </tr>
+        <tr>
+          <td>开始运行时间</td>
+          <td>2018-08-30 08:30:34.0</td>
+          <td>位移报警</td>
+          <td>正常</td>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 <script>
@@ -180,12 +271,19 @@ import _ from "lodash";
 import moment from "moment";
 import echarts from "echarts";
 import cityMap from "@/assets/js/china-main-city-map.js";
+import { lazyAMapApiLoaderInstance } from "vue-amap";
 // const china = require('../../../public/json/china.json')
 export default {
   name: "monitoring",
   components: {},
   data() {
     return {
+      currentWindow: {
+        position: [0, 0],
+        content: "",
+        events: {},
+        visible: false
+      },
       dateTime: moment().format("YYYY.MM.DD"),
       threeStatusData: [],
       alarmList: [
@@ -273,6 +371,7 @@ export default {
         location: "{'longitude':123.123123,'latitude':234.123123}",
         craeteTime: moment().format("YYYY-MM-DD hh:mm:ss")
       },
+      isShowMap: false,
       totalCountObj: {},
       kindsCountList: [],
       monitoringList: [],
@@ -285,6 +384,7 @@ export default {
         pageSize: 1000,
         type: 2 //类型（1-正常，2告警，3-失联）
       },
+      curPositionData: [121.5273285, 31.21515044],
       alarmInfoList: []
     };
   },
@@ -298,8 +398,15 @@ export default {
     this.platformCount("platformCount");
   },
   methods: {
-    backIndexPage() {},
+    backIndexPage() {
+      this.isShowMap = false;
+      this.registerAndsetOption(myChart, chinaId, chinaName, chinaJson, false);
+      mapStack = [];
+      parentId = chinaId;
+      parentName = chinaName;
+    },
     backOnePage() {
+      this.isShowMap = false;
       if (mapStack.length != 0) {
         //如果有上级目录则执行
         var map = mapStack.pop();
@@ -516,38 +623,44 @@ export default {
     },
     async getEveryCityData(type, cityName) {
       //type 1-所有省份数据，2-省数据,3-市数据
-       // province 
+      // province
       let that = this;
       let params = {
         fetchUrl: "/sys/monitoring/platformInfo",
         listQuery: {
           type,
-          "province": type === 2 ? cityName : '',
-          "city": type === 3 ? cityName : '',
-          "county": type === 4 ? cityName : '',
+          province: type === 2 ? cityName : "",
+          city: type === 3 ? cityName : "",
+          county: type === 4 ? cityName : ""
         }
       };
       let data = await this.$store.dispatch("GetList", params);
       return data;
     },
     producePositionData(data) {
-      let tempData = []
-      data.map(item => item.children.map(ele => tempData.push({value: [JSON.parse(ele.location).longitude, JSON.parse(ele.location).latitude, 1], name: ele.province, status: ele.status})))
-      return tempData
+      let tempData = [];
+      data.map(item =>
+        item.children.map(ele =>
+          tempData.push({
+            value: [
+              JSON.parse(ele.location).longitude,
+              JSON.parse(ele.location).latitude,
+              1
+            ],
+            name: ele.county,
+            id: ele.id,
+            status: ele.status
+          })
+        )
+      );
+      return tempData;
     },
     async platformCount(divid) {
       // './json/china.json'
       let that = this;
       let { data } = await this.getEveryCityData(1);
       let unFormatData = this.producePositionData(data);
-      const testData = [
-        {name: '衡东县', value: [112.487345,26.9038430000001, 1] , status: 1},
-        {name: '北京', value: [116.405285, 39.904989, 1], status: 1},
-        {name: '望城区', value: [112.887345, 27.983843, 1], status: 2},
-        {name: '上海', value: [121.472644, 31.231706, 1], status: 2},
-        {name: '宁乡', value: [112.704832792969, 28.333843,1], status: 3}
-        ]
-      this.threeStatusData = _.groupBy(unFormatData, 'status')
+      this.threeStatusData = _.groupBy(unFormatData, "status");
       axios.get("./json/" + chinaId + ".json", {}).then(response => {
         const mapJson = response.data;
         chinaJson = mapJson;
@@ -567,30 +680,61 @@ export default {
           if (cityId) {
             //代表有下级地图
             axios.get("./json/" + cityId + ".json", {}).then(response => {
-              that.getEveryCityData(2, param.name).then(res => {
-                let cityDatas = res.data;
-                const mapJson = response.data;
-                that.registerAndsetOption(
-                  myChart,
-                  cityId,
-                  param.name,
-                  mapJson,
-                  true
-                );
-              });
+              const mapJson = response.data;
+              that.registerAndsetOption(
+                myChart,
+                cityId,
+                param.name,
+                mapJson,
+                true
+              );
             });
           } else {
-            //没有下级地图，回到一级中国地图，并将mapStack清空
-            that.registerAndsetOption(
-              myChart,
-              chinaId,
-              chinaName,
-              chinaJson,
-              false
-            );
-            mapStack = [];
-            parentId = chinaId;
-            parentName = chinaName;
+            if (param.componentSubType === "scatter") {
+              that.isShowMap = true;
+              that.curPositionData = param.value;
+              let postData = {
+                fetchUrl: "/sys/device/detail?id=" + param.data.id,
+                listQuery: {
+                  id: param.data.id
+                }
+              };
+              that.$store.dispatch("GetDetail", postData).then(detail => {
+                const detailData = detail.data;
+                const element = 
+                `<div class="modal_detail">
+                  <div style="margin: -1px; padding: 1px;">
+                    <div style="text-align:center;white-space:nowrap;margin:10px;">
+                      <table style="border:1px solid #999;">
+                        <tbody style="border:1px solid #999;">
+                          <tr><td>所属机构</td><td colspan="3">全国&gt;&gt;二级管理&gt;&gt;三级管理&gt;&gt;老化架测试</td></tr>
+                          <tr><td>终端识别号</td><td>9010210118070008</td><td>ICCID卡号</td><td>89860402101870571012</td></tr>
+                          <tr><td>终端名称</td><td>test_3</td><td>终端通讯时间</td><td>2019-04-28 00:30:14.0</td></tr>   
+                          <tr><td>当前坐标位置</td><td>28.3668,112.893</td><td>灯质模式</td><td>黄闪灯</td></tr>   
+                          <tr><td>信号强度</td><td>24</td><td>终端备注</td><td>test_3</td></tr>   
+                          <tr><td>安装单位</td><td>老化架</td><td>安装地点</td><td>老化架</td></tr>   
+                          <tr><td>安装时间</td><td>2018-08-30 00:00:00.0</td><td>负责人</td><td>chen</td></tr>   
+                          <tr><td>联系方式</td><td>123</td><td>支队联系方式</td><td>123</td></tr>   
+                          <tr><td>电池类型</td><td>市电</td><td>太阳能电压</td><td>0.0</td></tr>   
+                          <tr><td>电池电压</td><td>12.7</td><td>点阵/面阵</td><td>点阵</td></tr>   
+                          <tr><td>运行模式</td><td>夏季模式</td><td>运行等级</td><td>1</td></tr>   
+                          <tr><td>开始运行时间</td><td>2018-08-30 08:30:34.0</td><td>终端状态</td><td>正常</td></tr>
+                          <tr><td>位移报警</td><td>正常</td><td>位移距离</td><td>0.3</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>`;
+                that.currentWindow = {
+                  position: param.value,
+                  content: element,
+                  events: {},
+                  size: 10,
+                  visible: true
+                };
+                console.log("detaildetaildetaildetail", detail);
+              });
+            }
           }
         });
       });
@@ -643,6 +787,12 @@ export default {
             map: name,
             itemStyle: {
               normal: {
+                label: {
+                  show: true, //默认是否显示省份名称
+                  textStyle: {
+                    color: "#fff"
+                  }
+                },
                 areaColor: "rgba(23, 27, 57,0)",
                 borderColor: "#1dc199",
                 borderWidth: 1
@@ -654,7 +804,7 @@ export default {
             name: "正常",
             type: "scatter",
             coordinateSystem: "geo",
-            symbol: 'rect',
+            symbol: "rect",
             data: this.threeStatusData[1] || [],
             symbolSize: 16,
             legend: {
@@ -690,7 +840,7 @@ export default {
             name: "异常",
             type: "scatter",
             coordinateSystem: "geo",
-            symbol: 'rect',
+            symbol: "rect",
             data: this.threeStatusData[2] || [],
             symbolSize: 16,
             legend: {
@@ -726,7 +876,7 @@ export default {
             name: "离线",
             type: "scatter",
             coordinateSystem: "geo",
-            symbol: 'rect',
+            symbol: "rect",
             data: this.threeStatusData[3] || [],
             symbolSize: 16,
             legend: {
@@ -777,6 +927,7 @@ export default {
           name: mapJson.features[i].properties.name
         });
       }
+      console.log("mapdata========", mapData, mapJson);
       return mapData;
     }
   }
