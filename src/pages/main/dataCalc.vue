@@ -383,17 +383,19 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         var list = res.data.datas
-        this.terminalList = []
-        var firstList=[]
-        for(let i = 0; i <list.length; i++) {
-          this.terminalList.push(list[i].name)
-          var itemlist={
-            id:list[i].name,
-            name:list[i].id
+        if(list.length>0){
+          this.terminalList = []  
+          var firstList=[]
+          for(let i = 0; i <list.length; i++) {
+            this.terminalList.push(list[i].name)
+            var itemlist={
+              id:list[i].name,
+              name:list[i].id
+            }
+            firstList.push(itemlist)
           }
-          firstList.push(itemlist)
+          firstList.map((item)=>this.terminalAllList[item.id] = item.name)
         }
-        firstList.map((item)=>this.terminalAllList[item.id] = item.name)
       })
     },
     getAllSourceList(listQuery) {
