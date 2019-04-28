@@ -321,7 +321,7 @@ export default {
             listQuery: listQuery
           }
           this.$store.dispatch('GetList', params).then(res => {
-            console.log('****33**********',res.data)
+            console.log('****33**********',res.data) // {}
             if(j==1){//月
                 label= '月度'
                 if(i==1){
@@ -337,19 +337,18 @@ export default {
                   eleId="chargeMonth"
                   title= '◆ 电池电压统计 ◆'
                 }
-                if((res.data).length>0){
+                if(Object.keys(res.data).length > 0){
                   _this.allData = res.data
-                }else{
-                  _this.allData = _this.dateData
+                  let params = {
+                    eleId:eleId,
+                    timeData: _this.DateList,
+                    data: _this.allData,
+                    title: title,
+                    label: label
+                  }
+                  _this.getMonthAndDateData(params)
                 }
-                let params = {
-                  eleId:eleId,
-                  timeData: _this.DateList,
-                  data: _this.allData,
-                  title: title,
-                  label: label
-                }
-                _this.getMonthAndDateData(params)
+                
             }else{//日
                 label=moment().subtract(1, 'day').format('YYYY.MM.DD')
                 if(i==1){
@@ -365,19 +364,17 @@ export default {
                   eleId="chargeYesterday"
                   title='昨日◆ 电池电压统计 ◆'
                 }
-                if((res.data).length>0){
+                if(Object.keys(res.data).length > 0){
                   _this.allData = res.data
-                }else{
-                  _this.allData = _this.hoursData
+                  let params2 = {
+                    eleId:eleId,
+                    xAxisData: _this.hoursList,
+                    seriesData: _this.allData || [],
+                    title: title,
+                    label: label
+                  }
+                  _this.getSignAndTempData(params2)
                 }
-                let params2 = {
-                  eleId:eleId,
-                  xAxisData: _this.hoursList,
-                  seriesData: _this.allData,
-                  title: title,
-                  label: label
-                }
-                _this.getSignAndTempData(params2)
             }
           })
         }
@@ -412,9 +409,10 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         let data = res.data
-        if(data.numCount>0){
-          this.allSourceData = data
-        }
+        // if(data.numCount>0){
+        //   this.allSourceData = data
+        // }
+        this.allSourceData = data
       })
     },
     getArea() {

@@ -561,11 +561,12 @@ export default {
       this.$store.dispatch('GetList', params).then(res => {
         let data = res.data.datas
         console.log("_________故障异常日志_______",data)
-        if(data.length>0){
-          this.logsList_analysis = data
-        }else{
-          this.logsList_analysis = this.logsList
-        }
+        // if(data.length>0){
+        //   this.logsList_analysis = data
+        // }else{
+        //   this.logsList_analysis = this.logsList
+        // }
+        this.logsList_analysis = data
       })
       //失联异常日志
       let params2 = {
@@ -575,11 +576,12 @@ export default {
       this.$store.dispatch('GetList', params2).then(res => {
         let data = res.data.datas
         console.log("_________失联异常日志_______",data)
-        if(data.length>0){
-          this.logsList_offLine = data
-        }else{
-          this.logsList_offLine = this.logsList
-        }
+        // if(data.length>0){
+        //   this.logsList_offLine = data
+        // }else{
+        //   this.logsList_offLine = this.logsList
+        // }
+        this.logsList_offLine = data
       })
     },
     getMonthDataPar(data) {
