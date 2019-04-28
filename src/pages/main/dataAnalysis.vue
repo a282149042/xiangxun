@@ -443,8 +443,8 @@ export default {
               datelist.push(list[i].name)
               datalist.push(list[i])
             }
+          this.getBrokeAnalysisData(datalist,datelist)//故障数据分析
         }
-        this.getBrokeAnalysisData(datalist,datelist)//故障数据分析
       })
     },
     getLoseInfoAnalysisData(listQuery) {
@@ -472,9 +472,9 @@ export default {
              datelist.push(list[i].name)
            }
           datalist = list
+          console.log("失联数据分析图表数据：",datelist)
+          this.getLoseInfoAnalysisDataPar(datalist,datelist)//失联数据分析
         }
-        console.log("失联数据分析图表数据：",datelist)
-        this.getLoseInfoAnalysisDataPar(datalist,datelist)//失联数据分析
       })
     },
     getTeminaChars(data) {
@@ -563,8 +563,6 @@ export default {
         console.log("_________故障异常日志_______",data)
         if(data.length>0){
           this.logsList_analysis = data
-        }else{
-          this.logsList_analysis = this.logsList
         }
       })
       //失联异常日志
@@ -577,20 +575,12 @@ export default {
         console.log("_________失联异常日志_______",data)
         if(data.length>0){
           this.logsList_offLine = data
-        }else{
-          this.logsList_offLine = this.logsList
         }
       })
     },
     getMonthDataPar(data) {
       // 月度数据分析
       let dateList = this.DateList
-      // let dateData = this.dateData
-      if(data.length<0){
-        data[0] = this.dateData
-        data[1] = this.dateData
-        data[2] = this.dateData
-      }
       const teminaChars = echarts.init(document.getElementById('monthDataCharts'))
       const option = {
         color: ['green', 'red', '#999'],
