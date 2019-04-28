@@ -101,8 +101,8 @@
                     <div class="history_data" @click="updateDevice(item)">
                       编辑
                     </div>
-                    <div class="syn_device" @click="synDevice(item.id)">
-                      同步
+                    <div class="syn_device" @click="synDevice(item)">
+                      物联网
                     </div>
                   </div>
                 </td>
@@ -526,11 +526,17 @@ export default {
   },
   methods:{
     changeDevicePages(pages) {
+      if(pages > this.pageTermSum|| pages < 1){
+        return;
+      }
       this.activeTermIndex = pages
       this.listTermQuery.page = pages
       this.getTermList()
     },
     changeLightPages(pages) {
+      if(pages > this.pageLightSum|| pages < 1){
+        return;
+      }
       this.activeLightIndex = pages
       this.listLightQuery.page = pages
       this.getLightList()
@@ -739,18 +745,18 @@ export default {
     openDeviceManage() {
       this.$router.push('deviceManage')
     },
-    synDevice(id){
-      // 删除灯质
+    synDevice(device){
+      // 同步设备信息
       MessageBox.confirm(
-          '确定要立即设置设备信息吗？',
+          '产品KEY：'+device.iotPkey+'，设备秘钥：'+device.iotDsecret+'，如需设置设备信息，请点击“立即设置”','物联网信息',
           {
-            confirmButtonText: '确定',
+            confirmButtonText: '立即设置',
             cancelButtonText: '取消',
             type: 'warning'
           }
         ).then(() => {
             let params = {
-              fetchUrl: '/sys/device/sync?id='+id,
+              fetchUrl: '/sys/device/sync?id='+device.id,
               data: {}
             }
             this.$store.dispatch('DeleteMembers', params).then(res => {

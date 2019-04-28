@@ -327,11 +327,17 @@ export default {
   },
   methods:{
     changePages(pages) {
+      if(pages > this.pageSum|| pages < 1){
+        return;
+      }
       this.activeUserIndex = pages
       this.listQuery.page = pages
       this.getUserListData()
     },
     changeOrganPages(pages){
+      if(pages > this.pageOrganSum|| pages < 1){
+        return;
+      }
       this.activeOrganizationIndex = pages
       this.listOrganizeQuery.page = pages
       this.getOrganizeList()
