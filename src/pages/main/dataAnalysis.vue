@@ -103,7 +103,7 @@
               selectGroupLabel=""
               deselectLabel=""
               selectedLabel=""
-              placeholder=""
+              placeholder="请选择"
               v-model="selectedTerminal"
               :options="terminalList">
             </multiselect>
@@ -178,18 +178,18 @@
                 <div class="_logs_list" v-for="(item, index) in logsList_analysis" :key="index">
                   <div class="log_detail_date">
                     <div class="_detail">
-                      {{item.logs}}
+                      {{item.emsg}}
                     </div>
                     <div class="_date_time">
-                        {{item.dateTime}}
+                        {{item.time}}
                     </div>
                   </div>
                   <div class="reason_isfixed">
                     <div class="_reason">
-                      {{item.reason}}
+                      {{item.reMsg}}
                     </div>
                     <div class="_isFixed">
-                      {{item.status}}
+                      {{item.reStatus}}
                     </div>
                   </div>
                 </div>
@@ -212,18 +212,18 @@
                 <div class="_logs_list" v-for="(item, index) in logsList_offLine" :key="index">
                   <div class="log_detail_date">
                     <div class="_detail">
-                      {{item.logs}}
+                      {{item.emsg}}
                     </div>
                     <div class="_date_time">
-                        {{item.dateTime}}
+                        {{item.time}}
                     </div>
                   </div>
                   <div class="reason_isfixed">
                     <div class="_reason">
-                      {{item.reason}}
+                      {{item.reMsg}}
                     </div>
                     <div class="_isFixed">
-                      {{item.status}}
+                      {{item.reStatus}}
                     </div>
                   </div>
                 </div>
@@ -253,13 +253,13 @@ export default {
       selectedDate: new Date().getDate(),
       selectedYear: new Date().getFullYear(),
       selectedMonth: new Date().getMonth() + 1,
-      selectedProvice:"湖南省",
-      selectedArea: "长沙市",
+      selectedProvice:"",
+      selectedArea: "",
       proviceList: [],
       areaAllList:{},
       areaList: [],
-      selectedTerminal: '爆闪灯',
-      terminalList: ['爆闪灯','黄慢（闪）灯', '点阵式主动发光标志','面阵式全透发光标志' ,'面阵式半透发光标志'],
+      selectedTerminal: '',
+      terminalList: [],
       terminalAllList:[],
       monthList: [1,2,3,4,5,6,7,8,9,10,11,12],
       logsList_analysis:[],
@@ -337,10 +337,10 @@ export default {
     for(let i = 2000; i <= 2050; i++) {
       this.yearsList.push(i)
     }
-    this.getDengZhiList()
     this.getArea()
   },
   mounted() {
+    this.getDengZhiList()
     this.setQuest()
     this.makeDateListData()
   },
@@ -443,8 +443,8 @@ export default {
               datelist.push(list[i].name)
               datalist.push(list[i])
             }
+          this.getBrokeAnalysisData(datalist,datelist)//故障数据分析
         }
-        this.getBrokeAnalysisData(datalist,datelist)//故障数据分析
       })
     },
     getLoseInfoAnalysisData(listQuery) {
@@ -472,9 +472,9 @@ export default {
              datelist.push(list[i].name)
            }
           datalist = list
+          console.log("失联数据分析图表数据：",datelist)
+          this.getLoseInfoAnalysisDataPar(datalist,datelist)//失联数据分析
         }
-        console.log("失联数据分析图表数据：",datelist)
-        this.getLoseInfoAnalysisDataPar(datalist,datelist)//失联数据分析
       })
     },
     getTeminaChars(data) {
@@ -555,17 +555,17 @@ export default {
       let _this = this
       //故障异常日志
       let params = {
-        fetchUrl: '/sys/analysis/offLineLog',
+        fetchUrl: '/sys/analysis/errorlog',
         listQuery: listQuery
       }
       this.$store.dispatch('GetList', params).then(res => {
         let data = res.data.datas
         console.log("_________故障异常日志_______",data)
-        // if(data.length>0){
-        //   this.logsList_analysis = data
-        // }else{
-        //   this.logsList_analysis = this.logsList
-        // }
+        for(let i =0;i<data.length;i++){
+          let oldTime = data[i].time
+          let newdate = moment(oldTime).format('YYYY-MM-DD HH:mm:ss')
+          data[i].time = newdate
+        }
         this.logsList_analysis = data
       })
       //失联异常日志
@@ -576,23 +576,17 @@ export default {
       this.$store.dispatch('GetList', params2).then(res => {
         let data = res.data.datas
         console.log("_________失联异常日志_______",data)
-        // if(data.length>0){
-        //   this.logsList_offLine = data
-        // }else{
-        //   this.logsList_offLine = this.logsList
-        // }
+        for(let i =0;i<data.length;i++){
+          let oldTime = data[i].time
+          let newdate = moment(oldTime).format('YYYY-MM-DD HH:mm:ss')
+          data[i].time = newdate
+        }
         this.logsList_offLine = data
       })
     },
     getMonthDataPar(data) {
       // 月度数据分析
       let dateList = this.DateList
-      // let dateData = this.dateData
-      if(data.length<0){
-        data[0] = this.dateData
-        data[1] = this.dateData
-        data[2] = this.dateData
-      }
       const teminaChars = echarts.init(document.getElementById('monthDataCharts'))
       const option = {
         color: ['green', 'red', '#999'],
@@ -833,7 +827,8 @@ export default {
         listQuery: {}
       }
       this.$store.dispatch('GetList', params).then(res => {
-        var list = res.data
+        var list = res.data.datas
+        console.log('****灯质汇总********',list)
         if(list.length>0){
           this.terminalList = []  
           var firstList=[]
@@ -846,6 +841,7 @@ export default {
             firstList.push(itemlist)
           }
           firstList.map((item)=>this.terminalAllList[item.id] = item.name)
+          console.log("this.terminalAllList---",this.terminalAllList)
         }
       })
     },
@@ -863,7 +859,9 @@ export default {
         console.log("省shi数据：",list)
         this.proviceList = Object.keys(list)
         this.areaAllList = list
-        this.areaList = Object.keys(this.areaAllList[this.selectedProvice])
+         if(this.selectedProvice != ""){
+          this.areaList = Object.keys(this.areaAllList[this.selectedProvice])
+        }
         console.log("省数据：",this.proviceList)
       })
     },
@@ -879,8 +877,10 @@ export default {
       this.listQuery.day = this.selectedDate
       this.listQuery.city =  this.selectedArea
       this.listQuery.province = this.selectedProvice
-      this.listQuery.productId = this.terminalAllList[this.selectedTerminal]
-      if(!this.listQuery.productId) this.listQuery.productId=1001
+      if(this.selectedTerminal != ""){
+         this.listQuery.productId = this.terminalAllList[this.selectedTerminal]
+      }
+      console.log("this.listQuery:",this.listQuery)
       
       this.getTeminaDatas(this.listQuery)//终端数据分析数据
       this.getBrokeAnalysisDatas(this.listQuery)//故障数据分析
