@@ -76,10 +76,10 @@
                 </td>
               </tr>
               <tr class="divide_pages">
-                  <td colspan="7" v-if="organizeListData.length == 0 && listOrganizeQuery.page == 1">
+                  <td colspan="6" v-if="organizeListData.length == 0 && listOrganizeQuery.page == 1">
                     没有更多的数据了
                   </td>
-                  <td colspan="7" v-else>
+                  <td colspan="6" v-else>
                     共条{{organizeTotal}}记录，当前显示第{{listOrganizeQuery.page}}/{{pageOrganSum}}页
                     <a @click="changeOrganPages(1)">首页</a>
                     <a @click="changeOrganPages(listOrganizeQuery.page-1)">上一页</a>
@@ -327,11 +327,17 @@ export default {
   },
   methods:{
     changePages(pages) {
+      if(pages > this.pageSum|| pages < 1){
+        return;
+      }
       this.activeUserIndex = pages
       this.listQuery.page = pages
       this.getUserListData()
     },
     changeOrganPages(pages){
+      if(pages > this.pageOrganSum|| pages < 1){
+        return;
+      }
       this.activeOrganizationIndex = pages
       this.listOrganizeQuery.page = pages
       this.getOrganizeList()

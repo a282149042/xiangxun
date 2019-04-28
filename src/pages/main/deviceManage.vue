@@ -67,7 +67,7 @@
                 <td>{{item.serialNo}}</td>
                 <td>{{item.name}}</td>
                 <td>{{item.organizeName}}</td>
-                <td>{{
+                <td v-if="typeof (item.runMode) == 'string'">{{
                   JSON.parse(item.runMode).type == 1 ? "夏季模式" : (
                     JSON.parse(item.runMode).type == 2 ? "冬季模式" : (
                       JSON.parse(item.runMode).type == 3 ? "应急模式" : (
@@ -76,6 +76,17 @@
                     )
                   )
                   }}</td>
+                <td v-else>
+                  {{
+                    (item.runMode).type == 1 ? "夏季模式" : (
+                    (item.runMode).type == 2 ? "冬季模式" : (
+                      (item.runMode).type == 3 ? "应急模式" : (
+                        (item.runMode).type == 4 ? "自定义模式" : ""
+                      )
+                    )
+                  )
+                  }}
+                </td>  
                 <td v-if="item.linkMode==2">长连接</td>
                 <td v-else>短连接</td>
                 <td v-if="item.location != null">{{JSON.parse(item.location).longitude}}</td>
@@ -89,6 +100,9 @@
                   <div class="opration_btn">
                     <div class="history_data" @click="updateDevice(item)">
                       编辑
+                    </div>
+                    <div class="syn_device" @click="synDevice(item)">
+                      物联网
                     </div>
                   </div>
                 </td>
@@ -224,10 +238,10 @@
             <el-input v-model="deviceListForm.bootMode.level" style="width:200px" placeholder="光感等级，仅光感模式时填写"/>
           </el-form-item>
           <el-form-item label="RTC时间" prop="bootMode.rtcStart">
-              <el-date-picker type="datetime" placeholder="开始时间，仅RTC模式时填写" v-model="deviceListForm.bootMode.rtcStart" style="width:200px"></el-date-picker>
+              <el-date-picker type="datetime" placeholder="开始时间，仅RTC模式时填写" v-model="deviceListForm.bootMode.rtcStart" style="width:200px" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
           </el-form-item>
           <el-form-item label="RTC时间" prop="bootMode.rtcEnd">
-              <el-date-picker type="datetime" placeholder="结束时间，仅RTC模式时填写" v-model="deviceListForm.bootMode.rtcEnd" style="width:200px"></el-date-picker>
+              <el-date-picker type="datetime" placeholder="结束时间，仅RTC模式时填写" v-model="deviceListForm.bootMode.rtcEnd" style="width:200px" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
           </el-form-item>
         </el-card>
         <el-card style="padding:0px 0px;margin-top:10px;">
@@ -323,7 +337,7 @@
           <el-input v-model="deviceListForm.address" placeholder="请填写安装地址" style="width:200px"/>
         </el-form-item>
         <el-form-item label="安装时间" prop="installTime">
-          <el-date-picker type="datetime" placeholder="请填写安装时间" v-model="deviceListForm.installTime" style="width:200px"></el-date-picker>
+          <el-date-picker type="datetime" placeholder="请填写安装时间" v-model="deviceListForm.installTime" style="width:200px" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
         </el-form-item>
         </el-card>
       </el-form>
@@ -512,11 +526,17 @@ export default {
   },
   methods:{
     changeDevicePages(pages) {
+      if(pages > this.pageTermSum|| pages < 1){
+        return;
+      }
       this.activeTermIndex = pages
       this.listTermQuery.page = pages
       this.getTermList()
     },
     changeLightPages(pages) {
+      if(pages > this.pageLightSum|| pages < 1){
+        return;
+      }
       this.activeLightIndex = pages
       this.listLightQuery.page = pages
       this.getLightList()
@@ -595,10 +615,18 @@ export default {
     },
     updateDevice(row) {
       this.deviceStatus = "编辑"
-      row.bootMode = row.bootMode!=null ? JSON.parse(row.bootMode):{}
-      row.flashMode = row.flashMode!=null ? JSON.parse(row.flashMode):{}
-      row.runMode = row.runMode!=null?JSON.parse(row.runMode):{}
-      row.outLevel = row.outLevel!=null?JSON.parse(row.outLevel):{}
+      if(typeof (row.bootMode) == 'string'){
+        row.bootMode = (row.bootMode!=null && row.bootMode!='') ? JSON.parse(row.bootMode):{}
+      }
+      if(typeof (row.flashMode) == 'string'){
+        row.flashMode = (row.flashMode!=null && row.flashMode!='') ? JSON.parse(row.flashMode):{}
+      }
+      if(typeof (row.runMode) == 'string'){
+        row.runMode = (row.runMode!=null && row.runMode!='') ? JSON.parse(row.runMode):{}
+      }
+      if(typeof (row.outLevel) == 'string'){
+        row.outLevel = (row.outLevel!=null && row.outLevel!='') ? JSON.parse(row.outLevel):{}
+      }
 
       this.deviceListForm = row
       this.deviceDialogFormVisible = true
@@ -716,6 +744,25 @@ export default {
     },
     openDeviceManage() {
       this.$router.push('deviceManage')
+    },
+    synDevice(device){
+      // 同步设备信息
+      MessageBox.confirm(
+          '产品KEY：'+device.iotPkey+'，设备秘钥：'+device.iotDsecret+'，如需设置设备信息，请点击“立即设置”','物联网信息',
+          {
+            confirmButtonText: '立即设置',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).then(() => {
+            let params = {
+              fetchUrl: '/sys/device/sync?id='+device.id,
+              data: {}
+            }
+            this.$store.dispatch('DeleteMembers', params).then(res => {
+              
+            })
+        })
     },
     delLight(){
       if(this.listLightQuery.productId == '' || this.listLightQuery.productId <= 0){
