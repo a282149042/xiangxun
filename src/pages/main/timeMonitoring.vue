@@ -69,17 +69,6 @@
                <div class="platform_charts" id="platformCount">
                 <!-- 平台数据分布 -->
               </div>
-              <div v-if="isShowMap" class="amap-wrapper">
-                <el-amap class="amap-box" :vid="'amap-vue'" :center="curPositionData">
-                  <el-amap-info-window
-                    :position="currentWindow.position"
-                    :content="currentWindow.content"
-                    :visible="currentWindow.visible"
-                    :events="currentWindow.events">
-                  </el-amap-info-window>
-                  <!-- <el-amap-marker vid="component-marker" :position="componentMarker.position" :content-render="componentMarker.contentRender" ></el-amap-marker> -->
-                </el-amap>
-              </div>
             </div>
           </div>
           <div class="_left_bottom monitoring_list">
@@ -148,7 +137,7 @@
                   {{moment(item.createTime).format("YYYY-MM-DD")}}
                 </div>
               </div>
-              <div class="address_detail" @click="goToMap(item.location)">
+              <div class="address_detail" @click="goToMap(item)">
                   {{item.province+item.city+item.county+item.address || "暂无地址或地址不详"}}
               </div>
             </div>
@@ -173,6 +162,17 @@
         <el-button type="primary" @click="checkDetailSubmit">关闭</el-button>
       </div>
     </el-dialog>
+    <div v-if="isShowMap" class="amap-wrapper">
+      <el-amap class="amap-box" :zoom="zoom" :resizeEnable="true" :vid="'amap-vue'" :autoMove="true" :center="curPositionData">
+        <el-amap-info-window
+          :position="currentWindow.position"
+          :content="currentWindow.content"
+          :visible="currentWindow.visible"
+          :events="currentWindow.events">
+        </el-amap-info-window>
+        <!-- <el-amap-marker vid="component-marker" :position="componentMarker.position" :content-render="componentMarker.contentRender" ></el-amap-marker> -->
+      </el-amap>
+    </div>
   </div>
 </template>
 <script>
@@ -198,6 +198,7 @@ export default {
   components: {},
   data() {
     return {
+      zoom: 12,
       currentWindow: {
         position: [0, 0],
         content: "",
@@ -320,14 +321,9 @@ export default {
   methods: {
     goToMap(item){
       this.isShowMap = true;
-      this.currentWindow = {
-        position: [item.longitude, item.latitude],
-        content: '11111',
-        events: {},
-        size: 100,
-        visible: true
-      };
-      
+      let id = item.deviceId
+      let positionData = [item.location.longitude, item.location.latitude]
+      this.jumpMapPosition(id,positionData, this)
     },
     backIndexPage() {
       this.isShowMap = false;
@@ -587,6 +583,65 @@ export default {
       );
       return tempData;
     },
+    jumpMapPosition(id,positionData, that) {
+      that.isShowMap = true;
+      that.curPositionData = positionData;
+      let postData = {
+        fetchUrl: "/sys/device/info?id=" + id,
+        listQuery: {
+          id
+        }
+      };
+      that.$store.dispatch("GetDetail", postData).then(detail => {
+        const detailData = detail.data;
+        let oldTime = detailData.synTime
+        let newdate = moment(oldTime).format('YYYY-MM-DD HH:mm:ss')
+        detailData.synTime= newdate
+
+        let oldTime2 = detailData.installTime
+        let newdate2 = moment(oldTime2).format('YYYY-MM-DD HH:mm:ss')
+        detailData.installTime= newdate2
+        
+        let types=[{'1':"夏季模式",'2':"冬季模式",'3':"应急模式",'4':"自定义模式"}]
+        detailData.runMode.type = types[detailData.runMode.type]
+        
+        let status=[{'1':"正常",'2':"告警",'3':"离线"}]
+        detailData.status = status[detailData.status]
+
+        const element = 
+        '<div class="modal_detail">'+
+          '<div style="margin: -1px; padding: 1px;">'+
+            '<div style="text-align:center;white-space:nowrap;margin:10px;">'+
+              '<table style="border:1px solid #999;">'+
+                '<tbody style="border:1px solid #999;">'+
+                  '<tr><td>所属机构</td><td colspan="3">'+detailData.organizeTree+'</td></tr>'+
+                  '<tr><td>终端识别号</td><td>'+detailData.serialNo+'</td><td>ICCID卡号</td><td>'+detailData.iccid+'</td></tr>'+
+                  '<tr><td>终端名称</td><td>'+detailData.name+'</td><td>终端通讯时间</td><td>'+detailData.synTime+'</td></tr>'+   
+                  '<tr><td>当前坐标位置</td><td>'+detailData.location.latitude+'/'+detailData.location.longitude+'</td><td>灯质模式</td><td>'+detailData.productName+'</td></tr>'+   
+                  '<tr><td>信号强度</td><td>'+detailData.gsm+'</td><td>终端备注</td><td>'+detailData.descs+'</td></tr>'+   
+                  '<tr><td>安装单位</td><td>'+detailData.installUnit+'</td><td>安装地点</td><td>'+detailData.address+'</td></tr>'+   
+                  '<tr><td>安装时间</td><td>'+detailData.installTime+'</td><td>负责人</td><td>'+detailData.installContacts+'</td></tr>'+   
+                  '<tr><td>联系方式</td><td>'+detailData.installPhone+'</td><td>支队联系方式</td><td>'+detailData.branchPhone+'</td></tr>'+   
+                  '<tr><td>电池类型</td><td>'+detailData.batteryTypeName+'</td><td>太阳能电压</td><td>'+detailData.solarVolt+'</td></tr>'+   
+                  '<tr><td>电池电压</td><td>'+detailData.batteryVolt+'</td><td>点阵/面阵</td><td>'+detailData.productName+'</td></tr>'+   
+                  '<tr><td>运行模式</td><td>'+detailData.runMode.type+'</td><td>运行等级</td><td>'+detailData.runMode.outLevel+'</td></tr>'+   
+                  '<tr><td>开始运行时间</td><td>'+detailData.synTime+'</td><td>终端状态</td><td>'+detailData.status+'</td></tr>'+
+                  // '<tr><td>位移报警</td><td>正常</td><td>位移距离</td><td>0.3</td></tr>'+
+                '</tbody>'+
+              '</table>'+
+            '</div>'+
+          '</div>'+
+        '</div>';
+        that.currentWindow = {
+          position: positionData,
+          content: element,
+          events: {},
+          size: 10,
+          visible: true
+        };
+        console.log("detaildetaildetaildetail", detail);
+      });
+    },
     async platformCount(divid) {
       // './json/china.json'
       let that = this;
@@ -623,64 +678,7 @@ export default {
             });
           } else {
             if (param.componentSubType === "scatter") {
-              that.isShowMap = true;
-              that.curPositionData = param.value;
-              let postData = {
-                fetchUrl: "/sys/device/info?id=" + param.data.id,
-                listQuery: {
-                  id: param.data.id
-                }
-              };
-              that.$store.dispatch("GetDetail", postData).then(detail => {
-                const detailData = detail.data;
-                console.log("******************",detailData)
-                let oldTime = detailData.synTime
-                let newdate = moment(oldTime).format('YYYY-MM-DD HH:mm:ss')
-                detailData.synTime= newdate
-
-                let oldTime2 = detailData.installTime
-                let newdate2 = moment(oldTime2).format('YYYY-MM-DD HH:mm:ss')
-                detailData.installTime= newdate2
-                
-                let types=[{'1':"夏季模式",'2':"冬季模式",'3':"应急模式",'4':"自定义模式"}]
-                detailData.runMode.type = types[detailData.runMode.type]
-                
-                let status=[{'1':"正常",'2':"告警",'3':"离线"}]
-                detailData.status = status[detailData.status]
-
-                const element = 
-                '<div class="modal_detail">'+
-                  '<div style="margin: -1px; padding: 1px;">'+
-                    '<div style="text-align:center;white-space:nowrap;margin:10px;">'+
-                      '<table style="border:1px solid #999;">'+
-                        '<tbody style="border:1px solid #999;">'+
-                          '<tr><td>所属机构</td><td colspan="3">'+detailData.organizeTree+'</td></tr>'+
-                          '<tr><td>终端识别号</td><td>'+detailData.serialNo+'</td><td>ICCID卡号</td><td>'+detailData.iccid+'</td></tr>'+
-                          '<tr><td>终端名称</td><td>'+detailData.name+'</td><td>终端通讯时间</td><td>'+detailData.synTime+'</td></tr>'+   
-                          '<tr><td>当前坐标位置</td><td>'+detailData.location.latitude+'/'+detailData.location.longitude+'</td><td>灯质模式</td><td>'+detailData.productName+'</td></tr>'+   
-                          '<tr><td>信号强度</td><td>'+detailData.gsm+'</td><td>终端备注</td><td>'+detailData.descs+'</td></tr>'+   
-                          '<tr><td>安装单位</td><td>'+detailData.installUnit+'</td><td>安装地点</td><td>'+detailData.address+'</td></tr>'+   
-                          '<tr><td>安装时间</td><td>'+detailData.installTime+'</td><td>负责人</td><td>'+detailData.installContacts+'</td></tr>'+   
-                          '<tr><td>联系方式</td><td>'+detailData.installPhone+'</td><td>支队联系方式</td><td>'+detailData.branchPhone+'</td></tr>'+   
-                          '<tr><td>电池类型</td><td>'+detailData.batteryTypeName+'</td><td>太阳能电压</td><td>'+detailData.solarVolt+'</td></tr>'+   
-                          '<tr><td>电池电压</td><td>'+detailData.batteryVolt+'</td><td>点阵/面阵</td><td>'+detailData.productName+'</td></tr>'+   
-                          '<tr><td>运行模式</td><td>'+detailData.runMode.type+'</td><td>运行等级</td><td>'+detailData.runMode.outLevel+'</td></tr>'+   
-                          '<tr><td>开始运行时间</td><td>'+detailData.synTime+'</td><td>终端状态</td><td>'+detailData.status+'</td></tr>'+
-                          '<tr><td>位移报警</td><td>正常</td><td>位移距离</td><td>0.3</td></tr>'+
-                        '</tbody>'+
-                      '</table>'+
-                    '</div>'+
-                  '</div>'+
-                '</div>';
-                that.currentWindow = {
-                  position: param.value,
-                  content: element,
-                  events: {},
-                  size: 10,
-                  visible: true
-                };
-                console.log("detaildetaildetaildetail", detail);
-              });
+              that.jumpMapPosition(param.data.id, param.value, that)
             }
           }
         });
