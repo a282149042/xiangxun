@@ -145,11 +145,11 @@
                   告警地点
                 </div>
                 <div class="_time">
-                  {{moment.unix(item.craeteTime).format("YYYY-MM-DD")}}
+                  {{moment(item.createTime).format("YYYY-MM-DD")}}
                 </div>
               </div>
-              <div class="address_detail">
-                  {{item.location || "暂无地址或地址不详"}}
+              <div class="address_detail" @click="goToMap(item.location)">
+                  {{item.province+item.city+item.county+item.address || "暂无地址或地址不详"}}
               </div>
             </div>
           </div>
@@ -318,6 +318,17 @@ export default {
     this.platformCount("platformCount");
   },
   methods: {
+    goToMap(item){
+      this.isShowMap = true;
+      this.currentWindow = {
+        position: [item.longitude, item.latitude],
+        content: '11111',
+        events: {},
+        size: 100,
+        visible: true
+      };
+      
+    },
     backIndexPage() {
       this.isShowMap = false;
       this.registerAndsetOption(myChart, chinaId, chinaName, chinaJson, false);
@@ -346,7 +357,6 @@ export default {
       }
     },
     goAlarmRecordList(item) {
-      console.log('item====>>', item)
       this.statusType = "报警";
       this.detailInfo = item[0] || this.detailInfo;
       this.checkDetailVisible = true;
@@ -378,7 +388,8 @@ export default {
         listQuery: this.listAlarmInfoQuery
       };
       this.$store.dispatch("GetList", params).then(res => {
-        this.alarmInfoList = res.data;
+        this.alarmInfoList = res.data.datas;
+        console.log('res========>>', res)
       });
     },
     // /sys/monitoring/alarmInfo
@@ -615,7 +626,7 @@ export default {
               that.isShowMap = true;
               that.curPositionData = param.value;
               let postData = {
-                fetchUrl: "/sys/device/detail?id=" + param.data.id,
+                fetchUrl: "/sys/device/info?id=" + param.data.id,
                 listQuery: {
                   id: param.data.id
                 }
