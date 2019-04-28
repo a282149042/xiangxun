@@ -69,6 +69,17 @@
                <div class="platform_charts" id="platformCount">
                 <!-- 平台数据分布 -->
               </div>
+              <div v-if="isShowMap" class="amap-wrapper">
+                <el-amap class="amap-box" :vid="'amap-vue'" :center="curPositionData">
+                  <el-amap-info-window
+                    :position="currentWindow.position"
+                    :content="currentWindow.content"
+                    :visible="currentWindow.visible"
+                    :events="currentWindow.events">
+                  </el-amap-info-window>
+                  <!-- <el-amap-marker vid="component-marker" :position="componentMarker.position" :content-render="componentMarker.contentRender" ></el-amap-marker> -->
+                </el-amap>
+              </div>
             </div>
           </div>
           <div class="_left_bottom monitoring_list">
@@ -97,10 +108,10 @@
                 <td>{{statusMap[item.status]}}</td>
                 <td class="opration_table">
                   <div class="opration_btn">
-                    <div class="_record" @click="goAlarmRecordList(item.alarmRecord)">
+                    <div class="_record" @click="goAlarmRecordList(item)">
                       报警记录
                     </div>
-                    <div class="history_data" @click="goRecordList(item.record)">
+                    <div class="history_data" @click="goRecordList(item)">
                       历史数据
                     </div>
                   </div>
@@ -176,16 +187,25 @@ var parentName = null;
 //Echarts地图全局变量，主要是在返回上级地图的方法中会用到
 var myChart = null;
 import axios from "axios";
+import _ from "lodash";
 import moment from "moment";
 import echarts from "echarts";
 import cityMap from "@/assets/js/china-main-city-map.js";
+import { lazyAMapApiLoaderInstance } from "vue-amap";
 // const china = require('../../../public/json/china.json')
 export default {
   name: "monitoring",
   components: {},
   data() {
     return {
+      currentWindow: {
+        position: [0, 0],
+        content: "",
+        events: {},
+        visible: false
+      },
       dateTime: moment().format("YYYY.MM.DD"),
+      threeStatusData: [],
       alarmList: [
         {
           address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
@@ -271,6 +291,7 @@ export default {
         location: "{'longitude':123.123123,'latitude':234.123123}",
         craeteTime: moment().format("YYYY-MM-DD hh:mm:ss")
       },
+      isShowMap: false,
       totalCountObj: {},
       kindsCountList: [],
       monitoringList: [],
@@ -283,6 +304,7 @@ export default {
         pageSize: 1000,
         type: 2 //类型（1-正常，2告警，3-失联）
       },
+      curPositionData: [121.5273285, 31.21515044],
       alarmInfoList: []
     };
   },
@@ -297,30 +319,34 @@ export default {
   },
   methods: {
     backIndexPage() {
+      this.isShowMap = false;
+      this.registerAndsetOption(myChart, chinaId, chinaName, chinaJson, false);
+      mapStack = [];
+      parentId = chinaId;
+      parentName = chinaName;
     },
     backOnePage() {
-      console.log('map========', mapStack)
+      this.isShowMap = false;
       if (mapStack.length != 0) {
         //如果有上级目录则执行
         var map = mapStack.pop();
-        axios
-          .get("./json/" + map.mapId + ".json", {})
-          .then(response => {
-            const mapJson = response.data;
-            this.registerAndsetOption(
-              myChart,
-              map.mapId,
-              map.mapName,
-              mapJson,
-              false
-            );
-            //返回上一级后，父级的ID、Name随之改变
-            parentId = map.mapId;
-            parentName = map.mapName;
-          })
+        axios.get("./json/" + map.mapId + ".json", {}).then(response => {
+          const mapJson = response.data;
+          this.registerAndsetOption(
+            myChart,
+            map.mapId,
+            map.mapName,
+            mapJson,
+            false
+          );
+          //返回上一级后，父级的ID、Name随之改变
+          parentId = map.mapId;
+          parentName = map.mapName;
+        });
       }
     },
     goAlarmRecordList(item) {
+      console.log('item====>>', item)
       this.statusType = "报警";
       this.detailInfo = item[0] || this.detailInfo;
       this.checkDetailVisible = true;
@@ -518,23 +544,44 @@ export default {
     },
     async getEveryCityData(type, cityName) {
       //type 1-所有省份数据，2-省数据,3-市数据
+      // province
       let that = this;
-      // /sys/monitoring/platformInfo
       let params = {
         fetchUrl: "/sys/monitoring/platformInfo",
         listQuery: {
           type,
-          name: cityName || ""
+          province: type === 2 ? cityName : "",
+          city: type === 3 ? cityName : "",
+          county: type === 4 ? cityName : ""
         }
       };
       let data = await this.$store.dispatch("GetList", params);
       return data;
     },
+    producePositionData(data) {
+      let tempData = [];
+      data.map(item =>
+        item.children.map(ele =>
+          tempData.push({
+            value: [
+              JSON.parse(ele.location).longitude,
+              JSON.parse(ele.location).latitude,
+              1
+            ],
+            name: ele.county,
+            id: ele.id,
+            status: ele.status
+          })
+        )
+      );
+      return tempData;
+    },
     async platformCount(divid) {
       // './json/china.json'
       let that = this;
       let { data } = await this.getEveryCityData(1);
-      this.allDatas = data;
+      let unFormatData = this.producePositionData(data);
+      this.threeStatusData = _.groupBy(unFormatData, "status");
       axios.get("./json/" + chinaId + ".json", {}).then(response => {
         const mapJson = response.data;
         chinaJson = mapJson;
@@ -551,43 +598,71 @@ export default {
         parentName = "china";
         myChart.on("click", function(param) {
           var cityId = cityMap[param.name];
-          console.log("param.nameparam.nameparam.name", param.name);
           if (cityId) {
             //代表有下级地图
             axios.get("./json/" + cityId + ".json", {}).then(response => {
-              that.getEveryCityData(2, param.name).then(res => {
-                let cityDatas = res.data;
-                const mapJson = response.data;
-                that.registerAndsetOption(
-                  myChart,
-                  cityId,
-                  param.name,
-                  mapJson,
-                  true,
-                  cityDatas
-                );
-              });
+              const mapJson = response.data;
+              that.registerAndsetOption(
+                myChart,
+                cityId,
+                param.name,
+                mapJson,
+                true
+              );
             });
           } else {
-            //没有下级地图，回到一级中国地图，并将mapStack清空
-            that.registerAndsetOption(
-              myChart,
-              chinaId,
-              chinaName,
-              chinaJson,
-              false,
-              that.allDatas
-            );
-            mapStack = [];
-            parentId = chinaId;
-            parentName = chinaName;
+            if (param.componentSubType === "scatter") {
+              that.isShowMap = true;
+              that.curPositionData = param.value;
+              let postData = {
+                fetchUrl: "/sys/device/detail?id=" + param.data.id,
+                listQuery: {
+                  id: param.data.id
+                }
+              };
+              that.$store.dispatch("GetDetail", postData).then(detail => {
+                const detailData = detail.data;
+                const element = 
+                `<div class="modal_detail">
+                  <div style="margin: -1px; padding: 1px;">
+                    <div style="text-align:center;white-space:nowrap;margin:10px;">
+                      <table style="border:1px solid #999;">
+                        <tbody style="border:1px solid #999;">
+                          <tr><td>所属机构</td><td colspan="3">全国&gt;&gt;二级管理&gt;&gt;三级管理&gt;&gt;老化架测试</td></tr>
+                          <tr><td>终端识别号</td><td>9010210118070008</td><td>ICCID卡号</td><td>89860402101870571012</td></tr>
+                          <tr><td>终端名称</td><td>test_3</td><td>终端通讯时间</td><td>2019-04-28 00:30:14.0</td></tr>   
+                          <tr><td>当前坐标位置</td><td>28.3668,112.893</td><td>灯质模式</td><td>黄闪灯</td></tr>   
+                          <tr><td>信号强度</td><td>24</td><td>终端备注</td><td>test_3</td></tr>   
+                          <tr><td>安装单位</td><td>老化架</td><td>安装地点</td><td>老化架</td></tr>   
+                          <tr><td>安装时间</td><td>2018-08-30 00:00:00.0</td><td>负责人</td><td>chen</td></tr>   
+                          <tr><td>联系方式</td><td>123</td><td>支队联系方式</td><td>123</td></tr>   
+                          <tr><td>电池类型</td><td>市电</td><td>太阳能电压</td><td>0.0</td></tr>   
+                          <tr><td>电池电压</td><td>12.7</td><td>点阵/面阵</td><td>点阵</td></tr>   
+                          <tr><td>运行模式</td><td>夏季模式</td><td>运行等级</td><td>1</td></tr>   
+                          <tr><td>开始运行时间</td><td>2018-08-30 08:30:34.0</td><td>终端状态</td><td>正常</td></tr>
+                          <tr><td>位移报警</td><td>正常</td><td>位移距离</td><td>0.3</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>`;
+                that.currentWindow = {
+                  position: param.value,
+                  content: element,
+                  events: {},
+                  size: 10,
+                  visible: true
+                };
+                console.log("detaildetaildetaildetail", detail);
+              });
+            }
           }
         });
       });
     },
     registerAndsetOption(myChart, id, name, mapJson, flag, allDatas) {
       echarts.registerMap(name, mapJson);
-      const optionsParams = {
+      myChart.setOption({
         title: {
           text: "◆ 平台数据分布 ◆",
           subtext: "",
@@ -598,26 +673,6 @@ export default {
             color: "#FFDE29"
           }
         },
-        tooltip: {
-          trigger: "item",
-          formatter: function(params) {
-            var res = params.name + "<br/>";
-            var myseries = optionsParams.series;
-            console.log("myseries=============>>>", myseries);
-            for (var i = 0; i < myseries.length; i++) {
-              for (var j = 0; j < myseries[i].data.length; j++) {
-                if (myseries[i].data[j].name == params.name) {
-                  res +=
-                    myseries[i].name +
-                    " : " +
-                    myseries[i].data[j].value +
-                    "</br>";
-                }
-              }
-            }
-            return res;
-          }
-        },
         legend: {
           orient: "horizontal",
           x: "center",
@@ -626,16 +681,31 @@ export default {
             color: "#FFDE29",
             fontSize: 12
           },
-          data:['正常','异常','离线']
+          data: ["正常", "异常", "离线"]
+        },
+        geo: {
+          map: name,
+          label: {
+            emphasis: {
+              show: false
+            }
+          },
+          itemStyle: {
+            //未激活样式
+            normal: {
+              areaColor: "#323c48",
+              borderColor: "red"
+            },
+            //激活样式
+            emphasis: {
+              areaColor: "#2a333d"
+            }
+          }
         },
         series: [
           {
-            name: '正常',
             type: "map",
-            coordinateSystem: "geo",
-            symbolSize: 12,
-            mapType: "china",
-            roam: false,
+            map: name,
             itemStyle: {
               normal: {
                 label: {
@@ -644,85 +714,117 @@ export default {
                     color: "#fff"
                   }
                 },
-                color: "#1fa022",
-                areaColor: "#21262b",
-                borderWidth: 1,
-                borderColor: "#aca62f"
-              },
-              emphasis: {
-                show: true,
-                areaColor: "#1fa022"
-              }
-            },
-            data: this.initMapData(mapJson, allDatas)
-           
-          }
-          ,
-          {
-              name: '异常',
-              type: 'map',
-              mapType: 'china',
-              roam: false,
-              itemStyle: {
-                normal: {
-                    label: {
-                      show: true,//默认是否显示省份名称
-                      textStyle: {
-                        color: "#fff"
-                      },
-                    },
-                    color:'#e6212a',
-                    areaColor: '#21262b',
-                    textStyle: {
-                      color: "#fff"
-                    },
-                    borderWidth:1,
-                    borderColor:'#aca62f',
-                },
-                emphasis: {
-                      show: true,
-                      areaColor: '#e6212a',
-                }
-              },
-              data:this.initMapData(mapJson, allDatas, 'type2')
-          },
-          {
-              name: '离线',
-              type: 'map',
-              roam: false,
-              mapType: 'china',
-              itemStyle: {
-                normal: {
-                    color: '#848484',
-                    areaColor: '#21262b',
-                    label: {
-                      show: true,//默认是否显示省份名称
-                      textStyle: {
-                        color: "#fff"
-                      },
-                    },
-                    borderWidth:1,
-                    borderColor:'#aca62f',
-                },
-                emphasis: {
-                    show: true,
-                    areaColor: '#848484'
-                }
-              },
-              data:this.initMapData(mapJson, allDatas, 'type3')
-          }
-        ]
-      };
-      myChart.setOption(optionsParams);
-      myChart.setOption({
-        series: [
-          {
-            type: "map",
-            map: name,
-            itemStyle: {
-              normal: {
                 areaColor: "rgba(23, 27, 57,0)",
                 borderColor: "#1dc199",
+                borderWidth: 1
+              }
+            },
+            data: this.initMapData(mapJson)
+          },
+          {
+            name: "正常",
+            type: "scatter",
+            coordinateSystem: "geo",
+            symbol: "rect",
+            data: this.threeStatusData[1] || [],
+            symbolSize: 16,
+            legend: {
+              orient: "horizontal",
+              x: "center",
+              bottom: "10",
+              textStyle: {
+                color: "#1FA122",
+                fontSize: 12
+              }
+            },
+            //直接在点上显示标签
+            label: {
+              show: false,
+              normal: {
+                show: true
+              },
+              emphasis: {
+                show: true
+              },
+              formatter: "{b}",
+              offset: [15, -15] //文字的相对偏移
+            },
+            //标签的样式
+            itemStyle: {
+              normal: {
+                color: "#1FA122",
+                borderWidth: 1
+              }
+            }
+          },
+          {
+            name: "异常",
+            type: "scatter",
+            coordinateSystem: "geo",
+            symbol: "rect",
+            data: this.threeStatusData[2] || [],
+            symbolSize: 16,
+            legend: {
+              orient: "horizontal",
+              x: "center",
+              bottom: "10",
+              textStyle: {
+                color: "#1FA122",
+                fontSize: 12
+              }
+            },
+            //直接在点上显示标签
+            label: {
+              show: false,
+              normal: {
+                show: true
+              },
+              emphasis: {
+                show: true
+              },
+              formatter: "{b}",
+              offset: [15, -15] //文字的相对偏移
+            },
+            //标签的样式
+            itemStyle: {
+              normal: {
+                color: "#E62129",
+                borderWidth: 1
+              }
+            }
+          },
+          {
+            name: "离线",
+            type: "scatter",
+            coordinateSystem: "geo",
+            symbol: "rect",
+            data: this.threeStatusData[3] || [],
+            symbolSize: 16,
+            legend: {
+              orient: "horizontal",
+              x: "center",
+              bottom: "10",
+              textStyle: {
+                color: "#1FA122",
+                fontSize: 12
+              }
+            },
+            //直接在点上显示标签
+            label: {
+              show: false,
+              normal: {
+                show: true
+              },
+              emphasis: {
+                show: true
+              },
+              formatter: "{b}",
+              offset: [15, -15] //文字的相对偏移
+            },
+            //标签的样式
+            itemStyle: {
+              normal: {
+                color: "#848484",
                 borderWidth: 1
               }
             }
@@ -740,24 +842,14 @@ export default {
       }
     },
     initMapData(mapJson, allDatas, type) {
-      console.log('allDatas=====>', allDatas)
-      for (var j = 0; j < allDatas.length; j++) {
-        var mapData = [];
-        for (var i = 0; i < mapJson.features.length; i++) {
-          if (mapJson.features[i].properties.name.indexOf(allDatas[j].name) !== -1) {
-            mapData.push({
-              name: mapJson.features[i].properties.name,
-              value: allDatas[j][type]
-            });
-          } else {
-            mapData.push({
-              name: mapJson.features[i].properties.name,
-              value: 0
-            });
-          }
-        }
-        return mapData;
+      var mapData = [];
+      for (var i = 0; i < mapJson.features.length; i++) {
+        mapData.push({
+          name: mapJson.features[i].properties.name
+        });
       }
+      console.log("mapdata========", mapData, mapJson);
+      return mapData;
     }
   }
 };

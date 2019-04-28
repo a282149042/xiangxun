@@ -120,7 +120,7 @@
               selectGroupLabel=""
               deselectLabel=""
               selectedLabel=""
-              placeholder=""
+              placeholder="请选择"
               v-model="selectedTerminal"
               :options="terminalList">
             </multiselect>
@@ -255,20 +255,20 @@ export default {
       selectedDate: new Date().getDate(),
       selectedYear: new Date().getFullYear(),
       selectedMonth: new Date().getMonth() + 1,
-      selectedProvice:"湖南省",
-      selectedArea: "长沙市",
+      selectedProvice:"",
+      selectedArea: "",
       proviceList: [],
       areaAllList:{},
       areaList: [],
-      selectedTerminal: '爆闪灯',
-      terminalList: ['爆闪灯','黄慢（闪）灯', '点阵式主动发光标志','面阵式全透发光标志' ,'面阵式半透发光标志'],
+      selectedTerminal: '',
+      terminalList: [],
       terminalAllList:[],
       monthList: [1,2,3,4,5,6,7,8,9,10,11,12],
       listQuery:{
         "year": "",
         "month": "",
         "day": "",
-        "cityName": "",
+        // "cityName": "",
         "productId": "",
         "type": 1,
         "cycle": 1
@@ -301,10 +301,10 @@ export default {
       this.hoursData.push(Math.round(Math.random()*20))
     }
     this.isFebMonthData()
-    this.getDengZhiList()
     this.getArea()
   },
   mounted() {
+    this.getDengZhiList()
     this.setQuest()
   },
   methods:{
@@ -337,8 +337,8 @@ export default {
                   eleId="chargeMonth"
                   title= '◆ 电池电压统计 ◆'
                 }
-                var arr = Object.keys(res.data);
-                if(arr.length>0){
+                if(Object.keys(res.data).length > 0){
+                  _this.allData = res.data
                   let params = {
                     eleId:eleId,
                     timeData: _this.DateList,
@@ -363,13 +363,12 @@ export default {
                   eleId="chargeYesterday"
                   title='昨日◆ 电池电压统计 ◆'
                 }
-                var arr = Object.keys(res.data);
-                if(arr.length>0){
+                if(Object.keys(res.data).length > 0){
                   _this.allData = res.data
                   let params2 = {
                     eleId:eleId,
                     xAxisData: _this.hoursList,
-                    seriesData: _this.allData,
+                    seriesData: _this.allData || [],
                     title: title,
                     label: label
                   }
@@ -387,6 +386,7 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         var list = res.data.datas
+        console.log('****灯质汇总********',list)
         if(list.length>0){
           this.terminalList = []  
           var firstList=[]
@@ -410,9 +410,7 @@ export default {
       this.$store.dispatch('GetList', params).then(res => {
         let data = res.data
         console.log('****数据汇总********',res.data)
-        if(data.numCount>0){
-          this.allSourceData = data
-        }
+        this.allSourceData = data
       })
     },
     getArea() {
@@ -429,7 +427,9 @@ export default {
         console.log("省shi数据：",list)
         this.proviceList = Object.keys(list)
         this.areaAllList = list
-        this.areaList = Object.keys(this.areaAllList[this.selectedProvice])
+        if(this.selectedProvice != ""){
+          this.areaList = Object.keys(this.areaAllList[this.selectedProvice])
+        }
         console.log("省数据：",this.proviceList)
       })
     },
@@ -440,22 +440,17 @@ export default {
       this.selectedArea = this.areaList[0]
     },
     setQuest(){
-      // this.listQuery.year = this.selectedYear
-      // this.listQuery.month = this.selectedMonth
-      // this.listQuery.day = this.selectedDate
-      // this.listQuery.cityName =  this.selectedArea
-      // this.listQuery.productId = this.terminalAllList[this.selectedTerminal]
       this.listQuery.year = this.selectedYear
       this.listQuery.month = this.selectedMonth
       this.listQuery.day = this.selectedDate
       this.listQuery.city =  this.selectedArea
       this.listQuery.province = this.selectedProvice
-      this.listQuery.productId = this.terminalAllList[this.selectedTerminal]
-      if(!this.listQuery.productId) this.listQuery.productId=1001
-      
+      if(this.selectedTerminal != ""){
+         this.listQuery.productId = this.terminalAllList[this.selectedTerminal]
+      }
+      console.log("this.listQuery:",this.listQuery)
       this.getAllData(this.listQuery)
       this.getAllSourceList(this.listQuery)
-
     },
     searchAll(){
       this.setQuest()

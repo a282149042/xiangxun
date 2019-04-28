@@ -38,25 +38,6 @@
         <div class="orgnazition_title">
           ◆ 组织机构 ◆
         </div>
-        <!-- 筛选框 -->
-        <div class="select_items select_items_area">
-          <div class="label_item">
-            机构名称：
-          </div>
-          <div class="select_input">
-            <el-select v-model="organizeDataForm.parentId" clearable>
-              <el-option
-                v-for="(item, index) in organizeListData"
-                :key="index"
-                :label="item.name"
-                :value="item.id">
-              </el-option>
-            </el-select>
-          </div>
-        </div>
-        <div class="submit_btn">
-          搜索
-        </div>
         <div class="submit_btn" @click="addInstitution">
           新增
         </div>
@@ -64,7 +45,7 @@
       <div class="table_container">
         <div class="left_table">
           <div class="three_tree_level">
-            <groupTree :treeData="treeData"></groupTree>
+            <groupTree :treeData="treeData" @searchOrganizeList="searchOrganizeList" :mtype="2"></groupTree>
           </div>
         </div>
         <div class="right_table">
@@ -94,10 +75,19 @@
                   </div>
                 </td>
               </tr>
+              <tr class="divide_pages">
+                  <td colspan="6" v-if="organizeListData.length == 0 && listOrganizeQuery.page == 1">
+                    没有更多的数据了
+                  </td>
+                  <td colspan="6" v-else>
+                    共条{{organizeTotal}}记录，当前显示第{{listOrganizeQuery.page}}/{{pageOrganSum}}页
+                    <a @click="changeOrganPages(1)">首页</a>
+                    <a @click="changeOrganPages(listOrganizeQuery.page-1)">上一页</a>
+                    <a @click="changeOrganPages(listOrganizeQuery.page+1)">下一页</a>
+                    <a @click="changeOrganPages(pageOrganSum)">尾页</a>
+                  </td>
+              </tr>
             </table>
-            <div class="divide_pages">
-              <span class="pageing" :class="pages === activeOrganizationIndex ? 'active_pages':''" v-for="(pages) in pageOrganSum" :key="pages" @click="changeOrganPages(pages)">{{pages}}</span>              
-            </div>
           <!-- <div class="divide_pages">
             
             <span class="pageing">1</span>
@@ -117,7 +107,7 @@
       <div class="table_container">
         <div class="left_table">
           <div class="three_tree_level">
-            <groupTree :treeData="treeData"></groupTree>
+            <groupTree :treeData="treeData" @searchUserListData="searchUserListData" :mtype="3"></groupTree>
           </div>
         </div>
         <div class="right_table">
@@ -149,18 +139,27 @@
                   </div>
                 </td>
               </tr>
+              <tr class="divide_pages">
+                  <td colspan="7" v-if="userListData.length == 0 && listQuery.page == 1">
+                    没有更多的数据了
+                  </td>
+                  <td colspan="7" v-else>
+                    共条{{userTotal}}记录，当前显示第{{listQuery.page}}/{{pageSum}}页
+                    <a @click="changePages(1)">首页</a>
+                    <a @click="changePages(listQuery.page-1)">上一页</a>
+                    <a @click="changePages(listQuery.page+1)">下一页</a>
+                    <a @click="changePages(pageSum)">尾页</a>
+                  </td>
+              </tr>
             </table>
-          <div class="divide_pages">
-            <span class="pageing" :class="page === activeUserIndex ? 'active_pages':''" v-for="(page) in pageSum" :key="page" @click="changePages(page)">{{page}}</span>
-          </div>
         </div>
       </div>
     </div>
-    <el-dialog :title="`${userStatus}机构`" :visible.sync="organizeDialogFormVisible">
-      <el-form ref="organizeDataForm" :rules="rules" :model="organizeDataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+    <el-dialog :title="`${userStatus}机构`" :visible.sync="organizeDialogFormVisible" width="710px">
+      <el-form ref="organizeDataForm" :rules="rules" :model="organizeDataForm" label-position="left" label-width="100px">
         <el-form-item label="上级机构" prop="parentId">
-          <el-select v-model="organizeDataForm.parentId" clearable>
-            <el-option label="无" value="0"></el-option>
+          <el-select v-model="organizeDataForm.parentId" clearable  style="width:510px">
+            <el-option label="无" value="0">无</el-option>
             <el-option
               v-for="(item, index) in organizeListData"
               :key="index"
@@ -170,16 +169,16 @@
           </el-select>
         </el-form-item>
         <el-form-item label="机构名称" prop="name">
-          <el-input v-model="organizeDataForm.name"/>
+          <el-input v-model="organizeDataForm.name"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="联系人" prop="contacts">
-          <el-input v-model="organizeDataForm.contacts"/>
+          <el-input v-model="organizeDataForm.contacts"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="organizeDataForm.remark"/>
+          <el-input v-model="organizeDataForm.remark"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="联系方式" prop="phone">
-          <el-input v-model="organizeDataForm.phone"/>
+          <el-input v-model="organizeDataForm.phone"  style="width:510px"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -188,8 +187,8 @@
       </div>
     </el-dialog>
    <!-- <el-dialog :title="`${textMap[dialogStatus]}管理员`" :visible.sync="dialogFormVisible"> -->
-   <el-dialog :title="`${userStatus}管理员`" :visible.sync="userDialogFormVisible">
-      <el-form ref="userDataForm" :rules="rules" :model="userDataForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+   <el-dialog :title="`${userStatus}管理员`" :visible.sync="userDialogFormVisible" width="710px">
+      <el-form ref="userDataForm" :rules="rules" :model="userDataForm" label-position="left" label-width="100px">
         <el-form-item label="类型" prop="userType">
           <template>
               <el-radio v-model="userType" label="1">超级管理员</el-radio>
@@ -197,7 +196,7 @@
           </template>
         </el-form-item>
         <el-form-item label="所属机构" prop="organizeId">
-          <el-select v-model="userDataForm.organizeId" clearable>
+          <el-select v-model="userDataForm.organizeId" clearable  style="width:510px">
             <el-option
               v-for="(item, index) in organizeListData"
               :key="index"
@@ -207,19 +206,19 @@
           </el-select>
         </el-form-item>
         <el-form-item label="姓名" prop="name">
-          <el-input v-model="userDataForm.name"/>
+          <el-input v-model="userDataForm.name"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="登录名" prop="uname">
-          <el-input v-model="userDataForm.uname"/>
+          <el-input v-model="userDataForm.uname"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="密码" prop="pwd">
-          <el-input v-model="userDataForm.pwd"/>
+          <el-input v-model="userDataForm.pwd" type="password"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="手机" prop="phone">
-          <el-input v-model="userDataForm.phone"/>
+          <el-input v-model="userDataForm.phone"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="userDataForm.email"/>
+          <el-input v-model="userDataForm.email"  style="width:510px"/>
         </el-form-item>
         <el-form-item label="账号状态" prop="status">
            <!-- 是否禁用 -->
@@ -293,15 +292,15 @@ export default {
       listQuery: {
         "page": 1,
         "pageSize": 10,
-        "content": "",
-        // "organizeId": 1002
+        "organizeId": 0
       },
+      userTotal:0,
       listOrganizeQuery: {
         "page": 1,
         "pageSize": 10,
-        "content": "",
-        // "organizeId": 1002
+        "organizeId": 0
       },
+      organizeTotal: 0,
       organizeTreeListData: [],
       organizeListData: [],
       rules: {
@@ -321,21 +320,27 @@ export default {
   },
   created() {
     this.getTreeList()
-    this.getInstitution()
+    this.getOrganizeList()
     this.getUserListData()
   },
   mounted() {
   },
   methods:{
     changePages(pages) {
+      if(pages > this.pageSum|| pages < 1){
+        return;
+      }
       this.activeUserIndex = pages
       this.listQuery.page = pages
       this.getUserListData()
     },
     changeOrganPages(pages){
+      if(pages > this.pageOrganSum|| pages < 1){
+        return;
+      }
       this.activeOrganizationIndex = pages
       this.listOrganizeQuery.page = pages
-      this.getInstitution()
+      this.getOrganizeList()
     },
     getTreeList(){
       // /organize/getTreeList
@@ -346,7 +351,12 @@ export default {
         this.treeData = res.data
       })
     },
-    getInstitution(){
+    searchOrganizeList(organizeId){
+      this.listOrganizeQuery.organizeId = organizeId
+      this.listOrganizeQuery.page=1
+      this.getOrganizeList()
+    },
+    getOrganizeList(){
       // 获取机构列表
       let params = {
         fetchUrl: '/sys/organize/list',
@@ -354,8 +364,14 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         this.organizeListData = res.data.datas
+        this.organizeTotal = res.data.total
         this.pageOrganSum = Math.ceil(res.data.total/this.listOrganizeQuery.pageSize)
       })
+    },
+    searchUserListData(organizeId){
+      this.listQuery.organizeId = organizeId
+      this.listQuery.page=1
+      this.getUserListData ()
     },
     getUserListData () {
       let params = {
@@ -364,6 +380,7 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         this.userListData = res.data.datas
+        this.userTotal = res.data.total
         this.pageSum = Math.ceil(res.data.total/this.listQuery.pageSize)
       })
     },
@@ -432,7 +449,7 @@ export default {
               });
               this.activeOrganizationIndex = 1 // 机构分页
               this.listOrganizeQuery.page = 1
-              this.getInstitution()
+              this.getOrganizeList()
               this.organizeDataForm = Object.assign({}, this.$options.data().organizeDataForm)
             })
           }
@@ -456,7 +473,7 @@ export default {
                 message: '修改机构资料成功',
                 type: 'success'
               });
-              this.getInstitution()
+              this.getOrganizeList()
               this.organizeDataForm = Object.assign({}, this.$options.data().organizeDataForm)
             })
           }
@@ -467,7 +484,9 @@ export default {
           if (valid) {
             this.userDataForm.status = this.switchValue ? 1 : 2
             this.userDataForm.userType = this.userType
-            this.userDataForm.pwd = md5(this.userDataForm.pwd)
+            if(this.userDataForm.pwd.length != 32){
+              this.userDataForm.pwd = md5(this.userDataForm.pwd)
+            }
             let params = {
               fetchUrl: '/sys/user/edit',
               data: this.userDataForm
@@ -499,7 +518,6 @@ export default {
           }
         ).then(() => {
           if (type === 1){
-            // /sys/organize/delete?id=1001
             let params = {
               fetchUrl: '/sys/organize/delete?id='+id,
               data: {}
@@ -507,7 +525,7 @@ export default {
             this.$store.dispatch('DeleteMembers', params).then(res => {
               this.activeUserIndex = 1
               this.listQuery.page = 1
-              this.getInstitution()
+              this.getOrganizeList()
             })
           }
           if (type === 2) {

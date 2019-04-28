@@ -45,14 +45,14 @@
       <div class="table_container">
         <div class="left_table">
           <div class="three_tree_level">
-            <groupTree :treeData="treeData"></groupTree>
+            <groupTree :treeData="treeData" @searchTermList="searchTermList" :mtype="1"></groupTree>
           </div>
         </div>
         <div class="right_table">
           <table class="table_list">
               <tr style="background: #A59226;">
                 <th>终端编号</th>
-                <th>终端描述</th>
+                <th>终端名称</th>
                 <th>所属机构</th>
                 <th>工作模式</th>
                 <th>连接模式</th>
@@ -61,34 +61,73 @@
                 <th>备注</th>
                 <th>安装单位</th>
                 <th>安装地点</th>
+                <th>操作</th>
               </tr>
               <tr v-for="item in terminalListData" :key="item.iotId">
                 <td>{{item.serialNo}}</td>
                 <td>{{item.name}}</td>
-                <td>{{item.organizeId}}</td>
-                <td>{{item.runMode}}</td>
-                <td>{{item.linkMode}}</td>
-                <td>{{item.location.longitude}}</td>
-                <td>{{item.location.latitude}}</td>
+                <td>{{item.organizeName}}</td>
+                <td v-if="typeof (item.runMode) == 'string'">{{
+                  JSON.parse(item.runMode).type == 1 ? "夏季模式" : (
+                    JSON.parse(item.runMode).type == 2 ? "冬季模式" : (
+                      JSON.parse(item.runMode).type == 3 ? "应急模式" : (
+                        JSON.parse(item.runMode).type == 4 ? "自定义模式" : ""
+                      )
+                    )
+                  )
+                  }}</td>
+                <td v-else>
+                  {{
+                    (item.runMode).type == 1 ? "夏季模式" : (
+                    (item.runMode).type == 2 ? "冬季模式" : (
+                      (item.runMode).type == 3 ? "应急模式" : (
+                        (item.runMode).type == 4 ? "自定义模式" : ""
+                      )
+                    )
+                  )
+                  }}
+                </td>  
+                <td v-if="item.linkMode==2">长连接</td>
+                <td v-else>短连接</td>
+                <td v-if="item.location != null">{{JSON.parse(item.location).longitude}}</td>
+                <td v-else>-</td>
+                <td v-if="item.location != null">{{JSON.parse(item.location).latitude}}</td>
+                <td v-else>-</td>
                 <td>{{item.status}}</td>
                 <td>{{item.installUnit}}</td>
-                <td>{{item.installAddress}}</td>
+                <td>{{item.address}}</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data" @click="updateDevice(item)">
+                      编辑
+                    </div>
+                    <div class="syn_device" @click="synDevice(item)">
+                      物联网
+                    </div>
+                  </div>
+                </td>
+              </tr>
+              <tr class="divide_pages">
+                  <td colspan="13" v-if="terminalListData.length == 0 && listTermQuery.page == 1">
+                    没有更多的数据了
+                  </td>
+                  <td colspan="13" v-else>
+                    共条{{pageTermTotal}}记录，当前显示第{{listTermQuery.page}}/{{pageTermSum}}页
+                    <a @click="changeDevicePages(1)">首页</a>
+                    <a @click="changeDevicePages(listTermQuery.page-1)">上一页</a>
+                    <a @click="changeDevicePages(listTermQuery.page+1)">下一页</a>
+                    <a @click="changeDevicePages(pageTermSum)">尾页</a>
+                  </td>
               </tr>
             </table>
-          <div class="divide_pages">
-            <span class="pageing" :class="page === activeTermIndex ? 'active_pages':''" v-for="(page) in pageTermSum" :key="page" @click="changeDevicePages(page)">{{page}}</span>
-          </div>
         </div>
       </div>
       <div class="bottom_title_display">
         <div class="orgnazition_title">
-          ◆ 灯质类型 ◆
+          ◆ 产品类型 ◆
         </div>
-        <div class="add_btn" @click="addLightStep()">
+        <div class="submit_btn" @click="addLightStep()">
           新增灯步
-        </div>
-        <div class="del_btn" @click="deleteLightStep()">
-          删除灯步
         </div>
       </div>
       <div class="table_container">
@@ -98,16 +137,17 @@
                 <div class="_add_light" @click="addLight()">
                   新增
                 </div>
-                <div class="_del_light"  @click="delLight()">
+                <div class="_del_light" @click="delLight()">
                   删除
                 </div>
               </div>
               <div class="light_table_list">
                 <div class="list_head">
-                  灯质类型
+                  产品类型
                 </div>
-                <div class="light_item" v-for="item in dengZhiListData" :key="item.id">
-                  {{item.name}}
+                <div  class="light_item" v-for="item in dengZhiListData" :key="item.id" @click="searchLightList(item.id)">
+                  <span v-if="item.id==listLightQuery.productId" style="color:red">{{item.name}}</span>
+                  <span v-else>{{item.name}}</span>
                 </div>
               </div>
           </div>
@@ -116,6 +156,7 @@
           <table class="table_list">
               <tr style="background: #A59226;">
                 <th>编 号</th>
+                <th>产品类型</th>
                 <th>四路控制</th>
                 <th>亮灯时间</th>
                 <th>灭灯时间</th>
@@ -123,7 +164,8 @@
                 <th style="padding: 0 30px">操作</th>
               </tr>
               <tr v-for="item in lightListData" :key="item.id">
-                <td>{{item.productId}}</td>
+                <td>{{item.id}}</td>
+                <td>{{item.productName}}</td>
                 <td>{{item.lineControl}}</td>
                 <td>{{item.onTime}}</td>
                 <td>{{item.offTime}}</td>
@@ -133,132 +175,184 @@
                     <div class="history_data" @click="updateLightStep(item)">
                       编辑
                     </div>
+                    <div class="_record" @click="delLightStep(item.id)">
+                      删除
+                    </div>
                   </div>
                 </td>
               </tr>
+              <tr class="divide_pages">
+                  <td colspan="7" v-if="lightListData.length == 0 && listLightQuery.page == 1">
+                    没有更多的数据了
+                  </td>
+                  <td colspan="7" v-else>
+                    共条{{pageLightTotal}}记录，当前显示第{{listLightQuery.page}}/{{pageLightSum}}页
+                    <a @click="changeLightPages(1)">首页</a>
+                    <a @click="changeLightPages(listLightQuery.page-1)">上一页</a>
+                    <a @click="changeLightPages(listLightQuery.page+1)">下一页</a>
+                    <a @click="changeLightPages(pageLightSum)">尾页</a>
+                  </td>
+              </tr>
             </table>
-          <div class="divide_pages">
-            <span class="pageing" :class="page === activeLightIndex ? 'active_pages':''" v-for="(page) in pageLightSum" :key="page" @click="changeLightPages(page)">{{page}}</span>
-          </div>
         </div>
       </div>
     </div>
-    <el-dialog title="新增终端" :visible.sync="deviceDialogFormVisible">
-      <el-form ref="deviceListForm" :rules="rules" :model="deviceListForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="终端编号" prop="serialNo">
-          <el-input v-model="deviceListForm.serialNo"/>
-        </el-form-item>
-        <el-form-item label="终端描述" prop="descs">
-          <el-input v-model="deviceListForm.descs"/>
-        </el-form-item>
-        <el-form-item label="设备ID" prop="iotId">
-          <el-input v-model="deviceListForm.iotId"/>
-        </el-form-item>
-        <el-form-item label="设备秘钥" prop="iotDsecret">
-          <el-input v-model="deviceListForm.iotDsecret"/>
-        </el-form-item>
-        <el-form-item label="终端名称" prop="name">
-          <el-input v-model="deviceListForm.name"/>
-        </el-form-item>
-        
-        <el-form-item label="iccid卡号" prop="iccid">
-          <el-input v-model="deviceListForm.iccid"/>
-        </el-form-item>
-
-        <el-form-item label="启动模式" prop="bootMode">
-          <el-input v-model="deviceListForm.bootMode"/>
-        </el-form-item>
-        
-        <el-form-item label="闪灯方式" prop="flashMode">
-          <el-input v-model="deviceListForm.flashMode"/>
-        </el-form-item>
-        <el-form-item label="运行模式" prop="runMode">
-          <el-input v-model="deviceListForm.runMode"/>
-        </el-form-item>
-        
-        <el-form-item label="输出等级" prop="outLevel">
-          <el-input v-model="deviceListForm.outLevel"/>
-        </el-form-item>
-        <el-form-item label="电池类型" prop="batteryType">
-          <el-input v-model="deviceListForm.batteryType"/>
-        </el-form-item>
-
-        <el-form-item label="连接模式" prop="linkMode">
-          <el-input v-model="deviceListForm.linkMode"/>
-        </el-form-item>
-        
-        <el-form-item label="安装单位" prop="installUnit">
-          <el-input v-model="deviceListForm.installUnit"/>
-        </el-form-item>
-
-        <el-form-item label="安装地址" prop="installAddress">
-          <el-input v-model="deviceListForm.installAddress"/>
-        </el-form-item>
-        <el-form-item label="安装负责人" prop="installContacts">
-          <el-input v-model="deviceListForm.installContacts"/>
-        </el-form-item>
-        <el-form-item label="安装负责电话" prop="installPhone">
-          <el-input v-model="deviceListForm.installPhone"/>
-        </el-form-item>
-        <el-form-item label="支队电话" prop="branchPhone">
-          <el-input v-model="deviceListForm.branchPhone"/>
-        </el-form-item>
-        <el-form-item label="安装时间" prop="installTime">
-          <el-input v-model="deviceListForm.installTime"/>
-        </el-form-item>
-        <el-form-item label="太阳能电压" prop="solarVolt">
-          <el-input v-model="deviceListForm.solarVolt"/>
-        </el-form-item>
-        <el-form-item label="电池电压" prop="batteryVolt">
-          <el-input v-model="deviceListForm.batteryVolt"/>
-        </el-form-item>
-        <!-- location -->
-        <el-form-item label="定位信息" prop="longitude">
-          <el-input v-model="deviceListForm.location"/>
-        </el-form-item>
-        <el-form-item label="定位省份" prop="province">
-          <el-input v-model="deviceListForm.province"/>
-        </el-form-item>
-        <el-form-item label="定位城市" prop="city">
-          <el-input v-model="deviceListForm.city"/>
-        </el-form-item>
-         <el-form-item label="gsm参数" prop="gsm">
-          <el-input v-model="deviceListForm.gsm"/>
-        </el-form-item>
-         <el-form-item label="温度" prop="temperature">
-          <el-input v-model="deviceListForm.temperature"/>
-        </el-form-item>
-        <el-form-item label="光照度" prop="illuminance">
-          <el-input v-model="deviceListForm.illuminance"/>
-        </el-form-item>
-         <el-form-item label="状态" prop="status">
-          <el-input v-model="deviceListForm.status"/>
-        </el-form-item>
-         <el-form-item label="选择产品" prop="productId">
-           <el-form-item label="选择产品" prop="productId">
-            <el-select v-model="lightStepForm.productId" clearable>
-              <el-option
-                v-for="(item, index) in dengZhiListData"
-                :key="index"
-                :label="item.name"
-                :value="item.id">
+    <el-dialog :title="`${deviceStatus}终端`" :visible.sync="deviceDialogFormVisible" width="710px" class="editDevice">
+      <el-form :inline="true" ref="deviceListForm" :rules="rules" :model="deviceListForm" label-position="right" label-width="100px">
+        <el-card style="padding:0px 0px;">
+          <el-form-item label="选择产品" prop="productId">
+            <el-select v-model="deviceListForm.productId" placeholder="请选择产品类型" style="width:510px">
+                <el-option
+                  v-for="(item, index) in dengZhiListData"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.id">
+                </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="终端名称" prop="name">
+            <el-input v-model="deviceListForm.name" style="width:200px" placeholder="请输入终端名称"/>
+          </el-form-item>
+          <el-form-item label="终端编号" prop="serialNo">
+            <el-input v-model="deviceListForm.serialNo" style="width:200px" placeholder="请输入终端编号，必须唯一"/>
+          </el-form-item>
+          <el-form-item label="终端描述" prop="descs">
+            <el-input v-model="deviceListForm.descs" style="width:200px" placeholder="请输入终端描述"/>
+          </el-form-item>
+          <el-form-item label="iccid卡号" prop="iccid">
+            <el-input v-model="deviceListForm.iccid" style="width:200px" placeholder="请输入ICCID卡号"/>
+          </el-form-item>
+        </el-card>
+        <el-card style="padding:0px 0px;margin-top:10px;">
+          <el-form-item label="启动模式" prop="bootMode.type">
+            <el-select v-model="deviceListForm.bootMode.type" style="width:200px" placeholder="请选择启动模式">
+                <el-option
+                  v-for="(item, index) in bootModeTypeList"
+                  :key="index"
+                  :label="item.name"
+                  :value="item.id">
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="光感等级" prop="bootMode.level">
+            <el-input v-model="deviceListForm.bootMode.level" style="width:200px" placeholder="光感等级，仅光感模式时填写"/>
+          </el-form-item>
+          <el-form-item label="RTC时间" prop="bootMode.rtcStart">
+              <el-date-picker type="datetime" placeholder="开始时间，仅RTC模式时填写" v-model="deviceListForm.bootMode.rtcStart" style="width:200px" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+          </el-form-item>
+          <el-form-item label="RTC时间" prop="bootMode.rtcEnd">
+              <el-date-picker type="datetime" placeholder="结束时间，仅RTC模式时填写" v-model="deviceListForm.bootMode.rtcEnd" style="width:200px" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+          </el-form-item>
+        </el-card>
+        <el-card style="padding:0px 0px;margin-top:10px;">
+        <el-form-item label="闪灯方式" prop="flashMode.type">
+          <el-select v-model="deviceListForm.flashMode.type" style="width:200px" placeholder="请选择闪灯方式">
+              <el-option
+                v-for="(item, index) in flashModeList"
+                :key="index"
+                :label="item.name"
+                :value="item.id">
+            </el-option>
+          </el-select>
         </el-form-item>
+        <el-form-item label="闪烁方式" prop="flashMode.mode">
+          <el-input v-model="deviceListForm.flashMode.mode" style="width:200px" placeholder="请填写闪烁方式，仅单机闪烁时填写"/>
+        </el-form-item>
+        </el-card>
+        <el-card style="padding:0px 0px;margin-top:10px;">
+        <el-form-item label="运行模式" prop="runMode.type">
+          <el-select v-model="deviceListForm.runMode.type" style="width:200px" placeholder="请选择运行模式">
+              <el-option
+                v-for="(item, index) in runModeTypeList"
+                :key="index"
+                :label="item.name"
+                :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="自定义等级" prop="runMode.outLevel">
+          <el-input v-model="deviceListForm.runMode.outLevel" style="width:200px" placeholder="请填写自定义等级，仅自定义模式时填写"/>
+        </el-form-item>
+        </el-card>
+        <el-card style="padding:0px 0px;margin-top:10px;">
+        <el-form-item label="输出方式" prop="outLevel.type">
+          <el-select v-model="deviceListForm.outLevel.type" style="width:200px" placeholder="请选择输出方式">
+              <el-option
+                v-for="(item, index) in outLevelTypeList"
+                :key="index"
+                :label="item.name"
+                :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="输出等级" prop="outLevel.level">
+          <el-input v-model="deviceListForm.outLevel.level" style="width:200px" placeholder="请填写输出等级，仅均衡输出时填写"/>
+        </el-form-item>
+        </el-card>
+        <el-card style="padding:0px 0px;margin-top:10px;">
+        <el-form-item label="电池类型" prop="batteryType">
+          <el-select v-model="deviceListForm.batteryType" style="width:200px">
+              <el-option
+                v-for="(item, index) in batteryTypeList"
+                :key="index"
+                :label="item.name"
+                :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="连接模式" prop="linkMode">
+          <el-select v-model="deviceListForm.linkMode" style="width:200px">
+              <el-option
+                v-for="(item, index) in linkModeList"
+                :key="index"
+                :label="item.name"
+                :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+        </el-card>
+        <el-card style="padding:0px 0px;margin-top:10px;">
+        <el-form-item label="安装单位" prop="installUnit">
+          <el-input v-model="deviceListForm.installUnit" placeholder="请填写安装单位" style="width:200px"/>
+        </el-form-item>
+        <el-form-item label="安装负责人" prop="installContacts">
+          <el-input v-model="deviceListForm.installContacts" placeholder="请填写安装负责人" style="width:200px"/>
+        </el-form-item>
+        <el-form-item label="负责人电话" prop="installPhone">
+          <el-input v-model="deviceListForm.installPhone" placeholder="请填写负责人电话" style="width:200px"/>
+        </el-form-item>
+        <el-form-item label="支队电话" prop="branchPhone">
+          <el-input v-model="deviceListForm.branchPhone" placeholder="请填写支队电话" style="width:200px"/>
+        </el-form-item>
+        <el-form-item label="安装省份" prop="province">
+          <el-input v-model="deviceListForm.province" placeholder="请填写安装省份" style="width:200px"/>
+        </el-form-item>
+        <el-form-item label="安装城市" prop="city">
+          <el-input v-model="deviceListForm.city" placeholder="请填写安装城市" style="width:200px"/>
+        </el-form-item>
+        <el-form-item label="安装区域" prop="county">
+          <el-input v-model="deviceListForm.county" placeholder="请填写安装区域" style="width:200px"/>
+        </el-form-item>
+        <el-form-item label="安装地址" prop="address">
+          <el-input v-model="deviceListForm.address" placeholder="请填写安装地址" style="width:200px"/>
+        </el-form-item>
+        <el-form-item label="安装时间" prop="installTime">
+          <el-date-picker type="datetime" placeholder="请填写安装时间" v-model="deviceListForm.installTime" style="width:200px" value-format="yyyy-MM-dd HH:mm:ss"></el-date-picker>
+        </el-form-item>
+        </el-card>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="deviceDialogFormVisible = false;">取消</el-button>
-        <el-button type="primary" @click="createDeviceData()">确定</el-button>
+        <el-button type="primary" @click="deviceStatus === '编辑'?updateDeviceData():createDeviceData()">确定</el-button>
       </div>
     </el-dialog>
-     <el-dialog title="新增灯质" :visible.sync="dengZhiDialogFormVisible">
-      <el-form ref="productLightForm" :rules="rules" :model="productLightForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+     <el-dialog title="新增灯质" :visible.sync="dengZhiDialogFormVisible" width="700px">
+      <el-form ref="productLightForm" :rules="rules" :model="productLightForm" label-position="left" label-width="100px">
         <el-form-item label="灯质名称" prop="name">
-          <el-input v-model="productLightForm.name"/>
+          <el-input v-model="productLightForm.name" style="width:510px"/>
         </el-form-item>
         <el-form-item label="灯质描述" prop="descs">
-          <el-input v-model="productLightForm.descs"/>
+          <el-input v-model="productLightForm.descs" style="width:510px"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -266,10 +360,10 @@
         <el-button type="primary" @click="createData()">确定</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="`${lightStatus}灯质`" :visible.sync="lightDialogFormVisible">
-      <el-form ref="lightStepForm" :rules="rules" :model="lightStepForm" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+    <el-dialog :title="`${lightStatus}灯质`" :visible.sync="lightDialogFormVisible" width="700px">
+      <el-form ref="lightStepForm" :rules="rules" :model="lightStepForm" label-position="left" label-width="100px">
          <el-form-item label="选择产品" prop="productId">
-          <el-select v-model="lightStepForm.productId" clearable>
+          <el-select v-model="lightStepForm.productId"  style="width:510px">
             <el-option
               v-for="(item, index) in dengZhiListData"
               :key="index"
@@ -279,16 +373,16 @@
           </el-select>
         </el-form-item>
         <el-form-item label="四路控制" prop="lineControl">
-          <el-input v-model="lightStepForm.lineControl"/>
+          <el-input v-model="lightStepForm.lineControl" style="width:510px"/>
         </el-form-item>
         <el-form-item label="循环次数" prop="loopCount">
-          <el-input v-model="lightStepForm.loopCount"/>
+          <el-input v-model="lightStepForm.loopCount" style="width:510px"/>
         </el-form-item>
         <el-form-item label="亮灯时间" prop="onTime">
-          <el-input v-model="lightStepForm.onTime"/>
+          <el-input v-model="lightStepForm.onTime" style="width:510px"/>
         </el-form-item>
         <el-form-item label="灭灯时间" prop="offTime">
-          <el-input v-model="lightStepForm.offTime"/>
+          <el-input v-model="lightStepForm.offTime" style="width:510px"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -323,25 +417,33 @@ export default {
       terminalList: ['爆闪灯','黄慢（闪）灯', '点阵式主动发光标志','面阵式全透发光标志' ,'面阵式半透发光标志'],
       monthList: [1,2,3,4,5,6,7,8,9,10,11,12],
       lightList: ['爆闪灯','黄慢（闪）灯', '点阵式主动发光标志','面阵式全透发光标志' ,'面阵式半透发光标志'],
+      bootModeTypeList:[{"id":1,"name":"光感模式"},{"id":2,"name":"RTC模式"}],
+      runModeTypeList:[{"id":1,"name":"夏季模式"},{"id":2,"name":"冬季模式"},{"id":3,"name":"应急模式"},{"id":4,"name":"自定义模式"}],
+      outLevelTypeList:[{"id":1,"name":"自动调光"},{"id":2,"name":"均衡输出"}],
+      batteryTypeList:[{"id":1,"name":"锂电池"},{"id":2,"name":"铅酸电池"},{"id":3,"name":"电网"}],
+      linkModeList:[{"id":1,"name":"短连接"},{"id":2,"name":"长连接"}],
+      flashModeList:[{"id":1,"name":"联机同频闪烁"},{"id":2,"name":"单机闪烁"}],
       treeData: [],
       fieldList: [],
       listTermQuery: {
         page: 1,
         pageSize: 10,
-        "organizeId": 1001
+        organizeId: 0
       },
       listLightQuery: {
         page: 1,
         pageSize: 10,
-        "organizeId": 1001
+        productId: 0
       },
       activeTermIndex: 1,
       activeLightIndex: 1,
       terminalListData: [],
       lightListData: [],
       dengZhiListData: [],
-      pageTermSum: 0,      
+      pageTermSum: 0,
+      pageTermTotal: 0,
       pageLightSum: 0,
+      pageLightTotal: 0,
       dengZhiDialogFormVisible: false,
       lightDialogFormVisible: false,
       productLightForm: {
@@ -349,48 +451,64 @@ export default {
         descs: ''
       },
       lightStepForm: {
-         "productId": "",
-        "lineControl": "",
-        "loopCount": '',
-        "onTime": '',
-        "offTime": ''
-      },
-      deviceDialogFormVisible: false,
-      deviceListForm: {
-          "productId": 1002,
-          "organizeId": 1001,
-          "serialNo": "张三",
-          "iotId": "455123",
-          "iotDsecret": "dsafd",
-          "name": "13974999769",
-          "iccid": "1",
-          "bootMode": "ss",
-          "flashMode": "1",
-          "runMode": "1",
-          "outLevel": "1",
-          "batteryType": 1,
-          "linkMode": 1,
-          "installUnit": "aaa",
-          "installAddress": "bbb",
-          "installContacts": "555",
-          "installPhone": "156554546",
-          "branchPhone": "1526655",
-          "installTime": 465646,
-          "solarVolt": 12.3,
-          "batteryVolt": 12.6,
-          "location": {longitude:123.123123,latitude:234.123123},
-          "province": "湖南省",
-          "city": "长沙市",
-          "gsm": "1",
-          "temperature": 17.5,
-          "illuminance": 10,
-          "status": 1
+        productId: "",
+        lineControl: "",
+        loopCount: '',
+        onTime: '',
+        offTime: ''
       },
       lightStatus: "新增",
+      deviceDialogFormVisible: false,
+      deviceStatus:"新增",
+      deviceListForm: {
+        productId: "",
+        organizeId: "",
+        serialNo: "",
+        iotId: "",
+        iotDsecret: "",
+        name: "",
+        iccid: "",
+        bootMode: {
+          type: '',
+          level: '',
+          rtcStart: '',
+          rtcEnd: ''
+        },
+        flashMode: {
+          type: 1,
+          mode: ''
+        },
+        runMode: {
+          type: 1,
+          outLevel: ''
+        },
+        outLevel: {
+          type: 1,
+          level:""
+        },
+        batteryType: 1,
+        linkMode: 1,
+        installUnit: "",
+        installContacts: "",
+        installPhone: "",
+        branchPhone: "",
+        installTime: "",
+        province: "",
+        city: "",
+        county: "",
+        address: ""
+      },
       rules: {
-        name: [{ required: true, message: '必填项', trigger: 'blur' }],
-        descs: [{ required: true, message: '必填项', trigger: 'blur' }],
         productId: [{ required: true, message: '必填项', trigger: 'blur' }],
+        name: [{ required: true, message: '必填项', trigger: 'blur' }],
+        serialNo: [{ required: true, message: '必填项', trigger: 'blur' }],
+        descs: [{ required: true, message: '必填项', trigger: 'blur' }],
+        iccid: [{ required: true, message: '必填项', trigger: 'blur' }],
+        'bootMode.type': [{ required: true, message: '必填项', trigger: 'blur' }],
+        'flashMode.type': [{ required: true, message: '必填项', trigger: 'blur' }],
+        'runMode.type': [{ required: true, message: '必填项', trigger: 'blur' }],
+        'outLevel.type': [{ required: true, message: '必填项', trigger: 'blur' }],
+        
         lineControl: [{ required: true, message: '必填项', trigger: 'blur' }],
         loopCount: [{ required: true, message: '必填项', trigger: 'blur' }],
         onTime: [{ required: true, message: '必填项', trigger: 'blur' }],
@@ -408,11 +526,17 @@ export default {
   },
   methods:{
     changeDevicePages(pages) {
+      if(pages > this.pageTermSum|| pages < 1){
+        return;
+      }
       this.activeTermIndex = pages
       this.listTermQuery.page = pages
       this.getTermList()
     },
     changeLightPages(pages) {
+      if(pages > this.pageLightSum|| pages < 1){
+        return;
+      }
       this.activeLightIndex = pages
       this.listLightQuery.page = pages
       this.getLightList()
@@ -432,6 +556,11 @@ export default {
         this.treeData = res.data
       })
     },
+    searchTermList(organizeId){
+      this.listTermQuery.organizeId=organizeId
+      this.listTermQuery.page=1
+      this.getTermList()
+    },
      getTermList(){
       // 获取终端列表
       let params = {
@@ -440,8 +569,16 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         this.terminalListData = res.data.datas
+        this.pageTermTotal = res.data.total
         this.pageTermSum = Math.ceil(res.data.total/this.listTermQuery.pageSize)
       })
+    },
+    searchLightList(productId){
+      this.listLightQuery.productId = productId
+      this.listLightQuery.page = 1
+      this.pageLightSum = 0
+      this.pageLightTotal = 0
+      this.getLightList()
     },
     getLightList(){
       // 获取灯步列表
@@ -451,6 +588,7 @@ export default {
       }
       this.$store.dispatch('GetList', params).then(res => {
         this.lightListData = res.data.datas
+        this.pageLightTotal = res.data.total
         this.pageLightSum = Math.ceil(res.data.total/this.listLightQuery.pageSize)
       })
     },
@@ -470,16 +608,35 @@ export default {
     },
     createDevice() {
       this.deviceDialogFormVisible = true
+      this.deviceStatus = '新增'
+      this.$nextTick(() => {
+        this.$refs['deviceListForm'].clearValidate()
+      })
+    },
+    updateDevice(row) {
+      this.deviceStatus = "编辑"
+      if(typeof (row.bootMode) == 'string'){
+        row.bootMode = (row.bootMode!=null && row.bootMode!='') ? JSON.parse(row.bootMode):{}
+      }
+      if(typeof (row.flashMode) == 'string'){
+        row.flashMode = (row.flashMode!=null && row.flashMode!='') ? JSON.parse(row.flashMode):{}
+      }
+      if(typeof (row.runMode) == 'string'){
+        row.runMode = (row.runMode!=null && row.runMode!='') ? JSON.parse(row.runMode):{}
+      }
+      if(typeof (row.outLevel) == 'string'){
+        row.outLevel = (row.outLevel!=null && row.outLevel!='') ? JSON.parse(row.outLevel):{}
+      }
+
+      this.deviceListForm = row
+      this.deviceDialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['deviceListForm'].clearValidate()
       })
     },
     createDeviceData() {
       this.$refs['deviceListForm'].validate((valid) => {
-          // this.userDataForm.userType = this.userType
           if (valid) {
-            // this.userDataForm.status = this.switchValue ? 1 : 2
-            // this.userDataForm.pwd = md5(this.userDataForm.pwd)
             let params = {
               fetchUrl: '/sys/device/add',
               data: this.deviceListForm
@@ -491,10 +648,27 @@ export default {
                 message: '添加终端成功',
                 type: 'success'
               });
-              // this.activeOrganizationIndex = 1 // 机构分页
-              // this.listOrganizeQuery.page = 1
               this.getTermList()
-              // this.organizeDataForm = Object.assign({}, this.$options.data().organizeDataForm)
+            })
+          }
+        })
+    },
+    updateDeviceData() {
+      this.$refs['deviceListForm'].validate((valid) => {
+          if (valid) {
+            let params = {
+              fetchUrl: '/sys/device/edit',
+              data: this.deviceListForm
+            }
+            this.$store.dispatch('EditMembers', params).then(res => {
+              this.deviceDialogFormVisible = false
+              this.$notify({
+                title: '成功',
+                message: '修改设备成功',
+                type: 'success'
+              });
+              this.getTermList()
+              this.deviceListForm = Object.assign({}, this.$options.data().deviceListForm)
             })
           }
         })
@@ -536,10 +710,7 @@ export default {
     },
     createLightData() {
       this.$refs['lightStepForm'].validate((valid) => {
-          // this.userDataForm.userType = this.userType
           if (valid) {
-            // this.userDataForm.status = this.switchValue ? 1 : 2
-            // this.userDataForm.pwd = md5(this.userDataForm.pwd)
             let params = {
               fetchUrl: '/sys/flashMode/add',
               data: this.lightStepForm
@@ -551,10 +722,7 @@ export default {
                 message: '添加灯步成功',
                 type: 'success'
               });
-              // this.activeOrganizationIndex = 1 // 机构分页
-              // this.listOrganizeQuery.page = 1
               this.getLightList()
-              // this.organizeDataForm = Object.assign({}, this.$options.data().organizeDataForm)
             })
           }
         })
@@ -577,7 +745,30 @@ export default {
     openDeviceManage() {
       this.$router.push('deviceManage')
     },
-    delLight(id){
+    synDevice(device){
+      // 同步设备信息
+      MessageBox.confirm(
+          '产品KEY：'+device.iotPkey+'，设备秘钥：'+device.iotDsecret+'，如需设置设备信息，请点击“立即设置”','物联网信息',
+          {
+            confirmButtonText: '立即设置',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).then(() => {
+            let params = {
+              fetchUrl: '/sys/device/sync?id='+device.id,
+              data: {}
+            }
+            this.$store.dispatch('DeleteMembers', params).then(res => {
+              
+            })
+        })
+    },
+    delLight(){
+      if(this.listLightQuery.productId == '' || this.listLightQuery.productId <= 0){
+        MessageBox.alert('请选择要删除的产品类型');
+        return false;
+      }
       // 删除灯质
       MessageBox.confirm(
           '确定要删除吗？',
@@ -588,7 +779,7 @@ export default {
           }
         ).then(() => {
             let params = {
-              fetchUrl: '/sys/product/delete?id='+id,
+              fetchUrl: '/sys/product/delete?id='+this.listLightQuery.productId,
               data: {}
             }
             this.$store.dispatch('DeleteMembers', params).then(res => {

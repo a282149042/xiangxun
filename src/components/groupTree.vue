@@ -1,7 +1,7 @@
 <template>
  <div>
     <div class="tree3">
-      <v-tree ref='tree1' :canDeleteRoot="true" :data='treeData' :draggable='true' :tpl='tplJsx' :halfcheck='true' :multiple="true"/>
+      <v-tree ref='tree1' :canDeleteRoot="false" :data='treeData' :draggable='false' :tpl='tplJsx' :halfcheck='true'/>
     </div>
  </div>
 </template>
@@ -11,7 +11,7 @@ import icon from '@/assets/images/file.png'
 import iconfile from '@/assets/images/file_package.png'
 export default {
   name: 'groupTree',
-  props: ['treeData'],
+  props: ['treeData','mtype'],
   data () {
     return {
     }
@@ -20,13 +20,23 @@ export default {
     tplJsx (...args) {
       let {0: node,1: children} = args
       let titleClass = node.selected ? 'node-title node-selected' : 'node-title'
-      if (node.searched) titleClass += ' node-searched'
+      let icon1 = (node.children && node.children.length) > 0 ? iconfile : icon;
+      node.expanded = true
       return (<span>
-            {children.expanded?<img style="vertical-align: middle;" src={icon}/>:<img style="vertical-align: middle;" src={iconfile}/>}
+            {<img style="vertical-align: middle;" src={icon1}/>}
             <span class={titleClass} domPropsInnerHTML={node.name} onClick={() => {
-            this.$refs.tree1.nodeSelected(node)
+                this.doRefreshList(node.id)
             }} />
       </span>)
+    },
+    doRefreshList (organizeId){
+        if(this.mtype == 1){
+            this.$emit('searchTermList',organizeId)
+        }else if(this.mtype == 2){
+            this.$emit('searchOrganizeList',organizeId)
+        }else if(this.mtype == 3){
+            this.$emit('searchUserListData',organizeId)
+        }
     }
   }
 }

@@ -224,8 +224,26 @@
               }
             }
             .platform_charts{
-              height: 736px;
+              height: 660px;
               width: 100%;
+            }
+            .amap-wrapper{
+              width: 800px;
+              height:600px;
+              position: absolute;
+              left: 50px;
+              top: 40px;
+              .modal_detail{
+                width: 800px;
+                height: 500px;
+                >table{
+                  font-size: 1rem;
+                  color: #000 !important;
+                }
+                table, td, th {
+                  border: 1px solid #083775;
+                }
+              }
             }
           }
         }
@@ -280,6 +298,10 @@
             }
           }
         }
+      }
+      .mapTable{
+        width: 500px;
+        height: 500px;
       }
       table{
         border-collapse: collapse;

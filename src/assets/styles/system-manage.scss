@@ -148,35 +148,16 @@
             font-size: 0.5625rem;
         }
         .top_title_display {
+            margin-top: 20px;
             display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
             .orgnazition_title {
                 font-size: 0.5625rem;
                 color: #7dd7f9;
-                height: 15px;
-                line-height: 15px;
+                height: 40px;
+                line-height: 40px;
                 width: 25%;
-            }
-            .select_items {
-                width: 30%;
-                display: flex;
-                justify-content: flex-end;
-                align-items: center;
-                .label_item {
-                    font-size: 0.5625rem;
-                    color: #ccc;
-                }
-                .select_input {
-                    margin-right: 10%;
-                    .el-input__inner{
-                        
-                        line-height:25px!important;
-                    }
-                    .el-input__icon {
-                        line-height:25px!important;
-                    }
-                }
-                
-
             }
             .submit_btn {
                 margin-right: 10px;
@@ -195,6 +176,7 @@
           margin-top: 20px;
           display: flex;
           justify-content: space-between;
+          align-items: flex-end;
           .orgnazition_title {
               font-size: 0.5625rem;
               height: 40px;
@@ -243,7 +225,7 @@
                         color:#ccc;
                     }
                     .opration_table {
-                        width:100px;
+                        width:120px;
                         .opration_btn {
                             display: flex;
                             justify-content: space-around;
@@ -251,53 +233,38 @@
                             margin: 5px 0px;
                             color:#fff;
                             ._record {
-                                //width: 60px;
+                                width: 30px;
                                 height: 12px;
                                 background: #E62129;
                                 font-size: 0.5rem;
                                 padding: 4px;
                                 border-radius: 2px;
                                 line-height: 12px;
+                                cursor: pointer;
                             }
                             .history_data {
+                                width: 30px;
                                 height: 12px;
                                 border-radius: 2px;
                                 line-height: 12px;
                                 padding: 4px;
                                 background: #56AAB7;
                                 font-size: 0.5rem;
+                                cursor: pointer;
                             }
                         }
                     }
                 }
                 .divide_pages{
-                  border: 1px solid #083775;
-                  width:98%;
-                  margin: 0 10px;
-                  height: 30px;
-                  box-sizing: border-box;
-                  line-height:30px;
-                  border-top: none;
-                  .pageing{
-                    color: #fff;
-                    font-size: 0.5rem;
-                    padding: 10px;
-                  }
-                  .pageing:hover{
-                      cursor: pointer;
-                  }
-                  .active_pages{
-                    color: #E0BC25;
-                    // background: rgba(243, 204, 23, 1)
-                  }
-                  .change_pages{
-                    float: right;
-                    color: #E0BC25;
-                    font-size: 0.5rem;
-                    padding: 10px;
-                  }
+                    height:30px;
+                    a{
+                        border: 1px solid #083775;
+                        margin: 0px 10px 0 10px;
+                        padding:2px 5px;
+                        background:linear-gradient(to bottom, #0c5b2e, #092a5d);
+                    }
                 }
             }
         }
       }
-    } 
+    }
