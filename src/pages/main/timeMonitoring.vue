@@ -198,7 +198,7 @@ export default {
   components: {},
   data() {
     return {
-      zoom: 12,
+      zoom: 16,
       currentWindow: {
         position: [0, 0],
         content: "",
@@ -305,7 +305,7 @@ export default {
         pageSize: 1000,
         type: 2 //类型（1-正常，2告警，3-失联）
       },
-      curPositionData: [121.5273285, 31.21515044],
+      curPositionData: [0, 0],
       alarmInfoList: []
     };
   },
