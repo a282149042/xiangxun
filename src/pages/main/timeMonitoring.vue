@@ -63,8 +63,8 @@
             </div>
             <div class="platform_distribution">
               <div class="platform_button">
-                <div class="back_behide_page"><button @click="backOnePage()">返回上一级</button></div>
                 <div class="back_index_page" @click="backIndexPage"><button>返回首层</button></div>
+                <div class="back_behide_page"><button @click="backOnePage()">返回上一级</button></div>
               </div>
                <div class="platform_charts" id="platformCount">
                 <!-- 平台数据分布 -->
@@ -106,6 +106,18 @@
                   </div>
                 </td>
               </tr>
+              <tr class="divide_pages">
+                  <td colspan="8" v-if="monitoringList.length == 0 && listMoniQuery.page == 1">
+                    没有更多的数据了
+                  </td>
+                  <td colspan="8" v-else>
+                    共条{{monitoringTotal}}记录，当前显示第{{listMoniQuery.page}}/{{monitoringPageSum}}页
+                    <a @click="changeMoniPages(1)">首页</a>
+                    <a @click="changeMoniPages(listMoniQuery.page-1)">上一页</a>
+                    <a @click="changeMoniPages(listMoniQuery.page+1)">下一页</a>
+                    <a @click="changeMoniPages(pageSum)">尾页</a>
+                  </td>
+              </tr>
             
             </table>
           </div>
@@ -141,6 +153,12 @@
                   {{item.province+item.city+item.county+item.address || "暂无地址或地址不详"}}
               </div>
             </div>
+            <div class="no_more" v-if="listAlarmInfoQuery.page>=alarmInfoPageSum">
+                没有更多的数据了
+            </div>  
+            <div class="load_more" v-else>
+              <a @click="loadMoreAlarmList(listAlarmInfoQuery.page+1)">点击查看更多</a>
+            </div>
           </div>
         </div>
       </div>
@@ -163,6 +181,7 @@
       </div>
     </el-dialog>
     <div v-if="isShowMap" class="amap-wrapper">
+      <div v-if="isShowMap" class="close_amap"><button @click="closeAmap()">关闭窗口</button></div>
       <el-amap class="amap-box" :zoom="zoom" :resizeEnable="true" :vid="'amap-vue'" :autoMove="true" :center="curPositionData">
         <el-amap-info-window
           :position="currentWindow.position"
@@ -208,70 +227,6 @@ export default {
       dateTime: moment().format("YYYY.MM.DD"),
       threeStatusData: [],
       alarmList: [
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        },
-        {
-          address: "湖南省长沙市岳麓区梅溪湖街道步步高新天地120号",
-          time: moment().format("YYYY.MM.DD")
-        }
       ],
       moment,
       statusMap: {
@@ -296,17 +251,21 @@ export default {
       totalCountObj: {},
       kindsCountList: [],
       monitoringList: [],
+      monitoringPageSum:0,
+      monitoringTotal:0,
       listMoniQuery: {
         page: 1,
         pageSize: 10
       },
       listAlarmInfoQuery: {
         page: 1,
-        pageSize: 1000,
+        pageSize: 50,
         type: 2 //类型（1-正常，2告警，3-失联）
       },
       curPositionData: [0, 0],
-      alarmInfoList: []
+      alarmInfoList: [],
+      alarmInfoPageSum:0,
+      alarmInfoTotal:0
     };
   },
   created() {},
@@ -331,6 +290,9 @@ export default {
       mapStack = [];
       parentId = chinaId;
       parentName = chinaName;
+    },
+    closeAmap(){
+      this.isShowMap = false;
     },
     backOnePage() {
       this.isShowMap = false;
@@ -365,6 +327,13 @@ export default {
     checkDetailSubmit() {
       this.checkDetailVisible = false;
     },
+    changeMoniPages(pages){
+      if(pages > this.monitoringPageSum|| pages < 1){
+        return;
+      }
+      this.listMoniQuery.page = pages
+      this.getMonitoringList()
+    },
     getMonitoringList() {
       let params = {
         fetchUrl: "/sys/monitoring/monitoringList",
@@ -372,10 +341,18 @@ export default {
       };
       this.$store.dispatch("GetList", params).then(res => {
         this.monitoringList = res.data.datas;
+        this.monitoringTotal = res.data.total
+        this.monitoringPageSum = Math.ceil(res.data.total/this.listMoniQuery.pageSize)
       });
     },
     changeAlarmList(type) {
+      this.listAlarmInfoQuery.pages = 1;
       this.listAlarmInfoQuery.type = type;
+      this.alarmInfoList = [];
+      this.getAlarmInfoList();
+    },
+    loadMoreAlarmList(pages){
+      this.listAlarmInfoQuery.page = pages;
       this.getAlarmInfoList();
     },
     getAlarmInfoList() {
@@ -384,8 +361,9 @@ export default {
         listQuery: this.listAlarmInfoQuery
       };
       this.$store.dispatch("GetList", params).then(res => {
-        this.alarmInfoList = res.data.datas;
-        console.log('res========>>', res)
+        this.alarmInfoList = this.alarmInfoList.concat(res.data.datas);
+        this.alarmInfoTotal = res.data.total
+        this.alarmInfoPageSum = Math.ceil(res.data.total/this.listAlarmInfoQuery.pageSize)
       });
     },
     // /sys/monitoring/alarmInfo
@@ -436,7 +414,7 @@ export default {
           textStyle: {
             fontSize: 14,
             fontWeight: "bolder",
-            color: "#FFDE29"
+            color: "#7dd7f9"
           }
         },
         tooltip: {
@@ -447,7 +425,7 @@ export default {
           x: "center",
           y: "bottom",
           textStyle: {
-            color: "#FFDE29",
+            color: "#7dd7f9",
             fontSize: 12
           },
           data: dataKeyList
@@ -499,7 +477,7 @@ export default {
           textStyle: {
             fontSize: 14,
             fontWeight: "bolder",
-            color: "#FFDE29"
+            color: "#7dd7f9"
           }
         },
         legend: {
@@ -507,7 +485,7 @@ export default {
           x: "center",
           bottom: "10",
           textStyle: {
-            color: "#FFDE29",
+            color: "#7dd7f9",
             fontSize: 12
           },
           data: ["正常", "异常", "离线"]
@@ -584,8 +562,6 @@ export default {
       return tempData;
     },
     jumpMapPosition(id,positionData, that) {
-      that.isShowMap = true;
-      that.curPositionData = positionData;
       let postData = {
         fetchUrl: "/sys/device/info?id=" + id,
         listQuery: {
@@ -594,6 +570,8 @@ export default {
       };
       that.$store.dispatch("GetDetail", postData).then(detail => {
         const detailData = detail.data;
+        that.isShowMap = true;
+        that.curPositionData = [detailData.location.longitude,detailData.location.latitude];
         let oldTime = detailData.synTime
         let newdate = moment(oldTime).format('YYYY-MM-DD HH:mm:ss')
         detailData.synTime= newdate
@@ -602,26 +580,27 @@ export default {
         let newdate2 = moment(oldTime2).format('YYYY-MM-DD HH:mm:ss')
         detailData.installTime= newdate2
         
-        let types=[{'1':"夏季模式",'2':"冬季模式",'3':"应急模式",'4':"自定义模式"}]
+        let types={'1':"夏季模式",'2':"冬季模式",'3':"应急模式",'4':"自定义模式"}
         detailData.runMode.type = types[detailData.runMode.type]
         
-        let status=[{'1':"正常",'2':"告警",'3':"离线"}]
+        let status={'1':"正常",'2':"告警",'3':"离线"}
         detailData.status = status[detailData.status]
 
         const element = 
+        '<style>td{border:solid 1px #999;font-size:14px;padding:2px 5px;}</style>'+
         '<div class="modal_detail">'+
           '<div style="margin: -1px; padding: 1px;">'+
             '<div style="text-align:center;white-space:nowrap;margin:10px;">'+
-              '<table style="border:1px solid #999;">'+
-                '<tbody style="border:1px solid #999;">'+
+              '<table style="border-collapse: collapse;">'+
+                '<tbody>'+
                   '<tr><td>所属机构</td><td colspan="3">'+detailData.organizeTree+'</td></tr>'+
-                  '<tr><td>终端识别号</td><td>'+detailData.serialNo+'</td><td>ICCID卡号</td><td>'+detailData.iccid+'</td></tr>'+
+                  '<tr><td>终端识别号</td><td>'+detailData.serialNo+'</td><td>ICCID卡号</td><td>'+(detailData.iccid==null?'':detailData.iccid)+'</td></tr>'+
                   '<tr><td>终端名称</td><td>'+detailData.name+'</td><td>终端通讯时间</td><td>'+detailData.synTime+'</td></tr>'+   
-                  '<tr><td>当前坐标位置</td><td>'+detailData.location.latitude+'/'+detailData.location.longitude+'</td><td>灯质模式</td><td>'+detailData.productName+'</td></tr>'+   
-                  '<tr><td>信号强度</td><td>'+detailData.gsm+'</td><td>终端备注</td><td>'+detailData.descs+'</td></tr>'+   
-                  '<tr><td>安装单位</td><td>'+detailData.installUnit+'</td><td>安装地点</td><td>'+detailData.address+'</td></tr>'+   
-                  '<tr><td>安装时间</td><td>'+detailData.installTime+'</td><td>负责人</td><td>'+detailData.installContacts+'</td></tr>'+   
-                  '<tr><td>联系方式</td><td>'+detailData.installPhone+'</td><td>支队联系方式</td><td>'+detailData.branchPhone+'</td></tr>'+   
+                  '<tr><td>当前坐标位置</td><td>'+detailData.location.longitude+','+detailData.location.latitude+'</td><td>灯质模式</td><td>'+detailData.productName+'</td></tr>'+   
+                  '<tr><td>信号强度</td><td>'+detailData.gsm+'</td><td>终端备注</td><td>'+(detailData.descs==null?'':detailData.descs)+'</td></tr>'+   
+                  '<tr><td>安装单位</td><td>'+detailData.installUnit+'</td><td>安装地点</td><td>'+(detailData.address==null?'':detailData.address)+'</td></tr>'+   
+                  '<tr><td>安装时间</td><td>'+detailData.installTime+'</td><td>负责人</td><td>'+(detailData.installContacts==null?'':detailData.installContacts)+'</td></tr>'+   
+                  '<tr><td>联系方式</td><td>'+detailData.installPhone+'</td><td>支队联系方式</td><td>'+(detailData.branchPhone==null?'':detailData.branchPhone)+'</td></tr>'+   
                   '<tr><td>电池类型</td><td>'+detailData.batteryTypeName+'</td><td>太阳能电压</td><td>'+detailData.solarVolt+'</td></tr>'+   
                   '<tr><td>电池电压</td><td>'+detailData.batteryVolt+'</td><td>点阵/面阵</td><td>'+detailData.productName+'</td></tr>'+   
                   '<tr><td>运行模式</td><td>'+detailData.runMode.type+'</td><td>运行等级</td><td>'+detailData.runMode.outLevel+'</td></tr>'+   
@@ -694,7 +673,7 @@ export default {
           textStyle: {
             fontSize: 14,
             fontWeight: "bolder",
-            color: "#FFDE29"
+            color: "#7dd7f9"
           }
         },
         legend: {
@@ -702,7 +681,7 @@ export default {
           x: "center",
           bottom: "10",
           textStyle: {
-            color: "#FFDE29",
+            color: "#7dd7f9",
             fontSize: 12
           },
           data: ["正常", "异常", "离线"]
