@@ -1,4 +1,4 @@
-import { getList, addMembers, deleteMembers, getDetail, editMembers, allowAccess, importExcelFile, downLoadExcelFile } from '@/api/table'
+import { getList, getListSingle, addMembers, deleteMembers, getDetail, editMembers, allowAccess, importExcelFile, downLoadExcelFile } from '@/api/table'
 
 const table = {
   state: {
@@ -60,6 +60,14 @@ const table = {
             // commit('SET_TOTAL', res.data.total)
             // commit('SET_LIST_QUERY', listQuery)
             // commit('SET_ITEMS', res.data.datas)
+            resolve(res)
+        })
+      })
+    },
+    // 单参列表
+    GetListSingle({ commit }, params) {
+      return new Promise(resolve => {
+        getListSingle(params).then( res => {
             resolve(res)
         })
       })
