@@ -8,6 +8,14 @@ export function getList(params) {
     data: params.listQuery
   })
 }
+export function getListSingle(params) {
+  // 列表
+  return request({
+    url: params.fetchUrl,
+    method: 'post',
+    data: JSON.parse(params.listQuery)
+  })
+}
 export function addMembers(params) {
   // 添加
   return request({

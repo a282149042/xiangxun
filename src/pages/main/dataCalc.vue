@@ -315,67 +315,88 @@ export default {
       let label = ''
       for(let j=1;j<3;j++){
         for(let i=1;i<5;i++){
-          listQuery.type=i
+          this.listQuery.type=i
+          this.listQuery.cycle=j
           let params = {
             fetchUrl: '/sys/count/temperatureCount',
-            listQuery: listQuery
+            listQuery: JSON.stringify(this.listQuery),
           }
-          this.$store.dispatch('GetList', params).then(res => {
+          this.$store.dispatch('GetListSingle', params).then(res => {
             console.log('****数据统计********',res.data)
             if(j==1){//月
                 label= '月度'
                 if(i==1){
                   eleId="tempCalc"
                   title= '◆ 温度统计 ◆'
+                  this.setChar(res.data,eleId,title,label,1)
                 }else if(i==2){
                   eleId="signCalc"
                   title= '◆ 信号统计 ◆'
+                  this.setChar(res.data,eleId,title,label,1)
                 }else if(i==3){
                   eleId="sunMonth"
                   title= '◆ 太阳能电压分析 ◆'
+                  this.setChar(res.data,eleId,title,label,1)
                 }else if(i==4){
                   eleId="chargeMonth"
                   title= '◆ 电池电压统计 ◆'
+                  this.setChar(res.data,eleId,title,label,1)
                 }
-                if(Object.keys(res.data).length > 0){
-                  _this.allData = res.data
-                  let params = {
-                    eleId:eleId,
-                    timeData: _this.DateList,
-                    data: _this.allData,
-                    title: title,
-                    label: label
-                  }
-                  _this.getMonthAndDateData(params)
-                }
+                
             }else{//日
                 label=moment().subtract(1, 'day').format('YYYY.MM.DD')
                 if(i==1){
                   eleId="tempCalcYesterday"
                   title= '昨日◆ 温度统计 ◆'
+                  this.setChar(res.data,eleId,title,label,0)
                 }else if(i==2){
                   eleId="signCalcYesterday"
                   title= '昨日◆ 信号统计 ◆'
+                  this.setChar(res.data,eleId,title,label,0)
                 }else if(i==3){
                   eleId="sunYesterday"
                   title='昨日◆ 太阳能电压分析 ◆'
+                  this.setChar(res.data,eleId,title,label,0)
                 }else if(i==4){
                   eleId="chargeYesterday"
                   title='昨日◆ 电池电压统计 ◆'
-                }
-                if(Object.keys(res.data).length > 0){
-                  _this.allData = res.data
-                  let params2 = {
-                    eleId:eleId,
-                    xAxisData: _this.hoursList,
-                    seriesData: _this.allData || [],
-                    title: title,
-                    label: label
-                  }
-                  _this.getSignAndTempData(params2)
+                  this.setChar(res.data,eleId,title,label,0)
                 }
             }
           })
+        }
+      }
+    },
+    setChar(data,eleId,title,label,mark) {
+      let len = Object.keys(data).length
+      let _this =this
+      if(len > 0){
+        _this.DateList = []
+        _this.allData = []
+        for (let i = 1; i < len+1; i++) {
+          _this.DateList.push(i)
+          let va = "data"+i
+          _this.allData.push(data[va])
+        }
+        let params = {}
+        if(mark == 1){
+          params = {
+            eleId:eleId,
+            timeData: _this.DateList,
+            data: _this.allData,
+            title: title,
+            label: label
+          }
+          _this.getMonthAndDateData(params)
+        }else{
+          params = {
+            eleId:eleId,
+            xAxisData: _this.DateList,
+            seriesData: _this.allData,
+            title: title,
+            label: label
+          }
+          _this.getSignAndTempData(params)
         }
       }
     },
