@@ -167,14 +167,24 @@
       <el-form :model="detailInfo" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
         <el-form-item :label="`${statusType}类型`">
           <span>{{ statusTypeMap[detailInfo.type]}}</span>
-      </el-form-item>
-      <el-form-item label="详情">
-          <span>{{ detailInfo.edescs}}</span>
-      </el-form-item>
-      <el-form-item label="地理位置">
-          <span>{{detailInfo.longitude}}</span>
-          <span>{{detailInfo.latitude}}</span>
-      </el-form-item>
+        </el-form-item>
+        <el-form-item label="详情">
+            <span>{{ detailInfo.edescs}}</span>
+        </el-form-item>
+        <el-form-item label="地理位置">
+            <span>{{detailInfo.longitude}}</span>
+            <span>{{detailInfo.latitude}}</span>
+        </el-form-item>
+        <el-form-item :label="`${statusType}类型`">
+          <span>{{ statusTypeMap[detailInfo.type]}}</span>
+        </el-form-item>
+        <el-form-item label="详情">
+            <span>{{ detailInfo.edescs}}</span>
+        </el-form-item>
+        <el-form-item label="地理位置">
+            <span>{{detailInfo.longitude}}</span>
+            <span>{{detailInfo.latitude}}</span>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="checkDetailSubmit">关闭</el-button>
@@ -550,8 +560,7 @@ export default {
           tempData.push({
             value: [
               JSON.parse(ele.location).longitude,
-              JSON.parse(ele.location).latitude,
-              1
+              JSON.parse(ele.location).latitude
             ],
             name: ele.county,
             id: ele.id,
@@ -618,7 +627,6 @@ export default {
           size: 10,
           visible: true
         };
-        console.log("detaildetaildetaildetail", detail);
       });
     },
     async platformCount(divid) {
@@ -728,7 +736,7 @@ export default {
             name: "正常",
             type: "scatter",
             coordinateSystem: "geo",
-            symbol: "rect",
+            symbol: "circle",
             data: this.threeStatusData[1] || [],
             symbolSize: 16,
             legend: {
@@ -744,10 +752,10 @@ export default {
             label: {
               show: false,
               normal: {
-                show: true
+                show: false
               },
               emphasis: {
-                show: true
+                show: false
               },
               formatter: "{b}",
               offset: [15, -15] //文字的相对偏移
@@ -764,7 +772,7 @@ export default {
             name: "异常",
             type: "scatter",
             coordinateSystem: "geo",
-            symbol: "rect",
+            symbol: "circle",
             data: this.threeStatusData[2] || [],
             symbolSize: 16,
             legend: {
@@ -780,10 +788,10 @@ export default {
             label: {
               show: false,
               normal: {
-                show: true
+                show: false
               },
               emphasis: {
-                show: true
+                show: false
               },
               formatter: "{b}",
               offset: [15, -15] //文字的相对偏移
@@ -800,7 +808,7 @@ export default {
             name: "离线",
             type: "scatter",
             coordinateSystem: "geo",
-            symbol: "rect",
+            symbol: "circle",
             data: this.threeStatusData[3] || [],
             symbolSize: 16,
             legend: {
@@ -816,10 +824,10 @@ export default {
             label: {
               show: false,
               normal: {
-                show: true
+                show: false
               },
               emphasis: {
-                show: true
+                show: false
               },
               formatter: "{b}",
               offset: [15, -15] //文字的相对偏移
