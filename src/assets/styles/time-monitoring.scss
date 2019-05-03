@@ -469,6 +469,26 @@
       }
     }
   }
+  .table_alert{
+    font-size: 0.5625rem;
+    .table_list{
+      width: 98%;
+      margin: 0 1%;
+      border: 1px solid #083775;
+      color:#303133;
+      text-align:center;
+    }
+    .divide_pages{
+      height:30px;
+      a{
+          border: 1px solid #083775;
+          margin: 0px 10px 0 10px;
+          padding:2px 5px;
+          background:#fff;
+      }
+    }
+  }
+
   .divide_pages{
     height:30px;
     a{
