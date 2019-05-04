@@ -115,7 +115,7 @@
                     <a @click="changeMoniPages(1)">首页</a>
                     <a @click="changeMoniPages(listMoniQuery.page-1)">上一页</a>
                     <a @click="changeMoniPages(listMoniQuery.page+1)">下一页</a>
-                    <a @click="changeMoniPages(pageSum)">尾页</a>
+                    <a @click="changeMoniPages(monitoringPageSum)">尾页</a>
                   </td>
               </tr>
             
@@ -163,31 +163,44 @@
         </div>
       </div>
     </div>
-    <el-dialog :title="`${statusType}详细记录`" :visible.sync="checkDetailVisible">
-      <el-form :model="detailInfo" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item :label="`${statusType}类型`">
-          <span>{{ statusTypeMap[detailInfo.type]}}</span>
-        </el-form-item>
-        <el-form-item label="详情">
-            <span>{{ detailInfo.edescs}}</span>
-        </el-form-item>
-        <el-form-item label="地理位置">
-            <span>{{detailInfo.longitude}}</span>
-            <span>{{detailInfo.latitude}}</span>
-        </el-form-item>
-        <el-form-item :label="`${statusType}类型`">
-          <span>{{ statusTypeMap[detailInfo.type]}}</span>
-        </el-form-item>
-        <el-form-item label="详情">
-            <span>{{ detailInfo.edescs}}</span>
-        </el-form-item>
-        <el-form-item label="地理位置">
-            <span>{{detailInfo.longitude}}</span>
-            <span>{{detailInfo.latitude}}</span>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="checkDetailSubmit">关闭</el-button>
+    <el-dialog :title="`${statusType}记录`" :visible.sync="checkDetailVisible">
+      <div class="table_alert">
+        <table class="table_list">
+              <tr>
+                <th>序号</th>
+                <th>终端所属机构</th>
+                <th>终端序列号</th>
+                <th>终端名称</th>
+                <th>安装单位</th>
+                <th>安装地点</th>
+                <th>终端状态</th>
+                <th>报警时间</th>
+                <th>报警信息</th>
+              </tr>
+              <tr v-for="item in alertMonitoringList" :key="item.id">
+                <td>{{alertMonitoringItem.organizeName}}</td>
+                <td>{{alertMonitoringItem.organizeName}}</td>
+                <td>{{alertMonitoringItem.serialNo}}</td>
+                <td>{{alertMonitoringItem.name}}</td>
+                <td>{{alertMonitoringItem.installUnit}}</td>
+                <td>{{alertMonitoringItem.address}}</td>
+                <td>{{statusMap[item.status]}}</td>
+                <td>{{moment(item.createTime).format("YYYY-MM-DD")}}</td>
+                <td>{{item.emsg}}</td>
+              </tr>
+              <tr class="divide_pages">
+                  <td colspan="9" v-if="alertMonitoringList.length == 0 && alertMonitoringQuery.page == 1">
+                    没有更多的数据了
+                  </td>
+                  <td colspan="9" v-else>
+                    共条{{alertMonitoringTotal}}记录，当前显示第{{alertMonitoringQuery.page}}/{{alertMonitoringPageSum}}页
+                    <a @click="changeAlertMonitoringPages(1)">首页</a>
+                    <a @click="changeAlertMonitoringPages(alertMonitoringQuery.page-1)">上一页</a>
+                    <a @click="changeAlertMonitoringPages(alertMonitoringQuery.page+1)">下一页</a>
+                    <a @click="changeAlertMonitoringPages(alertMonitoringPageSum)">尾页</a>
+                  </td>
+              </tr>
+            </table>
       </div>
     </el-dialog>
     <div v-if="isShowMap" class="amap-wrapper">
@@ -199,7 +212,7 @@
           :visible="currentWindow.visible"
           :events="currentWindow.events">
         </el-amap-info-window>
-        <!-- <el-amap-marker vid="component-marker" :position="componentMarker.position" :content-render="componentMarker.contentRender" ></el-amap-marker> -->
+        <el-amap-marker v-for="(marker, index) in amapMarkers" :key='marker.id' :position="marker.value" :events="marker.events" :vid="index"></el-amap-marker>
       </el-amap>
     </div>
   </div>
@@ -275,7 +288,18 @@ export default {
       curPositionData: [0, 0],
       alarmInfoList: [],
       alarmInfoPageSum:0,
-      alarmInfoTotal:0
+      alarmInfoTotal:0,
+      amapMarkers:[],
+      alertMonitoringList:[],
+      alertMonitoringItem:null,
+      alertMonitoringQuery:{
+        page: 1,
+        pageSize: 20,
+        deviceId:0,
+        status:0
+      },
+      alertMonitoringTotal:0,
+      alertMonitoringPageSum:0
     };
   },
   created() {},
@@ -326,14 +350,36 @@ export default {
     },
     goAlarmRecordList(item) {
       this.statusType = "报警";
-      this.detailInfo = item[0] || this.detailInfo;
+      this.alertMonitoringQuery.deviceId = item.id;
+      this.alertMonitoringQuery.status = 2;
+      this.alertMonitoringItem = item;
+      this.changeAlertMonitoringPages(1);
       this.checkDetailVisible = true;
     },
     goRecordList(item) {
       this.statusType = "历史数据";
-      this.detailInfo = item[0] || this.detailInfo;
+      this.alertMonitoringQuery.deviceId = item.id;
+      this.alertMonitoringQuery.status = 0;
+      this.alertMonitoringItem = item;
+      this.changeAlertMonitoringPages(1);
       this.checkDetailVisible = true;
     },
+    changeAlertMonitoringPages(pages){
+      if((pages>1 && pages > this.alertMonitoringPageSum)|| pages < 1){
+        return;
+      }
+      this.alertMonitoringQuery.page = pages;
+      let params = {
+        fetchUrl: "/sys/monitoring/alarmInfo",
+        listQuery: this.alertMonitoringQuery
+      };
+      this.$store.dispatch("GetList", params).then(res => {
+        this.alertMonitoringList = res.data.datas;
+        this.alertMonitoringTotal = res.data.total
+        this.alertMonitoringPageSum = Math.ceil(res.data.total/this.alertMonitoringQuery.pageSize)
+      });
+    },
+
     checkDetailSubmit() {
       this.checkDetailVisible = false;
     },
@@ -551,10 +597,12 @@ export default {
         }
       };
       let data = await this.$store.dispatch("GetList", params);
+
       return data;
     },
     producePositionData(data) {
       let tempData = [];
+      let that = this;
       data.map(item =>
         item.children.map(ele =>
           tempData.push({
@@ -564,7 +612,13 @@ export default {
             ],
             name: ele.county,
             id: ele.id,
-            status: ele.status
+            status: ele.status,
+            events: {
+              click: () => {
+                this.jumpMapPosition(ele.id,[JSON.parse(ele.location).longitude,JSON.parse(ele.location).latitude],that)
+                
+              }
+            }
           })
         )
       );
@@ -595,7 +649,7 @@ export default {
         let status={'1':"正常",'2':"告警",'3':"离线"}
         detailData.status = status[detailData.status]
 
-        const element = 
+        let element = 
         '<style>td{border:solid 1px #999;font-size:14px;padding:2px 5px;}</style>'+
         '<div class="modal_detail">'+
           '<div style="margin: -1px; padding: 1px;">'+
@@ -634,6 +688,8 @@ export default {
       let that = this;
       let { data } = await this.getEveryCityData(1);
       let unFormatData = this.producePositionData(data);
+      this.amapMarkers = unFormatData;
+
       this.threeStatusData = _.groupBy(unFormatData, "status");
       axios.get("./json/" + chinaId + ".json", {}).then(response => {
         const mapJson = response.data;

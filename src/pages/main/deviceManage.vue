@@ -175,7 +175,7 @@
                     <div class="history_data" @click="updateLightStep(item)">
                       编辑
                     </div>
-                    <div class="_record" @click="delLightStep(item.id)">
+                    <div class="_record" @click="deleteLightStep(item.id)">
                       删除
                     </div>
                   </div>
@@ -373,7 +373,10 @@
           </el-select>
         </el-form-item>
         <el-form-item label="四路控制" prop="lineControl">
-          <el-input v-model="lightStepForm.lineControl" style="width:510px"/>
+            <el-checkbox v-model="line1" label="1路" border></el-checkbox>
+            <el-checkbox v-model="line2" label="2路" border></el-checkbox> 
+            <el-checkbox v-model="line3" label="3路" border></el-checkbox>
+            <el-checkbox v-model="line4" label="4路" border></el-checkbox>
         </el-form-item>
         <el-form-item label="循环次数" prop="loopCount">
           <el-input v-model="lightStepForm.loopCount" style="width:510px"/>
@@ -456,7 +459,12 @@ export default {
         loopCount: '',
         onTime: '',
         offTime: ''
+        
       },
+      line1: false,
+      line2: false,
+      line3: false,
+      line4: false,
       lightStatus: "新增",
       deviceDialogFormVisible: false,
       deviceStatus:"新增",
@@ -676,6 +684,11 @@ export default {
     addLightStep() {
       this.lightDialogFormVisible = true
       this.lightStatus = '新增'
+      this.line1 = false
+      this.line2 = false
+      this.line3 = false
+      this.line4 = false
+
       this.$nextTick(() => {
         this.$refs['lightStepForm'].clearValidate()
       })
@@ -683,6 +696,12 @@ export default {
     updateLightStep(row) {
       this.lightStatus = "编辑"
       this.lightStepForm = row
+      if(row.lineControl.length == 4){
+        this.line1 = (row.lineControl.substring(0,1) == '1' ? true : false)
+        this.line2 = (row.lineControl.substring(1,2) == '1' ? true : false)
+        this.line3 = (row.lineControl.substring(2,3) == '1' ? true : false)
+        this.line4 = (row.lineControl.substring(3,4) == '1' ? true : false)
+      }
       this.lightDialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['lightStepForm'].clearValidate()
@@ -695,6 +714,10 @@ export default {
               fetchUrl: '/sys/flashMode/edit',
               data: this.lightStepForm
             }
+            this.lightStepForm.lineControl = (this.line1 == true ? '1' : '0')
+                + (this.line2 == true ? '1' : '0')
+                + (this.line3 == true ? '1' : '0')
+                + (this.line4 == true ? '1' : '0')
             this.$store.dispatch('EditMembers', params).then(res => {
               this.lightDialogFormVisible = false
               this.$notify({
@@ -727,8 +750,27 @@ export default {
           }
         })
     },
-    deleteLightStep() {
+    deleteLightStep(id) {
       // 删除灯步
+      MessageBox.confirm(
+          '确定要删除吗？',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).then(() => {
+          let params = {
+              fetchUrl: '/sys/flashMode/delete?id='+id,
+              data: {}
+            }
+            this.$store.dispatch('DeleteMembers', params).then(res => {
+              this.listLightQuery.page = 1
+              this.pageLightSum = 0
+              this.pageLightTotal = 0
+              this.getLightList()
+            })
+        })
     },
     openMonitoring() {
       this.$router.push('main')
