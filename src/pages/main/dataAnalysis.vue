@@ -178,7 +178,7 @@
                 <div class="_logs_list" v-for="(item, index) in logsList_analysis" :key="index">
                   <div class="log_detail_date">
                     <div class="_detail">
-                      {{item.emsg}}
+                      【{{item.etype}}】{{item.emsg}}
                     </div>
                     <div class="_date_time">
                         {{item.time}}
@@ -212,7 +212,7 @@
                 <div class="_logs_list" v-for="(item, index) in logsList_offLine" :key="index">
                   <div class="log_detail_date">
                     <div class="_detail">
-                      {{item.emsg}}
+                      【{{item.etype}}】{{item.emsg}}
                     </div>
                     <div class="_date_time">
                         {{item.time}}
@@ -456,23 +456,17 @@ export default {
       this.$store.dispatch('GetList', params).then(res => {
         let data = res.data
         console.log("_________失联数据_______",data)
-        let datelist = []
+        let datelist = this.terminalList
         let datalist = []
         if(data){
-          let list =[
-              {value:4, name:'爆闪灯'},
-              {value:8, name:'黄（慢）灯'},
-              {value:15, name:'点阵式发光标志'},
-              {value:5, name:"面阵式全透型发光标志"},
-              {value:10, name:'面阵式半透型发光标志'},
-          ]
-           for (let i = 0; i < 5; i++) {
+          let list =[]
+           for (let i = 0; i < datelist.length; i++) {
              let va = "kind"+(i+1)
-             list[i].value = data[va] 
-             datelist.push(list[i].name)
+             let value = data[va] 
+             var item = {value:value, name:datelist[i]}
+             list.push(item)
            }
           datalist = list
-          console.log("失联数据分析图表数据：",datelist)
           this.getLoseInfoAnalysisDataPar(datalist,datelist)//失联数据分析
         }
       })
@@ -565,6 +559,16 @@ export default {
           let oldTime = data[i].time
           let newdate = moment(oldTime).format('YYYY-MM-DD HH:mm:ss')
           data[i].time = newdate
+          if(data[i].reStatus == 1) data[i].reStatus = "未修复"
+          else if(data[i].reStatus == 2)data[i].reStatus = "已修复"
+          else data[i].reStatus = "未知"
+          if(data[i].etype == 1)data[i].etype = "输出"
+          else if(data[i].etype == 2)data[i].etype = "信号"
+          else if(data[i].etype == 3)data[i].etype = "太阳能电池"
+          else if(data[i].etype == 4)data[i].etype = "蓄电池"
+          else if(data[i].etype == 5)data[i].etype = "温度"
+          else if(data[i].etype == 6)data[i].etype = "其他"
+          else data[i].etype = "未知"
         }
         this.logsList_analysis = data
       })
@@ -580,6 +584,16 @@ export default {
           let oldTime = data[i].time
           let newdate = moment(oldTime).format('YYYY-MM-DD HH:mm:ss')
           data[i].time = newdate
+          if(data[i].reStatus == 1) data[i].reStatus = "未修复"
+          else if(data[i].reStatus == 2)data[i].reStatus = "已修复"
+          else data[i].reStatus = "未知"
+          if(data[i].etype == 1)data[i].etype = "输出"
+          else if(data[i].etype == 2)data[i].etype = "信号"
+          else if(data[i].etype == 3)data[i].etype = "太阳能电池"
+          else if(data[i].etype == 4)data[i].etype = "蓄电池"
+          else if(data[i].etype == 5)data[i].etype = "温度"
+          else if(data[i].etype == 6)data[i].etype = "其他"
+          else data[i].etype = "未知"
         }
         this.logsList_offLine = data
       })
@@ -874,7 +888,7 @@ export default {
     setQuest(){
       this.listQuery.year = this.selectedYear
       this.listQuery.month = this.selectedMonth
-      this.listQuery.day = this.selectedDate
+      // this.listQuery.day = this.selectedDate
       this.listQuery.city =  this.selectedArea
       this.listQuery.province = this.selectedProvice
       if(this.selectedTerminal != ""){
