@@ -212,7 +212,7 @@
           :visible="currentWindow.visible"
           :events="currentWindow.events">
         </el-amap-info-window>
-        <el-amap-marker v-for="(marker, index) in amapMarkers" :key='marker.id' :position="marker.value" :events="marker.events" :vid="index"></el-amap-marker>
+        <el-amap-marker v-for="(marker, index) in amapMarkers" :clickable="true" @click="markerPosition(marker)" :bubble="true" :key='marker.id' :position="marker.value" :events="marker.events" :vid="index"></el-amap-marker>
       </el-amap>
     </div>
   </div>
@@ -317,6 +317,10 @@ export default {
       let id = item.deviceId
       let positionData = [item.location.longitude, item.location.latitude]
       this.jumpMapPosition(id,positionData, this)
+    },
+    markerPosition (val) {
+      // 地图描点再点击
+      console.log('val===>>>>', val)
     },
     backIndexPage() {
       this.isShowMap = false;
@@ -614,8 +618,11 @@ export default {
             id: ele.id,
             status: ele.status,
             events: {
-              click: () => {
-                this.jumpMapPosition(ele.id,[JSON.parse(ele.location).longitude,JSON.parse(ele.location).latitude],that)
+              click: (e) => {
+                this.currentWindow.visible = false;
+                this.$nextTick(() => {
+                  this.jumpMapPosition(ele.id,[JSON.parse(ele.location).longitude,JSON.parse(ele.location).latitude],that)
+                });
                 
               }
             }
