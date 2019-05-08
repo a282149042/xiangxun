@@ -302,6 +302,7 @@ export default {
     }
     this.isFebMonthData()
     this.getArea()
+    console.log('DateListDateList', this.DateList)
   },
   mounted() {
     this.getDengZhiList()
@@ -313,10 +314,13 @@ export default {
       let eleId = ''
       let title = ''
       let label = ''
+      let {year, month, day} = this.listQuery
+      let curFullDate = `${year}-${month}-${day}`
       for(let j=1;j<3;j++){
         for(let i=1;i<5;i++){
           this.listQuery.type=i
           this.listQuery.cycle=j
+          this.listQuery.day = day - 1
           let params = {
             fetchUrl: '/sys/count/temperatureCount',
             listQuery: JSON.stringify(this.listQuery),
@@ -344,7 +348,7 @@ export default {
                 }
                 
             }else{//日
-                label=moment().subtract(1, 'day').format('YYYY.MM.DD')
+                label=moment(curFullDate).subtract(1, 'day').format('YYYY.MM.DD')
                 if(i==1){
                   eleId="tempCalcYesterday"
                   title= '昨日◆ 温度统计 ◆'
@@ -371,10 +375,10 @@ export default {
       let len = Object.keys(data).length
       let _this =this
       if(len > 0){
-        _this.DateList = []
+        _this.dateData = []
         _this.allData = []
         for (let i = 1; i < len+1; i++) {
-          _this.DateList.push(i)
+          _this.dateData.push(i)
           let va = "data"+i
           _this.allData.push(data[va])
         }
@@ -382,7 +386,7 @@ export default {
         if(mark == 1){
           params = {
             eleId:eleId,
-            timeData: _this.DateList,
+            timeData: _this.dateData,
             data: _this.allData,
             title: title,
             label: label
@@ -391,7 +395,7 @@ export default {
         }else{
           params = {
             eleId:eleId,
-            xAxisData: _this.DateList,
+            xAxisData: _this.dateData,
             seriesData: _this.allData,
             title: title,
             label: label
