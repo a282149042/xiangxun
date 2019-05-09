@@ -540,6 +540,10 @@ export default {
             color: "#7dd7f9"
           }
         },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {d}%"
+        },
         legend: {
           orient: "horizontal",
           x: "center",
@@ -552,7 +556,7 @@ export default {
         },
         series: [
           {
-            name: "访问来源",
+            name: "终端状态比例",
             type: "pie",
             radius: ["50%", "70%"],
             avoidLabelOverlap: false,

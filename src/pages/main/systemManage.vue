@@ -38,6 +38,26 @@
         <div class="orgnazition_title">
           ◆ 组织机构 ◆
         </div>
+         <!-- 筛选框 -->
+        <div class="select_items select_items_area">
+          <div class="label_item">
+            机构名称：
+          </div>
+          <div class="select_input">
+            <el-select v-model="organizeDataForm.parentId" clearable>
+              <el-option
+                v-for="(item, index) in organizeListData"
+                :key="index"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </div>
+           <div class="submit_btn">
+            搜索
+          </div>
+        </div>
+       
         <div class="submit_btn" @click="addInstitution">
           新增
         </div>

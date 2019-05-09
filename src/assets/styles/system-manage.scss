@@ -22,13 +22,17 @@
                     background: linear-gradient(to bottom,#092a5d , #0c5b2e);
                 }
                 .monitoring_btn {
-                    font-size: 0.875rem;
+                    font-size: 1.25rem;
                     text-align: center;
-                    line-height: 30px;
+                    line-height: 40px;
                     margin-right: 10%;
                     color: #FFFFFF;
                     width: 20%;
-                    height: 30px;
+                    height: 40px;
+                }
+                .monitoring_btn:hover{
+                    background: linear-gradient(to bottom, #092a5d, #0c5b2e);
+                    color: #FFFFFF;
                 }
             }
         }
@@ -83,15 +87,19 @@
                     background: linear-gradient(to bottom,#092a5d , #0c5b2e);
                 }
                 .monitoring_btn {
-                    font-size: 0.875rem;
+                    font-size: 1.25rem;
                     text-align: center;
-                    line-height: 30px;
+                    line-height: 40px;
                     margin-right: 10%;
                     color: #FFFFFF;
                     margin-left: 10%;
                     width: 50%;
-                    height: 30px;
+                    height: 40px;
                 }
+                .monitoring_btn:hover{
+                    background: linear-gradient(to bottom, #092a5d, #0c5b2e);
+                    color: #FFFFFF;
+                  }
             }
         }
         .header_right:before {
@@ -152,6 +160,21 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-end;
+            .select_items{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                .label_item{
+                    color: #ccc;
+                    margin-right: 10px;
+                }
+                .select_input{
+                    margin-right: 10px;
+                }
+                .submit_btn{
+                    margin-top: 20px;
+                }
+            }
             .orgnazition_title {
                 font-size: 0.5625rem;
                 color: #7dd7f9;

@@ -22,13 +22,17 @@
           background: linear-gradient(to bottom,#092a5d , #0c5b2e);
         }
         .monitoring_btn{
-          font-size: 0.875rem;
+          font-size: 1.25rem;
           text-align: center;
-          line-height: 30px;
+          line-height: 40px;
           margin-right: 10%;
           color: #FFFFFF;
           width: 20%;
-          height: 30px;
+          height: 40px;
+        }
+        .monitoring_btn:hover{
+          background: linear-gradient(to bottom, #092a5d, #0c5b2e);
+          color: #FFFFFF;
         }
       }
     }
@@ -79,13 +83,17 @@
         margin-right: 30px;
         width: 100%;
         .monitoring_btn{
-          font-size: 0.875rem;
+          font-size: 1.25rem;
           text-align: center;
-          line-height: 30px;
+          line-height: 40px;
           margin-right: 10%;
           color: #FFFFFF;
           width: 50%;
-          height: 30px;
+          height: 40px;
+        }
+        .monitoring_btn:hover{
+          background: linear-gradient(to bottom, #092a5d, #0c5b2e);
+          color: #FFFFFF;
         }
       }
     }
@@ -218,7 +226,7 @@
           }
           .number_{
             color: #fff;
-            font-size: 0.5625rem;
+            font-size:2rem;
           }
         }
         .three_list{
@@ -257,7 +265,7 @@
             ._numbers{
               text-align: center;
               color: #fff;
-              font-size: 0.5625rem;
+              font-size: 2rem;
             }
       }
       }

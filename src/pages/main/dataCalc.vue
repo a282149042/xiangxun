@@ -332,11 +332,11 @@ export default {
                 if(i==1){
                   eleId="tempCalc"
                   title= '◆ 温度统计 ◆'
-                  this.setChar(res.data,eleId,title,label,1)
+                  this.setChar(res.data,eleId,title,label,0)
                 }else if(i==2){
                   eleId="signCalc"
                   title= '◆ 信号统计 ◆'
-                  this.setChar(res.data,eleId,title,label,1)
+                  this.setChar(res.data,eleId,title,label,0)
                 }else if(i==3){
                   eleId="sunMonth"
                   title= '◆ 太阳能电压分析 ◆'
@@ -360,11 +360,11 @@ export default {
                 }else if(i==3){
                   eleId="sunYesterday"
                   title='昨日◆ 太阳能电压分析 ◆'
-                  this.setChar(res.data,eleId,title,label,0)
+                  this.setChar(res.data,eleId,title,label,1)
                 }else if(i==4){
                   eleId="chargeYesterday"
                   title='昨日◆ 电池电压统计 ◆'
-                  this.setChar(res.data,eleId,title,label,0)
+                  this.setChar(res.data,eleId,title,label,1)
                 }
             }
           })
