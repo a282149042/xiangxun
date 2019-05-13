@@ -205,7 +205,7 @@
     </el-dialog>
     <div v-if="isShowMap" class="amap-wrapper">
       <div v-if="isShowMap" class="close_amap"><button @click="closeAmap()">关闭窗口</button></div>
-      <el-amap class="amap-box" :zoom="zoom" :resizeEnable="true" :vid="'amap-vue'" :autoMove="true" :center="curPositionData">
+      <el-amap class="amap-box" :zoom="zoom" :resizeEnable="true" :bubble="true"  :vid="'amap-vue'" :autoMove="true" :center="curPositionData">
         <el-amap-info-window
           :position="currentWindow.position"
           :content="currentWindow.content"
@@ -235,6 +235,9 @@ import echarts from "echarts";
 import cityMap from "@/assets/js/china-main-city-map.js";
 import { lazyAMapApiLoaderInstance } from "vue-amap";
 // const china = require('../../../public/json/china.json')
+Window.checkOrder = function() {
+  console.log('eee', e)
+}
 export default {
   name: "monitoring",
   components: {},
@@ -302,6 +305,7 @@ export default {
       alertMonitoringPageSum:0
     };
   },
+ 
   created() {},
   mounted() {
     this.getMonitoringTotalCount();
@@ -659,40 +663,97 @@ export default {
         
         let status={'1':"正常",'2':"告警",'3':"离线"}
         detailData.status = status[detailData.status]
-
-        let element = 
-        '<style>td{border:solid 1px #999;font-size:14px;padding:2px 5px;}</style>'+
-        '<div class="modal_detail">'+
-          '<div style="margin: -1px; padding: 1px;">'+
-            '<div style="text-align:center;white-space:nowrap;margin:10px;">'+
-              '<table style="border-collapse: collapse;">'+
-                '<tbody>'+
-                  '<tr><td>所属机构</td><td colspan="3">'+detailData.organizeTree+'</td></tr>'+
-                  '<tr><td>终端识别号</td><td>'+detailData.serialNo+'</td><td>ICCID卡号</td><td>'+(detailData.iccid==null?'':detailData.iccid)+'</td></tr>'+
-                  '<tr><td>终端名称</td><td>'+detailData.name+'</td><td>终端通讯时间</td><td>'+detailData.synTime+'</td></tr>'+   
-                  '<tr><td>当前坐标位置</td><td>'+detailData.location.longitude+','+detailData.location.latitude+'</td><td>灯质模式</td><td>'+detailData.productName+'</td></tr>'+   
-                  '<tr><td>信号强度</td><td>'+detailData.gsm+'</td><td>终端备注</td><td>'+(detailData.descs==null?'':detailData.descs)+'</td></tr>'+   
-                  '<tr><td>安装单位</td><td>'+detailData.installUnit+'</td><td>安装地点</td><td>'+(detailData.address==null?'':detailData.address)+'</td></tr>'+   
-                  '<tr><td>安装时间</td><td>'+detailData.installTime+'</td><td>负责人</td><td>'+(detailData.installContacts==null?'':detailData.installContacts)+'</td></tr>'+   
-                  '<tr><td>联系方式</td><td>'+detailData.installPhone+'</td><td>支队联系方式</td><td>'+(detailData.branchPhone==null?'':detailData.branchPhone)+'</td></tr>'+   
-                  '<tr><td>电池类型</td><td>'+detailData.batteryTypeName+'</td><td>太阳能电压</td><td>'+detailData.solarVolt+'</td></tr>'+   
-                  '<tr><td>电池电压</td><td>'+detailData.batteryVolt+'</td><td>点阵/面阵</td><td>'+detailData.productName+'</td></tr>'+   
-                  '<tr><td>运行模式</td><td>'+detailData.runMode.type+'</td><td>运行等级</td><td>'+detailData.runMode.outLevel+'</td></tr>'+   
-                  '<tr><td>开始运行时间</td><td>'+detailData.synTime+'</td><td>终端状态</td><td>'+detailData.status+'</td></tr>'+
-                  // '<tr><td>位移报警</td><td>正常</td><td>位移距离</td><td>0.3</td></tr>'+
-                '</tbody>'+
-              '</table>'+
-            '</div>'+
-          '</div>'+
-        '</div>';
+        //  let temp = 
+        // '<style>td{border:solid 1px #999;font-size:14px;padding:2px 5px;}</style>'+
+        // '<div class="modal_detail">'+
+        //   '<div style="margin: -1px; padding: 1px;">'+
+        //     '<div style="text-align:center;white-space:nowrap;margin:10px;">'+
+        //       '<table style="border-collapse: collapse;">'+
+        //         '<tbody>'+
+        //           '<tr><td>所属机构</td><td colspan="3">'+detailData.organizeTree+'</td></tr>'+
+        //           '<tr><td>终端识别号</td><td>'+detailData.serialNo+'</td><td>ICCID卡号</td><td>'+(detailData.iccid==null?'':detailData.iccid)+'</td></tr>'+
+        //           '<tr><td>终端名称</td><td>'+detailData.name+'</td><td>终端通讯时间</td><td>'+detailData.synTime+'</td></tr>'+   
+        //           '<tr><td>当前坐标位置</td><td>'+detailData.location.longitude+','+detailData.location.latitude+'</td><td>灯质模式</td><td>'+detailData.productName+'</td></tr>'+   
+        //           '<tr><td>信号强度</td><td>'+detailData.gsm+'</td><td>终端备注</td><td>'+(detailData.descs==null?'':detailData.descs)+'</td></tr>'+   
+        //           '<tr><td>安装单位</td><td>'+detailData.installUnit+'</td><td>安装地点</td><td>'+(detailData.address==null?'':detailData.address)+'</td></tr>'+   
+        //           '<tr><td>安装时间</td><td>'+detailData.installTime+'</td><td>负责人</td><td>'+(detailData.installContacts==null?'':detailData.installContacts)+'</td></tr>'+   
+        //           '<tr><td>联系方式</td><td>'+detailData.installPhone+'</td><td>支队联系方式</td><td>'+(detailData.branchPhone==null?'':detailData.branchPhone)+'</td></tr>'+   
+        //           '<tr><td>电池类型</td><td>'+detailData.batteryTypeName+'</td><td>太阳能电压</td><td>'+detailData.solarVolt+'</td></tr>'+   
+        //           '<tr><td>电池电压</td><td>'+detailData.batteryVolt+'</td><td>点阵/面阵</td><td>'+detailData.productName+'</td></tr>'+   
+        //           '<tr><td>运行模式</td><td>'+detailData.runMode.type+'</td><td>运行等级</td><td>'+detailData.runMode.outLevel+'</td></tr>'+   
+        //           '<tr><td>开始运行时间</td><td>'+detailData.synTime+'</td><td>终端状态</td><td>'+detailData.status+'</td></tr>'+
+        //           // '<tr><td>位移报警</td><td>正常</td><td>位移距离</td><td>0.3</td></tr>'+
+        //         '</tbody>'+
+        //       '</table>'+
+        //     '</div>'+
+        //   '</div>'+
+        //   '<div style="display: flex;justify-content: flex-end;">'+
+        //     '<div style="margin-right: 10px">'+
+        //       '<button style="background: linear-gradient(to bottom, #092a5d, #0c5b2e); color: #fff;padding: 2px 6px">选择发送指令</button>'+
+        //     '</div>'+
+        //     '<div>'+
+        //     '<button style="color: #fff;background: linear-gradient(to bottom, #092a5d, #0c5b2e);padding: 2px 6px" id="checkOrder">查看发送指令</button>'+
+        //     '</div>'+
+        //   '</div>'+
+        // '</div>';
+        let temp = 
+        `<div class="modal_detail">
+        <style>td{border:solid 1px #999;font-size:14px;padding:2px 5px;}</style>
+        <div style="margin: -1px; padding: 1px;">
+          <div style="text-align:center;white-space:nowrap;margin:10px;">
+            <table style="border-collapse: collapse;">
+              <tbody>
+                <tr><td>所属机构</td><td colspan="3">${detailData.organizeTree}</td></tr>
+                <tr><td>终端识别号</td><td>${detailData.serialNo}</td><td>ICCID卡号</td><td>${detailData.iccid==null?'':detailData.iccid}</td></tr>
+                <tr><td>终端名称</td><td>${detailData.name}</td><td>终端通讯时间</td><td>${detailData.synTime}</td></tr>   
+                <tr><td>当前坐标位置</td><td>${detailData.location.longitude},${detailData.location.latitude}</td><td>灯质模式</td><td>${detailData.productName}</td></tr>   
+                <tr><td>信号强度</td><td>${detailData.gsm}</td><td>终端备注</td><td>${detailData.descs==null?'':detailData.descs}</td></tr>   
+                <tr><td>安装单位</td><td>${detailData.installUnit}</td><td>安装地点</td><td>${detailData.address==null?'':detailData.address}</td></tr>   
+                <tr><td>安装时间</td><td>${detailData.installTime}</td><td>负责人</td><td>${detailData.installContacts==null?'':detailData.installContacts}</td></tr>   
+                <tr><td>联系方式</td><td>${detailData.installPhone}</td><td>支队联系方式</td><td>${detailData.branchPhone==null?'':detailData.branchPhone}</td></tr>   
+                <tr><td>电池类型</td><td>${detailData.batteryTypeName}</td><td>太阳能电压</td><td>${detailData.solarVolt}</td></tr>   
+                <tr><td>电池电压</td><td>${detailData.batteryVolt}</td><td>点阵/面阵</td><td>${detailData.productName}</td></tr>   
+                <tr><td>运行模式</td><td>${detailData.runMode.type}</td><td>运行等级</td><td>${detailData.runMode.outLevel}</td></tr>   
+                <tr><td>开始运行时间</td><td>${detailData.synTime}</td><td>终端状态</td><td>${detailData.status}</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div style="display: flex;justify-content: flex-end;">
+          <div style="margin-right: 10px">
+            <button style="background: linear-gradient(to bottom, #092a5d, #0c5b2e); color: #fff;padding: 2px 6px" @click="chooseOrder">选择发送指令</button>
+          </div>
+          <div>
+          <button style="color: #fff;background: linear-gradient(to bottom, #092a5d, #0c5b2e);padding: 2px 6px" id="checkOrder">查看发送指令</button>
+          </div>
+        </div>
+      </div>`
+        let element = {
+          props: ['detailData'],
+          template: temp
+        }
         that.currentWindow = {
+          content: temp,
           position: positionData,
-          content: element,
-          events: {},
           size: 10,
-          visible: true
-        };
-      });
+          visible: true,
+          // contentRender: h => h(element, {
+          //       props: {
+          //         detailData: detailData
+          //       },
+          //       style: {
+          //         background: 'rgb(173, 47, 47)',
+          //         color: '#eee'
+          //       },
+          //       nativeOn: {
+          //         click: () => this.handler(`hello click`)
+          //       }
+          //     }).$mount('#app')
+          }
+      })
+    },
+    chooseOrder () {
+      console.log('1111')
     },
     async platformCount(divid) {
       // './json/china.json'

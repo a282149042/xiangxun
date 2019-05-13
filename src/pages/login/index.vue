@@ -40,7 +40,7 @@ export default {
   data() {
     return {
       clientHeight: '',
-      account: 'admin',
+      account: 'ceshi001',
       password: '123456'
     }
   },
