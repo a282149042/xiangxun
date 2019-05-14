@@ -51,22 +51,6 @@
               <th>指令消息</th>
               <th style="padding: 0 30px">操作</th>
             </tr>
-            <!-- <tr v-for="item in lightListData" :key="item.id">
-              <td>{{item.id}}</td>
-              <td>{{item.productName}}</td>
-              <td>{{item.lineControl}}</td>
-              <td>{{item.onTime}}</td>
-              <td class="opration_table">
-                <div class="opration_btn">
-                  <div class="history_data" @click="updateLightStep(item)">
-                    编辑
-                  </div>
-                  <div class="_record" @click="deleteLightStep(item.id)">
-                    删除
-                  </div>
-                </div>
-              </td>
-            </tr> -->
             <tr>
               <td>1</td>
               <td>aaa</td>

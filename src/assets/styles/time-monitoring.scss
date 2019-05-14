@@ -26,7 +26,7 @@
     position: fixed;
     left: 0px;
     top: 0px;
-    z-index:9999;
+    z-index:2000;
     .modal_detail{
       width: 800px;
       height: 500px;
@@ -292,7 +292,7 @@
               position: absolute;
               top: 0px;
               right: 10px;
-              z-index: 9999;
+              z-index: 1999;
               .back_behide_page{
                 margin: 10px 0;
                 width: 100px;
@@ -527,4 +527,77 @@
         background:linear-gradient(to bottom, #0c5b2e, #092a5d);
     }
   }
+  
+  .send_message_table{
+    width: 100%;
+    margin: 0px auto;
+    border-left: none;
+    .table_list {
+        width: 98%;
+        margin: 0 10px;
+        border: 1px solid #083775;
+        background: #0b122e;
+        th{
+          color: #f7a842;
+          border: 1px solid #757171;
+        }
+        tr>td{
+          text-align: center
+        }
+        .opration_table {
+            width: 120px;
+            .opration_btn {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                margin: 5px 0px;
+                ._record {
+                    width: 30px;
+                    height: 12px;
+                    background: #757171;
+                    font-size: 0.5rem;
+                    padding: 4px;
+                    border-radius: 2px;
+                    line-height: 12px;
+                }
+                .history_data {
+                    width: 30px;
+                    height: 12px;
+                    border-radius: 2px;
+                    line-height: 12px;
+                    padding: 4px;
+                    background: #3594a2;
+                    font-size: 0.5rem;
+                }
+                .syn_device{
+                    width: 40px;
+                    height: 12px;
+                    border-radius: 2px;
+                    line-height: 12px;
+                    padding: 4px;
+                    background: #E62129;
+                    font-size: 0.5rem;
+                }
+            }
+        }
+    }
+    .divide_pages{
+        a{
+            border: 1px solid #083775;
+            margin: 0px 10px 0 10px;
+            padding:2px 5px;
+            background:linear-gradient(to bottom, #0c5b2e, #092a5d);
+        }
+    }
+    .addBtn{
+        float: right;
+        background: #1188b5;
+        padding: 3px 5px;
+        text-align: center;
+        color: #fff;
+        border-radius: 4px;
+        margin: 0 12px 0px 0;
+        cursor: pointer;
+    }
+}
 }

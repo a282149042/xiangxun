@@ -206,6 +206,79 @@
             </table>
       </div>
     </el-dialog>
+    <el-dialog :visible.sync="isShowSendMsg" custom-class="send_message_table" title="选择发送指令">
+      <span class="addBtn" @click="addItem();">新建指令</span>
+      <table class="table_list" style="z-index: 9999">
+        <tr>
+          <th>序号</th>
+          <th>显示文本</th>
+          <th>指令类型</th>
+          <th>指令消息</th>
+          <th style="padding: 0 30px">操作</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>aaa</td>
+          <td>cdd</td>
+          <td>ffffff</td>
+          <td class="opration_table">
+            <div class="opration_btn">
+              <div class="history_data" @click="sendMsg(item)">
+                发送
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="divide_pages">
+            <td colspan="7" v-if="msgListData.length == 0 && listMsgQuery.page == 1">
+              没有更多的数据了
+            </td>
+            <td colspan="5" v-else>
+              共条{{pageMsgTotal}}记录，当前显示第{{listMsgQuery.page}}/{{pageMsgSum}}页
+              <a @click="changeLightPages(1)">首页</a>
+              <a @click="changeLightPages(listMsgQuery.page-1)">上一页</a>
+              <a @click="changeLightPages(listMsgQuery.page+1)">下一页</a>
+              <a @click="changeLightPages(pageMsgSum)">尾页</a>
+            </td>
+        </tr>
+      </table>
+    </el-dialog>
+    <el-dialog :visible.sync="isShowCheckMsg" custom-class="send_message_table" title="查看发送指令日志">
+      <table class="table_list" style="z-index: 9999">
+        <tr>
+          <th>序号</th>
+          <th>显示文本</th>
+          <th>指令类型</th>
+          <th>指令消息</th>
+          <th style="padding: 0 30px">操作</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>aaa</td>
+          <td>cdd</td>
+          <td>ffffff</td>
+          <td class="opration_table">
+            <div class="opration_btn">
+              <div class="history_data" @click="sendMsg(item)">
+                发送
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr class="divide_pages">
+            <td colspan="7" v-if="msgListData.length == 0 && listMsgQuery.page == 1">
+              没有更多的数据了
+            </td>
+            <td colspan="5" v-else>
+              共条{{pageMsgTotal}}记录，当前显示第{{listMsgQuery.page}}/{{pageMsgSum}}页
+              <a @click="changeLightPages(1)">首页</a>
+              <a @click="changeLightPages(listMsgQuery.page-1)">上一页</a>
+              <a @click="changeLightPages(listMsgQuery.page+1)">下一页</a>
+              <a @click="changeLightPages(pageMsgSum)">尾页</a>
+            </td>
+        </tr>
+      </table>
+    </el-dialog>
     <div @click="clickAmap" v-if="isShowMap" class="amap-wrapper">
       <div v-if="isShowMap" class="close_amap"><button @click="closeAmap()">关闭窗口</button></div>
       <el-amap class="amap-box" :zoom="zoom" :resizeEnable="true" :bubble="true"  :vid="'amap-vue'" :autoMove="true" :center="curPositionData">
@@ -236,14 +309,19 @@ import _ from "lodash";
 import moment from "moment";
 import echarts from "echarts";
 import cityMap from "@/assets/js/china-main-city-map.js";
-Window.checkOrder = function() {
-  console.log('eee', e)
-}
 export default {
   name: "monitoring",
   components: {},
   data() {
     return {
+      msgListData: [],
+      pageMsgTotal: 0,
+      pageMsgSum: 0,
+      listMsgQuery: {
+        page: 1,
+        pageSize: 10,
+        productId: 0
+      },
       zoom: 16,
       currentWindow: {
         position: [0, 0],
@@ -303,7 +381,9 @@ export default {
         status:0
       },
       alertMonitoringTotal:0,
-      alertMonitoringPageSum:0
+      alertMonitoringPageSum:0,
+      isShowSendMsg: false,
+      isShowCheckMsg: false
     };
   },
  
@@ -431,8 +511,6 @@ export default {
         this.alarmInfoPageSum = Math.ceil(res.data.total/this.listAlarmInfoQuery.pageSize)
       });
     },
-    // /sys/monitoring/alarmInfo
-    // /sys/monitoring/monitoringList
     getMonitoringTotalCount() {
       let params = {
         fetchUrl: "/sys/monitoring/totalCount",
@@ -646,11 +724,14 @@ export default {
     clickAmap(e) {
       if (e.target.dataset.type && e.target.dataset.type === 'sendMsg') {
         // 选择发送指令
+        console.log('click选择发送指令')
+        this.isShowSendMsg = true
 
       }
       if (e.target.dataset.type && e.target.dataset.type === 'checkMsg') {
         // 查看发送指令
-        
+        console.log('click查看发送指令')
+        this.isShowCheckMsg = true
       }
     },
     jumpMapPosition(id,positionData, that) {
