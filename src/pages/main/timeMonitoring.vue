@@ -203,7 +203,7 @@
             </table>
       </div>
     </el-dialog>
-    <div v-if="isShowMap" class="amap-wrapper">
+    <div @click="clickAmap" v-if="isShowMap" class="amap-wrapper">
       <div v-if="isShowMap" class="close_amap"><button @click="closeAmap()">关闭窗口</button></div>
       <el-amap class="amap-box" :zoom="zoom" :resizeEnable="true" :bubble="true"  :vid="'amap-vue'" :autoMove="true" :center="curPositionData">
         <el-amap-info-window
@@ -233,8 +233,6 @@ import _ from "lodash";
 import moment from "moment";
 import echarts from "echarts";
 import cityMap from "@/assets/js/china-main-city-map.js";
-import { lazyAMapApiLoaderInstance } from "vue-amap";
-// const china = require('../../../public/json/china.json')
 Window.checkOrder = function() {
   console.log('eee', e)
 }
@@ -639,6 +637,16 @@ export default {
       );
       return tempData;
     },
+    clickAmap(e) {
+      if (e.target.dataset.type && e.target.dataset.type === 'sendMsg') {
+        // 选择发送指令
+
+      }
+      if (e.target.dataset.type && e.target.dataset.type === 'checkMsg') {
+        // 查看发送指令
+        
+      }
+    },
     jumpMapPosition(id,positionData, that) {
       let postData = {
         fetchUrl: "/sys/device/info?id=" + id,
@@ -721,10 +729,10 @@ export default {
         </div>
         <div style="display: flex;justify-content: flex-end;">
           <div style="margin-right: 10px">
-            <button style="background: linear-gradient(to bottom, #092a5d, #0c5b2e); color: #fff;padding: 2px 6px" @click="chooseOrder">选择发送指令</button>
+            <button data-type="sendMsg" style="background: linear-gradient(to bottom, #092a5d, #0c5b2e); color: #fff;padding: 2px 6px" @click="chooseOrder">选择发送指令</button>
           </div>
           <div>
-          <button style="color: #fff;background: linear-gradient(to bottom, #092a5d, #0c5b2e);padding: 2px 6px" id="checkOrder">查看发送指令</button>
+          <button data-type="checkMsg" style="color: #fff;background: linear-gradient(to bottom, #092a5d, #0c5b2e);padding: 2px 6px" id="checkOrder">查看发送指令</button>
           </div>
         </div>
       </div>`
@@ -751,9 +759,6 @@ export default {
           //     }).$mount('#app')
           }
       })
-    },
-    chooseOrder () {
-      console.log('1111')
     },
     async platformCount(divid) {
       // './json/china.json'
