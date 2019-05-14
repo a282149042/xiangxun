@@ -32,6 +32,9 @@
       <div class="monitoring_date">
           {{dateTime}}
       </div>
+      <div class="edit_btn" @click="openBtnEdit()">
+        按钮编辑器
+      </div>
     </div>
     <div class="page_center">
       <div class="top_title_display">
@@ -595,6 +598,9 @@ export default {
     },
     openDeviceManage() {
       this.$router.push('deviceManage')
+    },
+    openBtnEdit() {
+      this.$router.push('btnEdit')
     },
     nodechecked (node, v) {
       alert('that a node-check envent ...' + node.title + v)

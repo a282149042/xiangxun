@@ -8,6 +8,7 @@ import dataCalc from '@/pages/main/dataCalc.vue'
 import dataAnaysis from '@/pages/main/dataAnalysis.vue'
 import systemManage from '@/pages/main/systemManage.vue'
 import deviceManage from '@/pages/main/deviceManage.vue'
+import btnEdit from '@/pages/main/btnEdit.vue'
 
 Vue.use(Router)
 export default new Router({
@@ -49,6 +50,11 @@ export default new Router({
       path: '/deviceManage',
       name: "deviceManage",
       component: deviceManage
+    },
+    {
+      path: '/btnEdit',
+      name: "btnEdit",
+      component: btnEdit
     }
   ]
 })
