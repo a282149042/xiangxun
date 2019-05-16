@@ -57,18 +57,14 @@ service.interceptors.response.use(
         })
       }
       if (Number(res.code) >= 500) {
-        MessageBox.confirm(
+        MessageBox.alert(
           '服务器出错',
           {
-            confirmButtonText: '重新登录',
-            cancelButtonText: '取消',
+            confirmButtonText: '确认',
+            //cancelButtonText: '取消',
             type: 'warning'
           }
         ).then(() => {
-          store.dispatch('FedLogOut').then(() => {
-            location.href="#/login"
-            location.reload() // 为了重新实例化vue-router对象 避免bug
-          })
         })
       }
       return Promise.reject('error')

@@ -206,8 +206,30 @@
             </table>
       </div>
     </el-dialog>
+
+    <el-dialog :visible.sync="isShowAddMsg" custom-class="send_message_table" title="新建指令">
+      <el-form ref="addItemForm" :rules="rules" :model="addItemForm" label-position="left" label-width="100px">
+        <el-form-item label="指令名称" prop="name">
+          <el-input v-model="addItemForm.name"/>
+        </el-form-item>
+        <el-form-item label="指令类型" prop="type">
+            <el-radio-group v-model="addItemForm.type">
+              <el-radio label="1">字符</el-radio>
+              <el-radio label="2">十六进制</el-radio>
+            </el-radio-group>
+        </el-form-item>
+        <el-form-item label="指令内容" prop="cmd">
+          <el-input v-model="addItemForm.cmd"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="isShowSendMsg = false;">取消</el-button>
+        <el-button type="primary" @click="saveItem()">确定</el-button>
+      </div>
+    </el-dialog>  
+
     <el-dialog :visible.sync="isShowSendMsg" custom-class="send_message_table" title="选择发送指令">
-      <span class="addBtn" @click="addItem();">新建指令</span>
+      <span class="addBtn" @click="addItem()">新建指令</span>
       <table class="table_list" style="z-index: 9999">
         <tr>
           <th>序号</th>
@@ -216,29 +238,30 @@
           <th>指令消息</th>
           <th style="padding: 0 30px">操作</th>
         </tr>
-        <tr>
-          <td>1</td>
-          <td>aaa</td>
-          <td>cdd</td>
-          <td>ffffff</td>
-          <td class="opration_table">
-            <div class="opration_btn">
-              <div class="history_data" @click="sendMsg(item)">
-                发送
-              </div>
-            </div>
-          </td>
+        <tr v-for="item in cmdListData" :key="item.id">
+                <td>{{item.id}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.type==1?'字符':'十六进制'}}</td>
+                <td>{{item.cmd}}</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data" @click="cmdSend(item)">
+                      发送
+                    </div>
+                  </div>
+                </td>
         </tr>
-        <tr class="divide_pages">
-            <td colspan="7" v-if="msgListData.length == 0 && listMsgQuery.page == 1">
+        
+        <tr class="divide_pages_b">
+            <td colspan="5" v-if="cmdListData.length == 0 && cmdListQuery.page == 1">
               没有更多的数据了
             </td>
             <td colspan="5" v-else>
-              共条{{pageMsgTotal}}记录，当前显示第{{listMsgQuery.page}}/{{pageMsgSum}}页
-              <a @click="changeLightPages(1)">首页</a>
-              <a @click="changeLightPages(listMsgQuery.page-1)">上一页</a>
-              <a @click="changeLightPages(listMsgQuery.page+1)">下一页</a>
-              <a @click="changeLightPages(pageMsgSum)">尾页</a>
+              共条{{cmdListTotal}}记录，当前显示第{{cmdListQuery.page}}/{{cmdListPageSum}}页
+              <a @click="changeCmdListPages(1)">首页</a>
+              <a @click="changeCmdListPages(cmdListQuery.page-1)">上一页</a>
+              <a @click="changeCmdListPages(cmdListQuery.page+1)">下一页</a>
+              <a @click="changeCmdListPages(cmdListPageSum)">尾页</a>
             </td>
         </tr>
       </table>
@@ -250,31 +273,23 @@
           <th>显示文本</th>
           <th>指令类型</th>
           <th>指令消息</th>
-          <th style="padding: 0 30px">操作</th>
         </tr>
-        <tr>
-          <td>1</td>
-          <td>aaa</td>
-          <td>cdd</td>
-          <td>ffffff</td>
-          <td class="opration_table">
-            <div class="opration_btn">
-              <div class="history_data" @click="sendMsg(item)">
-                发送
-              </div>
-            </div>
-          </td>
+        <tr v-for="item in cmdLogListData" :key="item.id">
+                <td>{{item.id}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.type==1?'字符':'十六进制'}}</td>
+                <td>{{item.cmd}}</td>
         </tr>
-        <tr class="divide_pages">
-            <td colspan="7" v-if="msgListData.length == 0 && listMsgQuery.page == 1">
+        <tr class="divide_pages_b">
+            <td colspan="4" v-if="cmdLogListData.length == 0 && listMsgQuery.page == 1">
               没有更多的数据了
             </td>
-            <td colspan="5" v-else>
-              共条{{pageMsgTotal}}记录，当前显示第{{listMsgQuery.page}}/{{pageMsgSum}}页
-              <a @click="changeLightPages(1)">首页</a>
-              <a @click="changeLightPages(listMsgQuery.page-1)">上一页</a>
-              <a @click="changeLightPages(listMsgQuery.page+1)">下一页</a>
-              <a @click="changeLightPages(pageMsgSum)">尾页</a>
+            <td colspan="4" v-else>
+              共条{{cmdLogListTotal}}记录，当前显示第{{cmdLogListQuery.page}}/{{cmdLogListPageSum}}页
+              <a @click="changeCmdLogListPages(1)">首页</a>
+              <a @click="changeCmdLogListPages(cmdLogListQuery.page-1)">上一页</a>
+              <a @click="changeCmdLogListPages(cmdLogListQuery.page+1)">下一页</a>
+              <a @click="changeCmdLogListPages(cmdLogListPageSum)">尾页</a>
             </td>
         </tr>
       </table>
@@ -383,7 +398,34 @@ export default {
       alertMonitoringTotal:0,
       alertMonitoringPageSum:0,
       isShowSendMsg: false,
-      isShowCheckMsg: false
+      isShowCheckMsg: false,
+      isShowAddMsg: false,
+      cmdListData:[],
+      cmdListQuery:{
+        page: 1,
+        pageSize: 10,
+        deviceId:0
+      },
+      cmdListPageSum:0,
+      cmdListTotal:0,
+      addItemForm:{
+        name:'',
+        type:'',
+        cmd:''
+      },
+      cmdLogListData:[],
+      cmdLogListQuery:{
+        page: 1,
+        pageSize: 10,
+        deviceId:0
+      },
+      cmdLogListPageSum:0,
+      cmdLogListTotal:0,
+      rules:{
+        name: [{ required: true, message: '必填项', trigger: 'blur' }],
+        type: [{ required: true, message: '必填项', trigger: 'blur' }],
+        cmd: [{ required: true, message: '必填项', trigger: 'blur' }]
+      }
     };
   },
  
@@ -397,6 +439,95 @@ export default {
     this.platformCount("platformCount");
   },
   methods: {
+    addItem(){
+      this.isShowAddMsg = true;
+      this.$nextTick(() => {
+        this.$refs['addItemForm'].clearValidate()
+      })
+    },
+    saveItem(){
+      this.$refs['addItemForm'].validate((valid) => {
+          if (valid) {
+            let params = {
+              fetchUrl: '/sys/device/cmd/add',
+              data: this.addItemForm
+            }
+            this.$store.dispatch('AddMembers', params).then(res => {
+              this.isShowAddMsg = false
+              this.$notify({
+                title: '成功',
+                message: '添加指令成功',
+                type: 'success'
+              });
+              this.changeCmdListPages(1)
+            })
+          }
+        })
+    },
+    cmdSend(item){
+      let params = {
+              fetchUrl: '/sys/device/cmd/send?deviceId='+this.cmdListQuery.deviceId+'&cmdId='+item.id,
+              data: {
+                
+              }
+            }
+            this.$store.dispatch('AddMembers', params).then(res => {
+              this.isShowAddMsg = false
+              this.$notify({
+                title: '成功',
+                message: '发送指令成功',
+                type: 'success'
+              });
+            })
+    },
+    initItemList(){
+      this.cmdListQuery.page = 1;
+      this.getItemList();
+    },
+    changeCmdListPages(page){
+      if(page > this.cmdListPageSum|| page < 1){
+        return;
+      }
+      this.cmdListQuery.page = page;
+      this.getItemList();
+    },
+    getItemList(){
+      // 获取终端列表
+      let params = {
+        fetchUrl: '/sys/device/cmd/list',
+        listQuery: this.cmdListQuery
+      }
+      this.$store.dispatch('GetList', params).then(res => {
+        this.cmdListData = res.data.datas
+        this.cmdListTotal = res.data.total
+        this.cmdListPageSum = Math.ceil(res.data.total/this.cmdListQuery.pageSize)
+      })
+    },
+    initCmdLogList(){
+      this.cmdListQuery.page = 1;
+      this.getCmdLogList();
+    },
+    changeCmdLogListPages(page){
+      if(page > this.cmdLogListPageSum|| page < 1){
+        return;
+      }
+      this.cmdLogListQuery.page = page;
+      this.getCmdLogList();
+    },
+    getCmdLogList(){
+      // 获取终端列表
+      let params = {
+        fetchUrl: '/sys/device/cmd/log/list',
+        listQuery: this.cmdLogListQuery
+      }
+      this.$store.dispatch('GetList', params).then(res => {
+        this.cmdLogListData = res.data.datas
+        this.cmdLogListTotal = res.data.total
+        this.cmdLogListPageSum = Math.ceil(res.data.total/this.cmdLogListQuery.pageSize)
+      })
+    },
+
+
     goToMap(item){
       this.isShowMap = true;
       let id = item.deviceId
@@ -726,12 +857,13 @@ export default {
         // 选择发送指令
         console.log('click选择发送指令')
         this.isShowSendMsg = true
-
+        this.initItemList()
       }
       if (e.target.dataset.type && e.target.dataset.type === 'checkMsg') {
         // 查看发送指令
         console.log('click查看发送指令')
         this.isShowCheckMsg = true
+        this.initCmdLogList()
       }
     },
     jumpMapPosition(id,positionData, that) {
@@ -741,6 +873,8 @@ export default {
           id
         }
       };
+      this.cmdListQuery.deviceId = id;
+      this.cmdLogListQuery.deviceId = id;
       that.$store.dispatch("GetDetail", postData).then(detail => {
         const detailData = detail.data;
         that.isShowMap = true;
@@ -758,39 +892,6 @@ export default {
         
         let status={'1':"正常",'2':"告警",'3':"离线"}
         detailData.status = status[detailData.status]
-        //  let temp = 
-        // '<style>td{border:solid 1px #999;font-size:14px;padding:2px 5px;}</style>'+
-        // '<div class="modal_detail">'+
-        //   '<div style="margin: -1px; padding: 1px;">'+
-        //     '<div style="text-align:center;white-space:nowrap;margin:10px;">'+
-        //       '<table style="border-collapse: collapse;">'+
-        //         '<tbody>'+
-        //           '<tr><td>所属机构</td><td colspan="3">'+detailData.organizeTree+'</td></tr>'+
-        //           '<tr><td>终端识别号</td><td>'+detailData.serialNo+'</td><td>ICCID卡号</td><td>'+(detailData.iccid==null?'':detailData.iccid)+'</td></tr>'+
-        //           '<tr><td>终端名称</td><td>'+detailData.name+'</td><td>终端通讯时间</td><td>'+detailData.synTime+'</td></tr>'+   
-        //           '<tr><td>当前坐标位置</td><td>'+detailData.location.longitude+','+detailData.location.latitude+'</td><td>灯质模式</td><td>'+detailData.productName+'</td></tr>'+   
-        //           '<tr><td>信号强度</td><td>'+detailData.gsm+'</td><td>终端备注</td><td>'+(detailData.descs==null?'':detailData.descs)+'</td></tr>'+   
-        //           '<tr><td>安装单位</td><td>'+detailData.installUnit+'</td><td>安装地点</td><td>'+(detailData.address==null?'':detailData.address)+'</td></tr>'+   
-        //           '<tr><td>安装时间</td><td>'+detailData.installTime+'</td><td>负责人</td><td>'+(detailData.installContacts==null?'':detailData.installContacts)+'</td></tr>'+   
-        //           '<tr><td>联系方式</td><td>'+detailData.installPhone+'</td><td>支队联系方式</td><td>'+(detailData.branchPhone==null?'':detailData.branchPhone)+'</td></tr>'+   
-        //           '<tr><td>电池类型</td><td>'+detailData.batteryTypeName+'</td><td>太阳能电压</td><td>'+detailData.solarVolt+'</td></tr>'+   
-        //           '<tr><td>电池电压</td><td>'+detailData.batteryVolt+'</td><td>点阵/面阵</td><td>'+detailData.productName+'</td></tr>'+   
-        //           '<tr><td>运行模式</td><td>'+detailData.runMode.type+'</td><td>运行等级</td><td>'+detailData.runMode.outLevel+'</td></tr>'+   
-        //           '<tr><td>开始运行时间</td><td>'+detailData.synTime+'</td><td>终端状态</td><td>'+detailData.status+'</td></tr>'+
-        //           // '<tr><td>位移报警</td><td>正常</td><td>位移距离</td><td>0.3</td></tr>'+
-        //         '</tbody>'+
-        //       '</table>'+
-        //     '</div>'+
-        //   '</div>'+
-        //   '<div style="display: flex;justify-content: flex-end;">'+
-        //     '<div style="margin-right: 10px">'+
-        //       '<button style="background: linear-gradient(to bottom, #092a5d, #0c5b2e); color: #fff;padding: 2px 6px">选择发送指令</button>'+
-        //     '</div>'+
-        //     '<div>'+
-        //     '<button style="color: #fff;background: linear-gradient(to bottom, #092a5d, #0c5b2e);padding: 2px 6px" id="checkOrder">查看发送指令</button>'+
-        //     '</div>'+
-        //   '</div>'+
-        // '</div>';
         let temp = 
         `<div class="modal_detail">
         <style>td{border:solid 1px #999;font-size:14px;padding:2px 5px;}</style>

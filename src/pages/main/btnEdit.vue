@@ -39,9 +39,9 @@
     <div class="page_center">
       <div class="table_container">
         <div class="right_table">
-          <span class="addBtn" @click="addItem();">新建指令</span>
+          <span class="addBtn" @click="addCmd();">新建指令</span>
           <table class="table_list">
-              <tr>
+            <tr>
               <th colspan="5" style="background: #083775;color: #7dd7f9;">*选择指令*</th>
             </tr>
             <tr>
@@ -51,114 +51,172 @@
               <th>指令消息</th>
               <th style="padding: 0 30px">操作</th>
             </tr>
-            <tr>
-              <td>1</td>
-              <td>aaa</td>
-              <td>cdd</td>
-              <td>ffffff</td>
-              <td class="opration_table">
-                <div class="opration_btn">
-                  <div class="history_data" @click="updateLightStep(item)">
-                    编辑
+            <tr v-for="item in cmdListData" :key="item.id">
+                <td>{{item.id}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.type==1?'字符':'十六进制'}}</td>
+                <td>{{item.cmd}}</td>
+                <td class="opration_table">
+                  <div class="opration_btn">
+                    <div class="history_data" @click="editCmd(item)">
+                      编辑
+                    </div>
+                    <div class="_record" @click="delCmd(item)">
+                      删除
+                    </div>
                   </div>
-                  <div class="_record" @click="deleteLightStep(item.id)">
-                    删除
-                  </div>
-                </div>
-              </td>
+                </td>
             </tr>
             <tr class="divide_pages">
-                <td colspan="7" v-if="lightListData.length == 0 && listLightQuery.page == 1">
+                <td colspan="7" v-if="cmdListData.length == 0 && cmdListQuery.page == 1">
                   没有更多的数据了
                 </td>
                 <td colspan="5" v-else>
-                  共条{{pageLightTotal}}记录，当前显示第{{listLightQuery.page}}/{{pageLightSum}}页
-                  <a @click="changeLightPages(1)">首页</a>
-                  <a @click="changeLightPages(listLightQuery.page-1)">上一页</a>
-                  <a @click="changeLightPages(listLightQuery.page+1)">下一页</a>
-                  <a @click="changeLightPages(pageLightSum)">尾页</a>
+                  共条{{cmdListTotal}}记录，当前显示第{{cmdListQuery.page}}/{{cmdListPageSum}}页
+                  <a @click="changeCmdListPages(1)">首页</a>
+                  <a @click="changeCmdListPages(cmdListQuery.page-1)">上一页</a>
+                  <a @click="changeCmdListPages(cmdListQuery.page+1)">下一页</a>
+                  <a @click="changeCmdListPages(cmdListQuery)">尾页</a>
                 </td>
             </tr>
           </table>
         </div>
       </div>
-      <div class="addContent" id="addContent">
-        <p class="title">新增指令</p>
-        <p class="item">
-          <span>输出文本</span>
-          <input class="input-txt" type="text" placeholder="请输入显示文本">
-        </p>
-        <div class="item" style="margin-left:30px">
-          <span style="float:left">输出文本</span>
-          <div class="input-radio" style="float:left"><input type="radio" name="textname">字符</div>
-          <div class="input-radio" ><input type="radio" name="textname">十六进制</div>
+      <el-dialog :visible.sync="isShowSaveMsg" custom-class="send_message_table" title="编辑指令">
+        <el-form ref="saveCmdForm" :rules="rules" :model="saveCmdForm" label-position="left" label-width="100px">
+          <el-form-item label="指令名称" prop="name">
+            <el-input v-model="saveCmdForm.name"/>
+          </el-form-item>
+          <el-form-item label="指令类型" prop="type">
+              <el-radio-group v-model="saveCmdForm.type">
+                <el-radio :label="1">字符</el-radio>
+                <el-radio :label="2">十六进制</el-radio>
+              </el-radio-group>
+          </el-form-item>
+          <el-form-item label="指令内容" prop="cmd">
+            <el-input v-model="saveCmdForm.cmd"/>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="isShowSaveMsg = false;">取消</el-button>
+          <el-button type="primary" @click="saveCmd()">确定</el-button>
         </div>
-        <p class="item">
-          <span>指令消息</span>
-          <input class="input-txt" type="text" placeholder="请输入指令消息">
-        </p>
-        <p class="btn">
-          <span @click="cansel()">取消</span>
-          <span @click="ok()">确定</span>
-        </p>
-      </div>
+      </el-dialog>
     </div>
   </div>
 </template>
 <script>
 import moment from 'moment'
+import { Message, MessageBox } from 'element-ui'
 import Multiselect from 'vue-multiselect'
 export default {
   name: 'btnEdit',
   data() {
     return {
       dateTime: moment().format('YYYY.MM.DD'),
-      yearsList: [],
-      DateList: [],
-      dateData: [],
-      hoursList: [],
-      hoursData: [],
-      lightListData: [],
-      listLightQuery: {
+      isShowSaveMsg:false,
+      cmdListData:[],
+      cmdListQuery:{
         page: 1,
         pageSize: 10,
-        productId: 0
+        deviceId:0
       },
-      pageTermSum: 0,
-      pageTermTotal: 0,
-      pageLightSum: 0,
-      pageLightTotal: 0,
+      cmdListPageSum:0,
+      cmdListTotal:0,
+      saveCmdForm:{
+        id:0,
+        name:'',
+        type:1,
+        cmd:''
+      },
+      rules:{
+        name: [{ required: true, message: '必填项', trigger: 'blur' }],
+        type: [{ required: true, message: '必填项', trigger: 'blur' }],
+        cmd: [{ required: true, message: '必填项', trigger: 'blur' }]
+      }
     }
   },
   created() {
-    
+    this.initCmdList();
   },
   mounted() {
     
     
   },
   methods:{
-    
-    getAllSourceList(listQuery) {
-      let params = {
-        fetchUrl: '/sys/count/dataSummary',
-        listQuery: listQuery
-      }
-      this.$store.dispatch('GetList', params).then(res => {
-        let data = res.data
-        console.log('****数据汇总********',res.data)
-        this.allSourceData = data
+    addCmd(){
+      this.saveCmdForm = Object.assign({}, this.$options.data().saveCmdForm)
+      this.isShowSaveMsg = true
+      this.$nextTick(() => {
+        this.$refs['saveCmdForm'].clearValidate()
       })
     },
-    addItem() {
-      document.getElementById("addContent").setAttribute('style', 'display: block');
+    editCmd(item){
+      this.saveCmdForm = item
+      this.isShowSaveMsg = true
+      this.$nextTick(() => {
+        this.$refs['saveCmdForm'].clearValidate()
+      })
     },
-    cansel() {
-      document.getElementById("addContent").setAttribute('style', 'display: none');
+    saveCmd(){
+      this.$refs['saveCmdForm'].validate((valid) => {
+          if (valid) {
+            let params = {
+              fetchUrl: '/sys/device/cmd/edit',
+              data: this.saveCmdForm
+            }
+            this.$store.dispatch('AddMembers', params).then(res => {
+              this.isShowSaveMsg = false
+              this.$notify({
+                title: '成功',
+                message: '编辑指令成功',
+                type: 'success'
+              });
+              this.changeCmdListPages(1)
+            })
+          }
+        })
     },
-    ok() {
-      alert("添加啦")
-      document.getElementById("addContent").setAttribute('style', 'display: none');
+    delCmd(item){
+      MessageBox.confirm(
+          '确定要删除吗？',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).then(() => {
+          let params = {
+              fetchUrl: '/sys/device/cmd/delete?id='+item.id,
+              data: {}
+            }
+            this.$store.dispatch('DeleteMembers', params).then(res => {
+              this.changeCmdListPages(1)
+            })
+        })
+    },
+    initCmdList(){
+      this.cmdListQuery.page = 1;
+      this.getCmdList();
+    },
+    changeCmdListPages(page){
+      if(page > this.cmdListPageSum|| page < 1){
+        return;
+      }
+      this.cmdListQuery.page = page;
+      this.getCmdList();
+    },
+    getCmdList(){
+      // 获取终端列表
+      let params = {
+        fetchUrl: '/sys/device/cmd/list',
+        listQuery: this.cmdListQuery
+      }
+      this.$store.dispatch('GetList', params).then(res => {
+        this.cmdListData = res.data.datas
+        this.cmdListTotal = res.data.total
+        this.cmdListPageSum = Math.ceil(res.data.total/this.cmdListQuery.pageSize)
+      })
     },
     openMonitoring() {
       this.$router.push('main')
@@ -166,16 +224,18 @@ export default {
     openDataCalc() {
       this.$router.push('dataCalc')
     },
+    openDataAnalysis() {
+      this.$router.push('dataAnaysis')
+    },
     openSystemManage() {
       this.$router.push('systemManage')
     },
     openDeviceManage() {
       this.$router.push('deviceManage')
     },
-    openDataAnalysis() {
-      this.$router.push('dataAnaysis')
-    },
-    
+    openBtnEdit() {
+      this.$router.push('btnEdit')
+    }
   },
 }
 </script>

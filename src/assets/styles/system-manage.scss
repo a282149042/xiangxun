@@ -24,11 +24,10 @@
                 .monitoring_btn {
                     font-size: 1.25rem;
                     text-align: center;
-                    line-height: 40px;
                     margin-right: 10%;
                     color: #FFFFFF;
                     width: 20%;
-                    height: 40px;
+                    padding:5px 5px;
                 }
                 .monitoring_btn:hover{
                     background: linear-gradient(to bottom, #092a5d, #0c5b2e);
@@ -89,12 +88,11 @@
                 .monitoring_btn {
                     font-size: 1.25rem;
                     text-align: center;
-                    line-height: 40px;
                     margin-right: 10%;
                     color: #FFFFFF;
-                    margin-left: 10%;
+                    margin-left: 10px;
                     width: 50%;
-                    height: 40px;
+                    padding:5px 5px;
                 }
                 .monitoring_btn:hover{
                     background: linear-gradient(to bottom, #092a5d, #0c5b2e);
@@ -135,15 +133,13 @@
         }
         .edit_btn{
             font-size: 1.25rem;
-            line-height: 40px;
             color: #FFFFFF;
-            height: 40px;
-            width: 156px;
             cursor: pointer;
             position: absolute;
             right: 85px;
             margin-top: 6px;
             text-align: center;
+            padding:5px 5px;
           }
           .edit_btn:hover{
             background: linear-gradient(to bottom, #092a5d, #0c5b2e);

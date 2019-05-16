@@ -25,11 +25,10 @@
             .monitoring_btn{
               font-size: 1.25rem;
               text-align: center;
-              line-height: 40px;
               margin-right: 10%;
               color: #FFFFFF;
               width: 20%;
-              height: 40px;
+              padding:5px 5px;
             }
             .monitoring_btn:hover{
               background: linear-gradient(to bottom, #092a5d, #0c5b2e);
@@ -86,11 +85,11 @@
             .monitoring_btn{
               font-size: 1.25rem;
               text-align: center;
-              line-height: 40px;
+              margin-left:10px;
               margin-right: 10%;
               color: #FFFFFF;
               width: 50%;
-              height: 40px;
+              padding:5px 5px;
             }
             .monitoring_btn:hover,.edit_btn:hover{
               background: linear-gradient(to bottom, #092a5d, #0c5b2e);
@@ -131,15 +130,13 @@
         }
         .edit_btn{
           font-size: 1.25rem;
-          line-height: 40px;
           color: #FFFFFF;
-          height: 40px;
-          width: 156px;
           cursor: pointer;
           position: absolute;
           right: 85px;
           margin-top: 6px;
           text-align: center;
+          padding:5px 5px;
         }
         .edit_btn:hover{
           background: linear-gradient(to bottom, #092a5d, #0c5b2e);
@@ -293,7 +290,7 @@
               }
             }
             .right_table{
-                width: 60%;
+                width: 100%;
                 margin: 0px auto;
                 border-left: none;
                 .table_list {
@@ -319,6 +316,7 @@
                                 padding: 4px;
                                 border-radius: 2px;
                                 line-height: 12px;
+                                cursor: pointer;
                             }
                             .history_data {
                                 width: 30px;
@@ -328,6 +326,7 @@
                                 padding: 4px;
                                 background: #3594a2;
                                 font-size: 0.5rem;
+                                cursor: pointer;
                             }
                             .syn_device{
                                 width: 40px;
@@ -356,7 +355,7 @@
                     text-align: center;
                     color: #fff;
                     border-radius: 4px;
-                    margin: 0 12px 0px 0;
+                    margin: 0 12px 12px 0;
                     cursor: pointer;
                 }
             }
